@@ -1,4 +1,4 @@
-package fr.univtln.laure.tp;
+package fr.univtln.laure;
 
 public class Main{
     public static void main(String[] args) {

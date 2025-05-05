@@ -1,0 +1,26 @@
+@startuml
+title Diagramme de cas d'utilisation – Système de gestion de films
+:Utilisateur: as U
+database BDD <<secondaire>>
+
+package System{
+  (Noter un film) as N
+  (Consulter les recommandations) as C
+  (Rechercher par filtre ou nom) as R
+  (Ajouter un tag) as AT
+  (Supprimer un tag) as ST
+  
+  C <.. N : <<include>>
+  C <.. R : <<include>>
+  C <.. AT : <<include>>
+  C <.. ST : <<include>>
+}
+
+U -right- System
+
+BDD -down- System
+
+
+
+
+@enduml

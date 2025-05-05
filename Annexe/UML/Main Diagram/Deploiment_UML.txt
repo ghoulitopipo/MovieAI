@@ -1,0 +1,112 @@
+@startuml
+left to right direction
+title Diagramme de déploiement – Système de gestion de films
+
+node "Front-End"{
+  node "Interface graphique\n(Javafx)" {
+    artifact "Login.java" 
+    artifact "CreateAccount.java"
+    artifact "Accueil.java"
+    artifact "MoviePage.java"
+    component "ApiPython.java"
+  }
+  
+  node "Serveur Front-End\n(Java / REST client)" {
+  component "ApiMovies.java"
+  component "ApiUsers.java"
+  component "ApiRatings.java"
+  component "ApiTags.java"
+}
+
+  node "Recommandation IA\n(Python / flask / docker)" {
+  artifact "Recommendation_IA.py"
+  component "ApiJava.py"
+}
+  
+}
+
+
+node "Back-End" {
+  
+  node "Serveur \n(Java / REST API / docker)"{
+    node "Controllers" {
+      component "MoviesController.java"
+      component "UsersController.java"
+      component "RatingsController.java"
+      component "TagsController.java"
+    }
+  
+    node "Services" {
+      component "MoviesServices.java"
+      component "UsersServices.java"
+      component "RatingsServices.java"
+      component "TagsServices.java"
+    }
+  
+    node "Repositories" {
+      component "MoviesRepository.java"
+      component "UsersRepository.java"
+      component "RatingsRepository.java"
+      component "TagsRepository.java"
+    }
+  
+    node "Entities \n (JPA)" {
+      artifact "Movies.java"
+      artifact "Users.java"
+      artifact "Ratings.java"
+      artifact "Tags.java"
+    }
+  
+  }
+    
+  node "Base de données\n(PostgreSQL /  docker)" {
+  database "DB Movies"
+}
+
+}
+
+
+
+"Login.java" -up-> "ApiPython.java"
+"CreateAccount.java" -up-> "ApiPython.java"
+"Accueil.java" -up-> "ApiPython.java"
+"MoviePage.java" -up-> "ApiPython.java"
+
+"ApiUsers.java" <-up- "Login.java"
+"ApiUsers.java" <-up- "CreateAccount.java"
+"ApiMovies.java" <-up- "Accueil.java"
+"ApiMovies.java" <-up- "MoviePage.java"
+"ApiRatings.java" <-up- "Accueil.java"
+"ApiRatings.java" <-up- "MoviePage.java"
+"ApiTags.java" <-up- "MoviePage.java"
+
+"ApiPython.java" <~~> "ApiJava.py"
+"ApiJava.py" <-up- "Recommendation_IA.py"
+
+"ApiJava.py" <~~> "ApiMovies.java"
+"ApiJava.py" <~~> "ApiUsers.java"
+"ApiJava.py" <~~> "ApiRatings.java"
+"ApiJava.py" <~~> "ApiTags.java"
+
+"ApiMovies.java" ~~> "MoviesController.java"
+"ApiUsers.java" ~~> "UsersController.java"
+"ApiRatings.java" ~~> "RatingsController.java"
+"ApiTags.java" ~~> "TagsController.java"
+
+"MoviesController.java" --> "MoviesServices.java"
+"UsersController.java" --> "UsersServices.java"
+"RatingsController.java" --> "RatingsServices.java"
+"TagsController.java" --> "TagsServices.java"
+
+"MoviesServices.java" --> "MoviesRepository.java"
+"UsersServices.java" --> "UsersRepository.java"
+"RatingsServices.java" --> "RatingsRepository.java"
+"TagsServices.java" --> "TagsRepository.java"
+
+"MoviesRepository.java" ~~> "DB Movies"
+"UsersRepository.java" ~~> "DB Movies"
+"RatingsRepository.java" ~~> "DB Movies"
+"TagsRepository.java" ~~> "DB Movies"
+
+@enduml
+

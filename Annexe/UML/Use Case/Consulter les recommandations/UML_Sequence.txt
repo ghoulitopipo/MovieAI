@@ -1,0 +1,36 @@
+@startuml
+title Consulter les recommandations - Diagramme de séquence
+
+participant User as U
+participant System as S
+database Database as D
+
+U -> S : Entre les identifiants
+
+S -> D : Vérifie les identifiants
+
+alt Identifiants invalides
+    D --> S : Échec de la connexion (password invalides)
+    S --> U : Affiche un message d'erreur "incorrect password"
+else Compte inexistant
+    D --> S : Échec de la connexion (email non trouvé)
+    S --> U : Affiche un message d'erreur "this email doesn't have an account"
+else Connexion valide
+    D --> S : Valide la connexion
+    S -> D : Charge les données de l'utilisateur
+    D --> S : Retourne les données de l'utilisateur
+    S --> S : Calcule les recommandations personnalisées
+    S --> U : Affiche la page d'accueil avec la liste de films recommandés
+
+    alt Consulter un film ? = vrai
+        U -> S : Choisit un film
+        S -> D : Demande les données du film
+        D --> S : Envoie les données du film
+        S --> U : Affiche la page MoviePage et les informations du film
+    else faux
+        ref over U,S,D : Appel du cas d’usage "Rechercher un film"
+    end
+end
+
+@enduml
+

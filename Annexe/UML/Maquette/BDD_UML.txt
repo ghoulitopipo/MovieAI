@@ -1,0 +1,38 @@
+@startuml
+entity Users {
+userId : UUID
+username : STRING
+password : STRING
+email : STRING
+}
+
+entity Ratings {
+ratingId : UUID
+userId : UUID
+movieId : UUID
+rating : INT
+timestamp : LOCALDATE
+}
+
+entity Movies {
+movieId : UUID
+title : STRING
+genre : STRING
+imdbId : STRING
+tmbId : STRING
+}
+
+entity Tags {
+tagId : UUID
+userId : UUID
+movieId : UUID
+tag : STRING
+timestamp : LOCALDATE
+}
+
+Movies -- Ratings
+Ratings -- Users
+
+Movies -- Tags
+Tags -- Users
+@enduml

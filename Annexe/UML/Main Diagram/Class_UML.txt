@@ -1,0 +1,51 @@
+@startuml
+left to right direction
+title Diagramme de class – Système de gestion de films
+
+
+
+    class Movies <<Java Class>> {
+      - movieId : int @Id
+      - tags : List<Tags> @OneToMany
+      - ratings : List<Ratings> @OneToMany
+      - title : String @Column
+      - genre :String @Column
+      - imdld : String @Column
+      - tmbld : String @Column
+    }
+    
+    class Users <<Java Class>> {
+      - userId : UUID @Id
+      - tags : List<Tags> @OneToMany
+      - ratings : List<Ratings> @OneToMany
+      - username : String @Column
+      - password : String @Column
+      - email : String @Column
+    }
+    
+    class Ratings <<Java Class>> {
+      - ratingId : int @Id
+      - userId : int @ManyToOne @JsonIgnore
+      - movieId :int @ManyToOne @JsonIgnore
+      - rating : int @Column
+      - timestamp : LocalDate @Column
+    }
+    
+    class Tags <<Java Class>> {
+      - tagId : int @Id
+      - userId : int @ManyToOne @JsonIgnore
+      - movieId :int @ManyToOne @JsonIgnore
+      - tag : String @Column
+      - timestamp : LocalDate @Column
+    }
+    
+    
+    Tags "1"--"n" Movies
+    Movies "n"--"1" Ratings
+    Users "n"--"1" Ratings
+    Tags "1"--"n" Users
+
+  }
+
+
+@enduml
