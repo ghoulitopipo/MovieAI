@@ -1,0 +1,32 @@
+Scenario Nominal "Consulter les recommandations":
+Description: L'utilisateur se connecte et consulte sa page d'acceuil avant d'effectuer une recherche ou choisir un film.
+Acteur: Utilisateur, Base de donné.
+Pré-condition: aucune
+Post_condition: aucune
+
+1- L'utilisateur envoie ses identifiants(email et password) au Systeme
+2- Le Systeme vérifie les identifiants avec la base de données
+3- La base de données valide la connexion
+4- Le Systeme charge les données de l'utilisateur de la base de données
+5- Le Systeme calcule les recommandations personnalisé pour cet utilisateur
+6- Le Systeme affiche la page d'acceuil avec la liste recommandée
+7- L'utilisateur choisit un film recommandé
+8- Le Systeme demande les données du film
+9- La base de données envoie les données du film au Systeme
+10- Le Systeme affiche la page du film et ses informations
+
+
+E1- L'email donné n'est pas associé à un compte (prend place après la ligne 2 du scénario nominal):
+
+3- La base de données envoie l'échec de connexion au Systeme
+4- Le Systeme affiche un message d'erreur "this email doesn't have an account"
+
+
+E2- Mot de passe incorrecte (prend place après la ligne 2 du scénario nominal):
+
+3- La base de données envoie l'échec de connexion au Systeme
+4- Le Systeme affiche un message d'erreur "incorrect password"
+
+A1- L'utilisateur recherche un film (prend place après la ligne 6 du scénario nominal):
+
+7- (Appel au cas d'usage "Rechercher un film")

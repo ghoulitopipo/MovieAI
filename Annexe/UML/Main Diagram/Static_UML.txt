@@ -1,0 +1,12 @@
+@startuml
+
+title Diagramme de contexte statique – Système de gestion de films
+left to right direction
+:Utilisateur: as U
+rectangle Systeme as Sys 
+database BDD <<secondaire>>
+
+U--Sys
+Sys--BDD
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+title Consulter les recommandations - Diagramme d'activité
+
+start
+
+repeat
+
+:Entrer les identifiants;
+:Vérifier les identifiants;
+
+if (A un compte ?) then (Non)
+    :Créer un compte;
+endif
+
+repeat while (Identifiants valides?) is (Non)
+
+:Calculer les recommandations;
+:Afficher les recommandentation;
+
+if (Consulter un film ?) then (oui)
+    :Choisir un film;
+    :Afficher la page du film;
+    stop
+else (non)
+  :Appeler le diagramme "Rechercher un film";
+  stop
+endif
+
+
+@enduml
+
