@@ -1,0 +1,6 @@
+# Ignorer le dossier .idea (dossier de configuration de l'IDE)
+.idea/
+
+# Ignorer les répertoires de build (comme target)
+frontend/target/
+backend/target/
