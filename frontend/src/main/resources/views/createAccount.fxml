@@ -6,8 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Login"
-            prefWidth="1000" prefHeight="600" stylesheets="@../styles/login.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.CreateAccount"
+            prefWidth="1000" prefHeight="600" stylesheets="@../styles/createAccount.css">
 
     <left>
         <VBox alignment="CENTER" spacing="20" styleClass="left-pane" prefWidth="400">
@@ -23,13 +23,15 @@
     <center>
         <VBox alignment="CENTER" spacing="25" styleClass="right-pane">
             <VBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Identifiant" styleClass="form-label"/>
+                <TextField fx:id="usernameField" promptText="Identifiant" styleClass="input-field"/>
                 <Label text="Email" styleClass="form-label"/>
                 <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
                 <Label text="Mot de passe" styleClass="form-label"/>
                 <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field"/>
             </VBox>
-            <Button fx:id="connexionButton" text="Connexion" onAction="#handleLogin" styleClass="login-button"/>
-            <Button fx:id="accountButton" text="Pas de compte ?" onAction="#handleLoginCA" styleClass="login-button"/>
+            <Button fx:id="createButton" text="Valider" onAction="#createAccount" styleClass="login-button"/>
+            <Button fx:id="cancelButton" text="Annuler" onAction="#loginChange" styleClass="login-button"/>
         </VBox>
     </center>
 </BorderPane>
