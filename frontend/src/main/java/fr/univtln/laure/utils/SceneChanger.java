@@ -26,7 +26,7 @@ public class SceneChanger {
 
     public static void setWindow(Stage stage, String fileName) {
         switch(fileName) {
-            case "accueil":
+            case "home":
                 stage.setWidth(1340);
                 stage.setHeight(800);
                 stage.setX(360);

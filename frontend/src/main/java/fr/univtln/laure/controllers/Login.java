@@ -2,10 +2,11 @@ package fr.univtln.laure.controllers;
 
 import java.io.IOException;
 
-import org.json.JSONObject;
+
+import fr.univtln.laure.utils.SceneChanger;
+
 import java.net.URL;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,22 +15,16 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 public class Login {
     @FXML
     private Button connexionButton;
 
     @FXML
-    private TextField usernameField;
+    private TextField emailField;
 
     @FXML
     private PasswordField passwordField;
-
-    @Setter
-    @Getter
-    private static String buttonInfo;
 
 
     private final int maxCharacters = 40;
@@ -38,10 +33,10 @@ public class Login {
     public void initialize() {
         connexionButton.setDisable(true);
 
-        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Limiter le nombre de caratères
             if (newValue.length() > maxCharacters) {
-                usernameField.setText(oldValue);
+                emailField.setText(oldValue);
             }
 
             // Activer le bouton de connexion si les champs ne sont pas vides
@@ -56,7 +51,7 @@ public class Login {
         });
 
         // Se connecter plus vite avec le bouton Entrée
-        usernameField.setOnKeyPressed(event -> {
+        emailField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 passwordField.requestFocus();
             }
@@ -64,14 +59,14 @@ public class Login {
 
         passwordField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                //handleLogin();
+                handleLogin();
             }
         });
     }
 
-    /*@FXML
+    @FXML
     private void handleLogin() {
-        String email = usernameField.getText().trim();
+        /*String email = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
         // Vérifier si les champs ne sont pas vides
@@ -83,7 +78,7 @@ public class Login {
         new Thread(() -> {
             try {
                 // Appel au service API pour l'authentification
-                String response = ApiService.login(email, password, this.getButtonInfo());
+                String response = ApiUsers.login(email, password, this.getButtonInfo());
                 if (response != null) {
                     System.out.println("Connexion réussie ! " + response);
 
@@ -100,38 +95,42 @@ public class Login {
                 e.printStackTrace();
                 System.out.println("Erreur lors de la connexion !");
             }
-        }).start();
-    }*/
+        }).start();*/
+        changeToAccueilSceneWithId(1);
+    }
 
-    /*private void changeToAccueilSceneWithId(int connexionId) {
+    @FXML
+    private void handleLoginCA(){
         try {
-            URL fxmlUrl = getClass().getResource("/views/accueil.fxml");
+            URL fxmlUrl = getClass().getResource("/views/createAccount.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Create Account");
+            SceneChanger.setWindow(stage, "createAccount");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void changeToAccueilSceneWithId(int connexionId) {
+        try {
+            URL fxmlUrl = getClass().getResource("/views/home.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load());
 
             // Récupération du contrôleur et injection de l'ID
-            AccueilController controller = loader.getController();
+            Home controller = loader.getController();
             controller.setIdConnexion(connexionId);
 
-            Stage stage = (Stage) usernameField.getScene().getWindow();
+            Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(scene);
-            stage.setTitle("Accueil");
-            SceneChanger.setWindow(stage, "accueil");
+            stage.setTitle("Home");
+            SceneChanger.setWindow(stage, "home");
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
-
-
-    /*private void changeScene(String fxmlFile) {
-        SceneChanger.changeScene((Stage) usernameField.getScene().getWindow(), fxmlFile, "Accueil");
-    }*/
-
-    public static String getButtonInfo() {
-        return buttonInfo;
-    }
-
-    public void setButtonInfo(String buttonInfo) {
-        this.buttonInfo = buttonInfo;
     }
 }
