@@ -26,5 +26,17 @@ public class MovieRepository{
     public EntityManager getEntityManager() {
         return em;
     }
+
+    public void persist(Movie movie) {
+        em.persist(movie); // Ne pas utiliser persist() sur une entité avec id déjà existant
+    }
+    
+    public Movie merge(Movie movie) {
+        return em.merge(movie);
+    }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Movie").executeUpdate();
+    }
 }
 

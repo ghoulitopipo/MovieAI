@@ -5,6 +5,11 @@ import fr.univtln.laure.repository.MovieRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import io.quarkus.runtime.StartupEvent;
+import jakarta.enterprise.event.Observes;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
+
 public class MovieService {
 
     @Inject
@@ -51,4 +57,17 @@ public class MovieService {
     }
     return movies;
 }
+
+@Transactional
+void onStart(@Observes StartupEvent ev) {
+    // Supprime tous les films existants
+    movieRepository.deleteAll();
+
+    // Importe les films depuis le CSV
+    List<Movie> movies = readMoviesFromCsv();
+    for (Movie movie : movies) {
+        movieRepository.merge(movie); // OK car la table est vide
+    }
 }
+}
+// ...existing code...

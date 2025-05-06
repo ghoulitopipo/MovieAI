@@ -1,5 +1,6 @@
 package fr.univtln.laure.controller;
 
+import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.model.Rating;
 import fr.univtln.laure.service.RatingService;
 import jakarta.inject.Inject;
@@ -18,4 +19,13 @@ public class RatingController {
     public List<Rating> getAllRatings() {
         return ratingService.getAllRatings();
     }
+
+
+    @GET
+    @Path("/csv")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Rating> getRatingsFromCsv() {
+        return ratingService.readRatingsFromCsv();
+    }
 }
+

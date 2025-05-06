@@ -1,5 +1,6 @@
 package fr.univtln.laure.controller;
 
+import fr.univtln.laure.model.Rating;
 import fr.univtln.laure.model.Tag;
 import fr.univtln.laure.service.TagService;
 import jakarta.inject.Inject;
@@ -17,5 +18,12 @@ public class TagController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
+    }
+
+    @GET
+    @Path("/csv")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Tag> getTagsFromCsv() {
+        return tagService.readTagsFromCsv();
     }
 }
