@@ -13,9 +13,17 @@ public class MovieController {
     @Inject
     MovieService movieService;
 
+    /* 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Movie> getAllMovies() {
         return movieService.getAllMovies();
+    } */
+
+    @GET
+    @Path("/csv")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Movie> getMoviesFromCsv() {
+        return movieService.readMoviesFromCsv();
     }
 }

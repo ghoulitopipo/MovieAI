@@ -26,7 +26,7 @@ public class Rating {
     private Users user;
 
     @Column
-    private int rating;
+    private float rating;
 
     @Column
     private LocalDate date;
