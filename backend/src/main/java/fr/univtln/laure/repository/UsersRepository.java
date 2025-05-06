@@ -30,9 +30,27 @@ public class UsersRepository {
                     .setParameter("email", email)
                     .setParameter("password", password)
                     .getSingleResult();
-            return user;
+            
+            if (user != null) {
+                return user;
+            }
+            System.out.println("User not found");
+            return null;
+
         } catch (NoResultException e) {
             return null;
         }
     }
+
+    public Users addNewUser(String username, String email, String password) {
+        
+        Users user = new Users();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        
+        em.persist(user);
+        return user;
+    }
+
 }
