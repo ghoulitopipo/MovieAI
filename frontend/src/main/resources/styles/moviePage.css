@@ -1,0 +1,81 @@
+.root-pane {
+    -fx-background-color: #d7265b;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.5, 0, 0);
+}
+
+.welcome-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 0, 1);
+}
+
+.button-bar {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0.2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
+}
+
+.button {
+    -fx-background-color: #a81d47;
+    -fx-text-fill: white;
+    -fx-background-radius: 30;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0.5, 0, 0);
+    -fx-border-width: 1;
+}
+
+.button:hover {
+    -fx-background-color: #94183d;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0, 1);
+}
+
+.today-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+.cours-box {
+    -fx-background-color: aliceblue;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-font-size: 16px;
+    -fx-padding: 10 0 0 20;
+    -fx-spacing: 10;
+    -fx-alignment: TOP_LEFT;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
+}
+
+.note-scroll-pane {
+    -fx-background-color: aliceblue;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
+}
+
+.notes-box {
+    -fx-font-size: 16px;
+    -fx-padding: 10 0 0 20;
+    -fx-spacing: 10;
+    -fx-alignment: TOP_CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 0);
+}
+
+.absences-scroll-pane {
+    -fx-background-color: aliceblue;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
+}
+
+.absences-box {
+    -fx-font-size: 16px;
+    -fx-padding: 10 0 0 20;
+    -fx-spacing: 10;
+    -fx-alignment: TOP_CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 0);
+}
