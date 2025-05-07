@@ -2,11 +2,14 @@ package fr.univtln.laure.controllers;
 
 import java.io.IOException;
 
-
+import fr.univtln.laure.utils.ApiUsers;
 import fr.univtln.laure.utils.SceneChanger;
 
 import java.net.URL;
 
+import org.json.JSONObject;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -27,30 +30,26 @@ public class Login {
     private PasswordField passwordField;
 
 
-    private final int maxCharacters = 40;
+    private final int MAX_CHARACTERS = 40;
 
     @FXML
     public void initialize() {
         connexionButton.setDisable(true);
 
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Limiter le nombre de caratères
-            if (newValue.length() > maxCharacters) {
+            if (newValue.length() > MAX_CHARACTERS) {
                 emailField.setText(oldValue);
             }
 
-            // Activer le bouton de connexion si les champs ne sont pas vides
             connexionButton.setDisable(newValue.trim().isEmpty());
         });
 
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Limiter le nombre de caratères
-            if (newValue.length() > maxCharacters) {
+            if (newValue.length() > MAX_CHARACTERS) {
                 passwordField.setText(oldValue);
             }
         });
 
-        // Se connecter plus vite avec le bouton Entrée
         emailField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 passwordField.requestFocus();
@@ -66,21 +65,17 @@ public class Login {
 
     @FXML
     private void handleLogin() {
-        /*String email = usernameField.getText().trim();
+        String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
 
-        // Vérifier si les champs ne sont pas vides
         if (email.isEmpty() || password.isEmpty()) {
             System.out.println("Veuillez remplir tous les champs !");
             return;
         }
-        // Utiliser un thread pour effectuer l'appel réseau sans bloquer l'UI
         new Thread(() -> {
             try {
-                // Appel au service API pour l'authentification
-                String response = ApiUsers.login(email, password, this.getButtonInfo());
+                String response = ApiUsers.login(email, password);
                 if (response != null) {
-                    System.out.println("Connexion réussie ! " + response);
 
                     JSONObject json = new JSONObject(response);
                     int connexionId = json.getInt("id");
@@ -88,15 +83,13 @@ public class Login {
                     Platform.runLater(() -> changeToAccueilSceneWithId(connexionId));
                 }
                 else {
-                    // Si la connexion échoue, afficher un message d'erreur
                     System.out.println("Échec de connexion, vérifiez vos identifiants !");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Erreur lors de la connexion !");
             }
-        }).start();*/
-        changeToAccueilSceneWithId(1);
+        }).start();
     }
 
     @FXML

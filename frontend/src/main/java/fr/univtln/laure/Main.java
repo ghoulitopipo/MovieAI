@@ -1,5 +1,9 @@
 package fr.univtln.laure;
 
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
+
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
