@@ -32,6 +32,12 @@ public class SceneChanger {
                 stage.setX(360);
                 stage.setY(130);
                 break;
+            case "moviePage":
+                stage.setWidth(1340);
+                stage.setHeight(800);
+                stage.setX(360);
+                stage.setY(130);
+                break;
             default:
                 stage.setWidth(1020);
                 stage.setHeight(630);
