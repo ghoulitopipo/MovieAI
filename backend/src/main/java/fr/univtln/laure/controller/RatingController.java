@@ -18,4 +18,18 @@ public class RatingController {
     public List<Rating> getAllRatings() {
         return ratingService.getAllRatings();
     }
+
+    @GET
+    @Path("/average/{id_movie}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public float getaverageRating(@PathParam("id_movie") int id_movie) {
+        return ratingService.getaverageRating(id_movie);
+    }
+
+    @GET
+    @Path("/getFloat/{id_movie}/{id_user}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public float getRatingFloat(@PathParam("id_movie") int id_movie, @PathParam("id_user") int id_user) {
+        return ratingService.getRatingFloat(id_movie, id_user);
+    }
 }

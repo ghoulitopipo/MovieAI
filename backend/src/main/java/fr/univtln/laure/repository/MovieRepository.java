@@ -1,12 +1,9 @@
 package fr.univtln.laure.repository;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 
-import java.math.BigDecimal;
 import java.util.List;
 import fr.univtln.laure.model.Movie;
 
@@ -25,6 +22,25 @@ public class MovieRepository{
 
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public List<Movie> getListMoviesNotRated(int id_user, String genre) {
+        genre = "%" + genre + "%";
+        return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id NOT IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
+                .setParameter("id_user", id_user)
+                .setParameter("genre", genre)
+                .getResultList();
+    }
+
+    public List<Movie> getListMoviesRated(int id_user, String genre) {
+        return em.createQuery("SELECT m FROM Movie m WHERE m.genre = :genre AND m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
+                .setParameter("id_user", id_user)
+                .setParameter("genre", genre)
+                .getResultList();
+    }
+    
+    public List<String> getGenres() {
+        return em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
     }
 }
 
