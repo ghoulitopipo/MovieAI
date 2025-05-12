@@ -1,0 +1,21 @@
+@startuml
+title Noter un film - Diagramme de séquence
+
+participant User as U
+participant System as S
+database Database as D
+
+ref over U,S,D : Cas d’usage "Consulter les recommandations" ou "Rechercher par filtre ou nom"
+
+alt Annuler ça note ? = vrai
+  U -> S : Annule la note
+  S -> D : Supprime la précédente note
+  else faux
+  U -> S : Note le film
+  S -> D : Enregistre la note
+end
+D --> S : Confirme la modification
+S --> U : Confirme la modification
+
+@enduml
+

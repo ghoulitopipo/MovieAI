@@ -1,0 +1,16 @@
+Scenario Nominal "Ajouter un tag":
+Description: L'utilisateur supprime un tag.
+Acteur: Utilisateur, Base de donné.
+Pré-condition: avoir effécteur le cas d'usage : "Consulter les recommandations" ou "Rechercher un film par filtre ou nom"
+Post_condition: aucune
+
+1- L'utilisateur choisis le tag à ajouter.
+2- Le système transmet la demande à la base de donné.
+3- La base de donné ajoute le tag au film.
+4- Le système affiche la liste de tag avec le nouveau tag.
+
+E1- Le tag est déjà sur ce film (prend place après la ligne 3 du scénario nominal):
+
+3- La base de données constate l'erreur.
+4- Le Systeme notifie l'erreur.
+

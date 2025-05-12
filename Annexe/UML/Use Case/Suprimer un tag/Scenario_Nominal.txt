@@ -1,0 +1,16 @@
+Scenario Nominal "Supprimer un tag":
+Description: L'utilisateur supprime un tag.
+Acteur: Utilisateur, Base de donné.
+Pré-condition: avoir effécteur le cas d'usage : "Consulter les recommandations" ou "Rechercher un film par filtre ou nom"
+Post_condition: aucune
+
+1- L'utilisateur choisis le tag à supprimer.
+2- Le système transmet la demande à la base de donné.
+3- La base de donné supprime le tag du film.
+4- Le système affiche la liste de tag sans le tag supprimer.
+
+E1- Le tag n'existe pas ou n'est pas présent sur le film (prend place après la ligne 3 du scénario nominal):
+
+3- La base de données ne trouve pas le tag à supprimer.
+4- Le Systeme notifie l'erreur.
+

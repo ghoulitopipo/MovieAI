@@ -1,0 +1,22 @@
+@startuml
+title Supprimer un tag - Diagramme d'activité
+
+start
+
+:Effectue le Diagramme "Consulter les recommandations"
+ou "Rechercher un film par filtre ou nom";
+
+:Utilisateur sélectionne un tag à supprimer;
+
+:Le système transmet la demande à la base de données;
+
+if (Tag inexistant ou\nabsent du film ?) then (Oui)
+  :La base ne fait rien;
+  stop
+else (Non)
+  :La base supprime le tag;
+  stop
+endif
+
+@enduml
+

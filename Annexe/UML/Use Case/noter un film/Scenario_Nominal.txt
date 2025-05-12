@@ -1,0 +1,17 @@
+Scenario Nominal "Noter un film":
+Description: L'utilisateur met une note sur un film.
+Acteur: Utilisateur, Base de donné.
+Pré-condition: avoir effécteur le cas d'usage : "Consulter les recommandations" ou "Rechercher un film par filtre ou nom"
+Post_condition: aucune
+
+1- L'utilisateur saisit une note.
+2- Le système envoie la nouvelle note a la base de donné.
+3- La base de donné confirme la modification.
+4- Le système affiche la nouvelle note.
+
+A1- L'utilisateur annule ça note (prend place après la ligne 1 du scénario nominal):
+
+1- L'utilisateur saisit la même note qu'il avait déjà rempli.
+2- Le système envoie l'annulation de note a la base de donné.
+3- La base de donné confirme l'annulation.
+4- Le système affiche la nouvelle note.

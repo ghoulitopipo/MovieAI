@@ -1,0 +1,27 @@
+@startuml
+title Ajouter un tag - Diagramme de séquence
+
+participant User as U
+participant System as S
+database Database as D
+
+ref over U,S,D : Cas d’usage "Consulter les recommandations" ou "Rechercher par filtre ou nom"
+
+U -> S : Choisis le tag à ajouter
+S -> D : Transmet la demande
+
+alt Tag déjà existant
+
+  D --> S : N'effectue pas la demande
+  S --> U : Notifie que le tag existe déjà
+
+else
+
+  D --> S : Ajoute le tag
+  S --> U : Notifie l'ajout du tag
+
+end
+
+
+@enduml
+

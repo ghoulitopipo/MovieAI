@@ -1,0 +1,17 @@
+@startuml
+title Noter un film - Diagramme d'activité
+
+start
+
+:Effectue le Diagramme "Consulter les recommandations"
+ou "Rechercher un film par filtre ou nom";
+
+if (Annuler une note?) then (oui)
+    :Utilisateur annule ça note;
+else (non)
+  :Utilisateur saisit une note;
+endif
+:Le système affiche la note;
+
+stop
+@enduml
