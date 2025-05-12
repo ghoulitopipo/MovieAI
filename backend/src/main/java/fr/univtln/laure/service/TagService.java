@@ -4,8 +4,11 @@ import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.model.Tag;
 import fr.univtln.laure.model.Users;
 import fr.univtln.laure.repository.TagRepository;
+import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -40,7 +43,7 @@ public class TagService {
                 Tag tag = new Tag();
                 Users user = new Users();
                 user.setId(Long.parseLong(parts[0]));
-                tag.setUser(user);
+                tag.setUsers(user);
                 Movie movie = new Movie();
                 movie.setId(Long.parseLong(parts[1]));
                 tag.setMovie(movie);

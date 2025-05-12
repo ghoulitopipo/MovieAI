@@ -57,17 +57,5 @@ public class MovieService {
     }
     return movies;
 }
-
-@Transactional
-void onStart(@Observes StartupEvent ev) {
-    // Supprime tous les films existants
-    movieRepository.deleteAll();
-
-    // Importe les films depuis le CSV
-    List<Movie> movies = readMoviesFromCsv();
-    for (Movie movie : movies) {
-        movieRepository.merge(movie); // OK car la table est vide
-    }
-}
 }
 // ...existing code...

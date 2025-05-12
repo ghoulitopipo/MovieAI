@@ -7,9 +7,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
+import fr.univtln.laure.service.DateConverter;
 
 @Getter
 @Setter
@@ -23,11 +25,12 @@ public class Tag {
     private Movie movie;
 
     @ManyToOne
-    private Users user;
+    private Users users;
 
     @Column
     private String tag;
 
     @Column
+    @Convert(converter=DateConverter.class)
     private LocalDate date;
 }

@@ -19,13 +19,5 @@ public class RatingController {
     public List<Rating> getAllRatings() {
         return ratingService.getAllRatings();
     }
-
-
-    @GET
-    @Path("/csv")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Rating> getRatingsFromCsv() {
-        return ratingService.readRatingsFromCsv();
-    }
 }
 
