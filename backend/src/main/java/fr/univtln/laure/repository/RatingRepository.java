@@ -1,5 +1,6 @@
 package fr.univtln.laure.repository;
 
+import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.model.Rating;
 
 import jakarta.persistence.NoResultException;
@@ -22,5 +23,17 @@ public class RatingRepository {
 
     public Rating findById(Long id) {
         return em.find(Rating.class, id);
+    }
+
+    public void persist(Rating rating) {
+        em.persist(rating);
+    }
+    
+    public Rating merge(Rating rating) {
+        return em.merge(rating);
+    }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Rating").executeUpdate();
     }
 }
