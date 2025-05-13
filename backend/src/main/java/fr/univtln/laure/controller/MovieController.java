@@ -22,14 +22,14 @@ public class MovieController {
     @GET
     @Path("/notrate/{id_user}/{genre}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getListMoviesNotRated(@PathParam("id_user") int id_user, @PathParam("genre") String genre) {
+    public List<Movie> getListMoviesNotRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
         return movieService.getListMoviesNotRated(id_user, genre);
 }
 
     @GET
     @Path("/rated/{id_user}/{genre}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getListMoviesRated(@PathParam("id_user") int id_user, @PathParam("genre") String genre) {
+    public List<Movie> getListMoviesRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
         return movieService.getListMoviesRated(id_user, genre);
     }
 

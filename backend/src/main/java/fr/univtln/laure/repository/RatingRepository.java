@@ -8,8 +8,13 @@ import jakarta.persistence.NoResultException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
+
+import fr.univtln.laure.model.Users;
+import fr.univtln.laure.service.UsersService;
+import io.quarkus.security.User;
 
 @ApplicationScoped
 public class RatingRepository {
@@ -26,7 +31,7 @@ public class RatingRepository {
     }
 
 
-    public List<Rating> findAllRatingsMovies(int id_movie) {
+    public List<Rating> findAllRatingsMovies(long id_movie) {
         try {
             return em.createQuery("SELECT r FROM Rating r WHERE r.movie.id = :id_movie", Rating.class)
                     .setParameter("id_movie", id_movie)
@@ -36,7 +41,7 @@ public class RatingRepository {
         }
     }
 
-    public float getRatingFloat(int id_movie, int id_user) {
+    public float getRatingFloat(long id_movie, long id_user) {
         try {
             return em.createQuery("SELECT r.rating FROM Rating r WHERE r.movie.id = :id_movie AND r.user.id = :id_user", Float.class)
                     .setParameter("id_movie", id_movie)
@@ -59,4 +64,51 @@ public class RatingRepository {
         em.createQuery("DELETE FROM Rating").executeUpdate();
 
     }
+
+    public Rating getRating(long id_movie, long id_user) {
+        try {
+            return em.createQuery("SELECT r FROM Rating r WHERE r.movie.id = :id_movie AND r.user.id = :id_user", Rating.class)
+                    .setParameter("id_movie", id_movie)
+                    .setParameter("id_user", id_user)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void addRating(long id_movie, long id_user, float rating) {
+        if (getRating(id_movie, id_user) != null) {
+            modifyRating(id_movie, id_user, rating);    
+        } else{
+            Movie movie = em.find(Movie.class, id_movie);
+            Users user = em.find(Users.class, id_user);
+            Rating newRating = new Rating();
+            newRating.setMovie(movie);
+            newRating.setUser(user);
+            newRating.setRating(rating);
+            em.persist(newRating);
+        }
+        
+    }
+
+    @Transactional
+    public void deleteRating(long id_movie, long id_user) {
+        Rating rating = getRating(id_movie, id_user);
+        if (rating != null) {
+            em.remove(rating);
+        }
+    }
+
+    @Transactional
+    public void modifyRating(long id_movie, long id_user, float rating) {
+        Rating existingRating = getRating(id_movie, id_user);
+        if (existingRating.getRating() != rating) {
+            existingRating.setRating(rating);
+            em.merge(existingRating);
+        } else{
+            deleteRating(id_movie, id_user);
+        }
+    }
+    
 }

@@ -30,7 +30,7 @@ public class MovieRepository{
     }
 
 
-    public List<Movie> getListMoviesNotRated(int id_user, String genre) {
+    public List<Movie> getListMoviesNotRated(long id_user, String genre) {
         genre = "%" + genre + "%";
         return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id NOT IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
                 .setParameter("id_user", id_user)
@@ -38,7 +38,7 @@ public class MovieRepository{
                 .getResultList();
     }
 
-    public List<Movie> getListMoviesRated(int id_user, String genre) {
+    public List<Movie> getListMoviesRated(long id_user, String genre) {
         genre = "%" + genre + "%";
         return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
                 .setParameter("id_user", id_user)
