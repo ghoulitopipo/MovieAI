@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import fr.univtln.laure.model.Users;
@@ -87,6 +88,7 @@ public class RatingRepository {
             newRating.setMovie(movie);
             newRating.setUser(user);
             newRating.setRating(rating);
+            newRating.setDate(LocalDate.now());
             em.persist(newRating);
         }
         
