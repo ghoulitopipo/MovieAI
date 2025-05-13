@@ -25,8 +25,6 @@ public class Main extends Application{
     }
 
     public static void main(String[] args) throws Exception {
-
-        System.out.println(ApiMovies.ListNotRate(1, "Drama"));
         launch(args);
     }
 }

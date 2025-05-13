@@ -52,11 +52,11 @@ public class MovieService {
     return movies;
 }
 
-    public List<Movie> getListMoviesNotRated(int id_user, String genre) {
+    public List<Movie> getListMoviesNotRated(long id_user, String genre) {
         return movieRepository.getListMoviesNotRated(id_user, genre);
     }
 
-    public List<Movie> getListMoviesRated(int id_user, String genre) {
+    public List<Movie> getListMoviesRated(long id_user, String genre) {
         return movieRepository.getListMoviesRated(id_user, genre);
     }
     

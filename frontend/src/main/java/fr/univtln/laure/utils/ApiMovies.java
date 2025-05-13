@@ -15,7 +15,7 @@ public class ApiMovies {
     private static final HttpClient client = HttpClient.newHttpClient();
 
 
-    public static JSONArray ListNotRate(int id_user, String genre) throws Exception {
+    public static JSONArray ListNotRate(long id_user, String genre) throws Exception {
 
         String url = String.format("%s/movies/notrate/%d/%s", BASE_URL, id_user, genre);
 
@@ -33,7 +33,7 @@ public class ApiMovies {
         return new JSONArray(response.body());
     }
 
-    public static JSONArray ListRated(int id_user, String genre) throws Exception {
+    public static JSONArray ListRated(long id_user, String genre) throws Exception {
 
         String url = String.format("%s/movies/rated/%d/%s", BASE_URL, id_user, genre);
 
