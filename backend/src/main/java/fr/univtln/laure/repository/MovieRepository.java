@@ -24,6 +24,7 @@ public class MovieRepository{
         return em;
     }
 
+
     public List<Movie> getListMoviesNotRated(int id_user, String genre) {
         genre = "%" + genre + "%";
         return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id NOT IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
@@ -41,6 +42,18 @@ public class MovieRepository{
     
     public List<String> getGenres() {
         return em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
+
+    public void persist(Movie movie) {
+        em.persist(movie);
+    }
+    
+    public Movie merge(Movie movie) {
+        return em.merge(movie);
+    }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Movie").executeUpdate();
+
     }
 }
 

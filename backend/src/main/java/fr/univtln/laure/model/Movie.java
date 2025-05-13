@@ -13,7 +13,6 @@ import jakarta.persistence.Entity;
 @Entity
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column

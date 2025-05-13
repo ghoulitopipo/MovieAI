@@ -1,5 +1,6 @@
 package fr.univtln.laure.repository;
 
+import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.model.Rating;
 
 import jakarta.persistence.NoResultException;
@@ -24,6 +25,7 @@ public class RatingRepository {
         return em.find(Rating.class, id);
     }
 
+
     public List<Rating> findAllRatingsMovies(int id_movie) {
         try {
             return em.createQuery("SELECT r FROM Rating r WHERE r.movie.id = :id_movie", Rating.class)
@@ -43,5 +45,17 @@ public class RatingRepository {
         } catch (NoResultException e) {
             return -1.0f;
         }
+
+    public void persist(Rating rating) {
+        em.persist(rating);
+    }
+    
+    public Rating merge(Rating rating) {
+        return em.merge(rating);
+    }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Rating").executeUpdate();
+
     }
 }

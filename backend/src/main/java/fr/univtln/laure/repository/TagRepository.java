@@ -1,5 +1,6 @@
 package fr.univtln.laure.repository;
 
+import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.model.Tag;
 
 import jakarta.persistence.NoResultException;
@@ -22,5 +23,17 @@ public class TagRepository {
 
     public Tag findById(Long id) {
         return em.find(Tag.class, id);
+    }
+
+    public void persist(Tag tag) {
+        em.persist(tag);
+    }
+    
+    public Tag merge(Tag tag) {
+        return em.merge(tag);
+    }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Tag").executeUpdate();
     }
 }

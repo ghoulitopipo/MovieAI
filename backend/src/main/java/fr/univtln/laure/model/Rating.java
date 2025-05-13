@@ -7,8 +7,10 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
+import fr.univtln.laure.service.DateConverter;
 
 @Getter
 @Setter
@@ -28,5 +30,6 @@ public class Rating {
     private float rating;
 
     @Column
+    @Convert(converter = DateConverter.class)
     private LocalDate date;
 }
