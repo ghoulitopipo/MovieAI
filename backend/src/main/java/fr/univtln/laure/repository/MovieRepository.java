@@ -42,7 +42,8 @@ public class MovieRepository{
     
     public List<String> getGenres() {
         return em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
-
+    }
+    
     public void persist(Movie movie) {
         em.persist(movie);
     }

@@ -45,7 +45,8 @@ public class RatingRepository {
         } catch (NoResultException e) {
             return -1.0f;
         }
-
+    }
+    
     public void persist(Rating rating) {
         em.persist(rating);
     }
