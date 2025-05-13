@@ -4,7 +4,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import fr.univtln.laure.model.Movie;
 
 @ApplicationScoped
@@ -34,16 +39,30 @@ public class MovieRepository{
     }
 
     public List<Movie> getListMoviesRated(int id_user, String genre) {
-        return em.createQuery("SELECT m FROM Movie m WHERE m.genre = :genre AND m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
+        genre = "%" + genre + "%";
+        return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
                 .setParameter("id_user", id_user)
                 .setParameter("genre", genre)
                 .getResultList();
     }
     
     public List<String> getGenres() {
-        return em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
+        List<String> badgenres = em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
+        
+        Set<String> uniqueGenres = new TreeSet<>(); 
+
+        for (String genres : badgenres) {
+            String[] splitGenres = genres.split("\\|");
+            uniqueGenres.addAll(Arrays.asList(splitGenres));
+        }
+
+        for (String genre : uniqueGenres) {
+            System.out.println(genre);
+        }
+
+        return new ArrayList<>(uniqueGenres);
     }
-    
+
     public void persist(Movie movie) {
         em.persist(movie);
     }
