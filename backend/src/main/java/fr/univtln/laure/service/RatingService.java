@@ -20,4 +20,23 @@ public class RatingService {
     public List<Rating> getAllRatings() {
         return ratingRepository.findAllRatings();
     }
+
+    public float getaverageRating(int id_movie) {
+        List<Rating> ratings = ratingRepository.findAllRatingsMovies(id_movie);
+        float sum = 0;
+        int count = 0;
+
+        for (Rating rating : ratings) {
+            if (rating.getMovie().getId() == id_movie) {
+                sum += rating.getRating();
+                count++;
+            }
+        }
+ 
+        return sum / count;
+    }
+
+    public float getRatingFloat(int id_movie, int id_user) {
+        return ratingRepository.getRatingFloat(id_movie, id_user);
+    }
 }

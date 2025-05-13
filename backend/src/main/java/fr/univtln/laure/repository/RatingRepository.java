@@ -25,6 +25,27 @@ public class RatingRepository {
         return em.find(Rating.class, id);
     }
 
+
+    public List<Rating> findAllRatingsMovies(int id_movie) {
+        try {
+            return em.createQuery("SELECT r FROM Rating r WHERE r.movie.id = :id_movie", Rating.class)
+                    .setParameter("id_movie", id_movie)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public float getRatingFloat(int id_movie, int id_user) {
+        try {
+            return em.createQuery("SELECT r.rating FROM Rating r WHERE r.movie.id = :id_movie AND r.user.id = :id_user", Float.class)
+                    .setParameter("id_movie", id_movie)
+                    .setParameter("id_user", id_user)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return -1.0f;
+        }
+
     public void persist(Rating rating) {
         em.persist(rating);
     }
@@ -35,5 +56,6 @@ public class RatingRepository {
 
     public void deleteAll() {
         em.createQuery("DELETE FROM Rating").executeUpdate();
+
     }
 }

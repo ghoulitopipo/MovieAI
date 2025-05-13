@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.univtln.laure.utils.ApiMovies;
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +24,9 @@ public class Main extends Application{
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        System.out.println(ApiMovies.ListNotRate(1, "Drama"));
         launch(args);
     }
 }
