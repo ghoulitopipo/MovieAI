@@ -71,4 +71,28 @@ public class ApiMovies {
 
         return genres;
     }
+
+        public static List<String> get8movies(int x) throws Exception {
+        String url = String.format("%s/movies/8movies/%d", BASE_URL, x);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+
+        JSONArray jsonArray = new JSONArray(response.body());
+        List<String> movie = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            movie.add(jsonArray.getString(i));
+        }
+
+        return movie;
+    }
 }

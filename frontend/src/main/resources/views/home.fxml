@@ -2,69 +2,77 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fr.univtln.laure.controllers.Home"
-            prefWidth="900" prefHeight="650"
-            styleClass="root-pane"
-            stylesheets="@../styles/home.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Home" stylesheets="@../styles/home.css">
 
-       <Label text="Bienvenue sur votre espace"
-            styleClass="welcome-label"
-            AnchorPane.topAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-            alignment="CENTER"/>
+    <!-- BARRE SUPÉRIEURE : bouton recherche -->
+    <top>
+        <HBox alignment="TOP_RIGHT" spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="searchButton" text="🔍" styleClass="search-button"/>
+            <Button fx:id="disconectButton" text="Deconnexion" styleClass="disconect-button" onAction="#handleDisconnect" />
+        </HBox>
+    </top>
 
-       <GridPane xmlns:fx="http://javafx.com/fxml/1"
-            styleClass="button-bar" prefWidth="900" prefHeight="50"
-            alignment="CENTER" hgap="25" vgap="10"
-            AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="45">
-  
-      <!-- Colonne vide pour centrer -->
-      <Label GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <!-- CENTRE : Message + listes -->
+    <center>
+        <VBox alignment="CENTER" spacing="30" BorderPane.alignment="CENTER">
+            <Label text="Bienvenue dans votre catalogue de films !" styleClass="welcome-text"/>
 
+            <!-- SECTION : Recommandé pour vous -->
+            <VBox spacing="10">
+                <Label text="Recommandé pour vous" styleClass="section-title"/>
+                <HBox spacing="10" alignment="CENTER">
 
-       <Button fx:id="MovieButton" text="Movie" onAction="#openMovie" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-       <Button fx:id="deconnexionButton" text="Déconnexion" onAction="#handleDisconnect" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-      
-      <!-- Colonne vide pour centrer -->
-      <Label GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-  </GridPane>
+                    <!-- Flèche gauche -->
+                    <Button text="◀" styleClass="arrow-button" fx:id="recommendedLeft" onAction="#updateMoviesB"/>
 
-    <!-- Cours de la journée -->
-    <Label text="Aujourd'hui"
-           styleClass="today-label"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="160"/>
+                    <!-- Films -->
+                    <HBox spacing="15" alignment="CENTER" fx:id="recommendedContainer">
+                        <StackPane fx:id="recommended1" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended2" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended3" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended4" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended5" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended6" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended7" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="recommended8" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                    </HBox>
 
-    <!-- Ajout du VBox ici pour afficher les cours -->
-    <VBox fx:id="coursBox" styleClass="cours-box"
-          AnchorPane.leftAnchor="16" AnchorPane.topAnchor="150"
-          prefWidth="400" prefHeight="600">
-        <!-- Les cours s'afficheront ici dynamiquement -->
-    </VBox>
+                    <!-- Flèche droite -->
+                    <Button text="▶" styleClass="arrow-button" fx:id="recommendedRight" onAction="#updateMoviesN"/>
+                </HBox>
+            </VBox>
 
-    <!-- Devoirs -->
-    <Label text="Notes"
-           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="640"/>
+            <!-- SECTION : D'autres comme vous ont aimé -->
+            <VBox spacing="10">
+                <Label text="D'autres comme vous ont aimé" styleClass="section-title"/>
+                <HBox spacing="10" alignment="CENTER">
 
+                    <!-- Flèche gauche -->
+                    <Button text="◀" styleClass="arrow-button" fx:id="likedLeft" onAction="#updateMoviesB"/>
 
-    <ScrollPane fx:id="noteScrollPane" styleClass="note-scroll-pane"
-                AnchorPane.leftAnchor="460" AnchorPane.topAnchor="150"
-                prefWidth="400" prefHeight="600">
-        <VBox fx:id="notesBox" styleClass="notes-box"
-              spacing="10" alignment="TOP_CENTER"/>
-    </ScrollPane>
+                    <!-- Films -->
+                    <HBox spacing="15" alignment="CENTER" fx:id="likedContainer">
+                        <StackPane fx:id="liked1" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked2" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked3" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked4" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked5" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked6" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked7" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                        <StackPane fx:id="liked8" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                    </HBox>
 
-    <!-- Absences -->
-    <Label text="Absences"
-           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="1068"/>
-    <ScrollPane fx:id="absencesScrollPane" styleClass="absences-scroll-pane"
-                AnchorPane.leftAnchor="903" AnchorPane.topAnchor="150"
-                prefWidth="400" prefHeight="600">
-        <VBox fx:id="absencesBox" styleClass="absences-box"
-              spacing="10" alignment="TOP_CENTER"/>
-    </ScrollPane>
+                    <!-- Flèche droite -->
+                    <Button text="▶" styleClass="arrow-button" fx:id="likedRight" onAction="#updateMoviesN"/>
+                </HBox>
+            </VBox>
 
-</AnchorPane>
+        </VBox>
+    </center>
+</BorderPane>

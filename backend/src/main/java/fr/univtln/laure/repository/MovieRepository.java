@@ -75,5 +75,12 @@ public class MovieRepository{
         em.createQuery("DELETE FROM Movie").executeUpdate();
 
     }
+
+        public List<String> get8movies(int x) {
+        return em.createQuery("SELECT m.title FROM Movie m", String.class)
+                .setFirstResult(x)
+                .setMaxResults(8)
+                .getResultList();
+    }
 }
 

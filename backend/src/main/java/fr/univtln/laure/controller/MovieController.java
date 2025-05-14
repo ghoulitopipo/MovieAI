@@ -57,4 +57,15 @@ public class MovieController {
         }
         return Response.ok(genres).build();
     }
+
+    @GET
+    @Path("/8movies/{x}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get8movies(@PathParam("x") int x) {
+        List<String> movie = movieService.get8movies(x);
+        if (movie == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movie).build();
+    }
 }

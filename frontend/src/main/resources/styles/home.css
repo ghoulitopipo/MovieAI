@@ -1,81 +1,55 @@
-.root-pane {
-    -fx-background-color: #d7265b;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.5, 0, 0);
-}
-
-.welcome-label {
-    -fx-font-size: 20px;
+.welcome-text {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: black;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 0, 1);
+    -fx-text-fill: #333;
 }
 
-.button-bar {
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-width: 0.2;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
-}
-
-.button {
-    -fx-background-color: #a81d47;
-    -fx-text-fill: white;
-    -fx-background-radius: 30;
-    -fx-font-size: 16px;
-    -fx-cursor: hand;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0.5, 0, 0);
-    -fx-border-width: 1;
-}
-
-.button:hover {
-    -fx-background-color: #94183d;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0, 1);
-}
-
-.today-label {
+.section-title {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: black;
+    -fx-text-fill: #555;
 }
 
-.cours-box {
-    -fx-background-color: aliceblue;
+.movie-poster {
+    -fx-pref-width: 100px;
+    -fx-pref-height: 150px;
+    -fx-background-color: #cccccc;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0.3, 2, 2);
+}
+
+.arrow-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 20px;
+    -fx-text-fill: #444;
+    -fx-cursor: hand;
+}
+
+.arrow-button:hover {
+    -fx-text-fill: #222;
+}
+
+.search-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+    -fx-text-fill: #444;
+    -fx-cursor: hand;
+    -fx-padding: 5 10;
+}
+
+.search-button:hover {
+    -fx-text-fill: #222;
+}
+
+.disconect-button {
+    -fx-background-color: transparent;
     -fx-border-color: black;
-    -fx-border-width: 1;
-    -fx-font-size: 16px;
-    -fx-padding: 10 0 0 20;
-    -fx-spacing: 10;
-    -fx-alignment: TOP_LEFT;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
+    -fx-font-size: 18px;
+    -fx-text-fill: #444;
+    -fx-cursor: hand;
+    -fx-padding: 5 10;
 }
 
-.note-scroll-pane {
-    -fx-background-color: aliceblue;
-    -fx-border-color: black;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
-}
-
-.notes-box {
-    -fx-font-size: 16px;
-    -fx-padding: 10 0 0 20;
-    -fx-spacing: 10;
-    -fx-alignment: TOP_CENTER;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 0);
-}
-
-.absences-scroll-pane {
-    -fx-background-color: aliceblue;
-    -fx-border-color: black;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0);
-}
-
-.absences-box {
-    -fx-font-size: 16px;
-    -fx-padding: 10 0 0 20;
-    -fx-spacing: 10;
-    -fx-alignment: TOP_CENTER;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.5, 0, 0);
+.disconect-button:hover {
+    -fx-text-fill: #222;
 }
