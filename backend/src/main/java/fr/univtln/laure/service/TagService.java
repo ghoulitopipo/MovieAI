@@ -19,12 +19,12 @@ public class TagService {
     }
 
     @Transactional
-    public void addTag(long id_movie, long id_user, String tag) {
-        tagRepository.addTag(id_movie, id_user, tag);
+    public Tag addTag(long id_movie, long id_user, String tag) {
+        return tagRepository.addTag(id_movie, id_user, tag);
     }
 
     @Transactional
-    public void deleteTag(long id_movie, long id_user, String tag) {
-        tagRepository.deleteTag(id_movie, id_user, tag);
+    public Tag deleteTag(long id_movie, long id_user, String tag) {
+        return tagRepository.deleteTag(id_movie, id_user, tag);
     }
 }

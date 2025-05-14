@@ -21,7 +21,6 @@ public class ApiMovies {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .GET() 
                 .build();
 
@@ -39,7 +38,6 @@ public class ApiMovies {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .GET() 
                 .build();
 
@@ -55,7 +53,6 @@ public class ApiMovies {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/movies/genres"))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .GET() 
                 .build();
 

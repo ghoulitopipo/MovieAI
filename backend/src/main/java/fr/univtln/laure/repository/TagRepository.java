@@ -41,21 +41,26 @@ public class TagRepository {
     }
 
     @Transactional
-    public void addTag(long id_movie, long id_user, String tag) {
+    public Tag addTag(long id_movie, long id_user, String tag) {
+        try {
+            Movie movie = em.find(Movie.class, id_movie);
+            Users user = em.find(Users.class, id_user);
 
-        Movie movie = em.find(Movie.class, id_movie);
-        Users user = em.find(Users.class, id_user);
-
-        Tag tagEntity = new Tag();
-        tagEntity.setMovie(movie);
-        tagEntity.setUser(user);
-        tagEntity.setTag(tag);
-        tagEntity.setDate(LocalDate.now());
-        em.persist(tagEntity);
+            Tag tagEntity = new Tag();
+            tagEntity.setMovie(movie);
+            tagEntity.setUser(user);
+            tagEntity.setTag(tag);
+            tagEntity.setDate(LocalDate.now());
+            em.persist(tagEntity);
+            return tagEntity;
+        } catch (Exception e) {
+            return null;
+        }
+        
     }
 
     @Transactional
-    public void deleteTag(long id_movie, long id_user, String tag) {
+    public Tag deleteTag(long id_movie, long id_user, String tag) {
         try {
             Tag tagEntity = em.createQuery("SELECT t FROM Tag t WHERE t.movie.id = :id_movie AND t.user.id = :id_user AND t.tag = :tag", Tag.class)
                     .setParameter("id_movie", id_movie)
@@ -63,7 +68,10 @@ public class TagRepository {
                     .setParameter("tag", tag)
                     .getSingleResult();
             em.remove(tagEntity);
+            return tagEntity;
         } catch (NoResultException e) {
+            return null;
         }
+
     }
 }

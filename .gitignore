@@ -6,3 +6,5 @@ frontend/target/
 backend/target/
 
 .vscode/
+
+frontend/dependency-reduced-pom.xml
