@@ -9,17 +9,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ApiRatings {
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
 
 
-    public static float AverageRating(long id_movie) throws Exception {
+    public static float getRating(long id_movie, long id_user) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/ratings/get/" + id_movie + "/" + id_user))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JSONObject jsonResponse = new JSONObject(response.body());
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+        return (float) jsonResponse.getLong("rating");
+    }
+
+    public static float averageRating(long id_movie) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/ratings/average/" + id_movie))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .GET() 
                 .build();
 
@@ -32,25 +48,25 @@ public class ApiRatings {
         return Float.parseFloat(response.body());
     }
 
-    public static Map<String, Object> AverageRatingAndCount(JSONArray movies, long id_user) throws Exception {
+    public static Map<String, Object> averageRatingAndCount(JSONArray movies, long id_user) throws Exception {
         float total = 0f;
         int count = 0;
 
         for (int i = 0; i < movies.length(); i++) {
             long id_movie = movies.getLong(i);
 
-            String url = String.format("%s/ratings/getFloat/%d/%d", BASE_URL, id_movie, id_user);
+            String url = String.format("%s/ratings/get/%d/%d", BASE_URL, id_movie, id_user);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
                     .GET()
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                float rating = Float.parseFloat(response.body());
+                JSONObject jsonResponse = new JSONObject(response.body());
+                float rating = (float) jsonResponse.getLong("rating");
                 total += rating;
                 count++;
             } else {
@@ -71,23 +87,22 @@ public class ApiRatings {
 
     public void addRating(long id_movie, long id_user, float rating) throws Exception {
 
-        String url = String.format("%s/ratings/add/%d/%d", BASE_URL, id_movie, id_user);
+        String url = String.format("%s/ratings/%d/%d", BASE_URL, id_movie, id_user);
 
         HttpRequest requestGet = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .GET()
                 .build();
 
         HttpResponse<String> responseGet = client.send(requestGet, HttpResponse.BodyHandlers.ofString());
 
         if (responseGet.statusCode() == 204) {
-            url = String.format("%s/ratings/modify/%d/%d/%f", BASE_URL, id_movie, id_user, rating);
+            String form = "id_movie=" + id_movie + "&id_user=" + id_user + "&rating=" + rating;
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
+                    .uri(URI.create(BASE_URL + "/ratings/modify"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .PUT(HttpRequest.BodyPublishers.noBody())
+                    .PUT(HttpRequest.BodyPublishers.ofString(form)) 
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -97,12 +112,12 @@ public class ApiRatings {
             }
 
         } else{
-            url = String.format("%s/ratings/add/%d/%d/%f", BASE_URL, id_movie, id_user, rating);
-
+            String form = "id_movie=" + id_movie + "&id_user=" + id_user + "&rating=" + rating;
+            
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
+                    .uri(URI.create(BASE_URL + "/ratings/add"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.noBody())
+                    .POST(HttpRequest.BodyPublishers.ofString(form)) 
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

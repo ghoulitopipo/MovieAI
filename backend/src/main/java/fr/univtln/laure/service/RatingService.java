@@ -27,6 +27,11 @@ public class RatingService {
 
     public float getaverageRating(long id_movie) {
         List<Rating> ratings = ratingRepository.findAllRatingsMovies(id_movie);
+        
+        if (ratings == null || ratings.isEmpty()) {
+            return -1.f;
+        }
+
         float sum = 0;
         int count = 0;
 
@@ -40,21 +45,17 @@ public class RatingService {
         return sum / count;
     }
 
-    public float getRatingFloat(long id_movie, long id_user) {
-        return ratingRepository.getRatingFloat(id_movie, id_user);
-    }
-
     public Rating getRating(long id_movie, long id_user) {
         return ratingRepository.getRating(id_movie, id_user);
     }
 
     @Transactional
-    public void addRating(long id_movie, long id_user, float rating) {
-        ratingRepository.addRating(id_movie, id_user, rating);
+    public Rating addRating(long id_movie, long id_user, float rating) {
+        return ratingRepository.addRating(id_movie, id_user, rating);
     }
 
     @Transactional
-    public void modifyRating(long id_movie, long id_user, float rating) {
-        ratingRepository.modifyRating(id_movie, id_user, rating);
+    public Rating modifyRating(long id_movie, long id_user, float rating) {
+        return ratingRepository.modifyRating(id_movie, id_user, rating);
     }
 }

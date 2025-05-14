@@ -23,8 +23,9 @@
       <!-- Colonne vide pour centrer -->
       <Label GridPane.columnIndex="0" GridPane.rowIndex="0"/>
   
-        <Button fx:id="deconnexionButton" text="Déconnexion" onAction="#handleDisconnect" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-      
+       <Button fx:id="deconnexionButton" text="Déconnexion" onAction="#handleDisconnect" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+       <Button fx:id="retourButton" text="Retour" onAction="#closeMovie" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
       <!-- Colonne vide pour centrer -->
       <Label GridPane.columnIndex="3" GridPane.rowIndex="0"/>
   </GridPane>

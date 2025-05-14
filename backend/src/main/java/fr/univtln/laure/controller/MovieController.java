@@ -5,6 +5,8 @@ import fr.univtln.laure.service.MovieService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.util.List;
 
 @Path("/movies")
@@ -15,28 +17,44 @@ public class MovieController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    public Response getAllMovies() {
+        List<Movie> movies = movieService.getAllMovies();
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
     }
 
     @GET
     @Path("/notrate/{id_user}/{genre}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getListMoviesNotRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
-        return movieService.getListMoviesNotRated(id_user, genre);
+    public Response getListMoviesNotRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
+        List<Movie> movies = movieService.getListMoviesNotRated(id_user, genre);
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
 }
 
     @GET
     @Path("/rated/{id_user}/{genre}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getListMoviesRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
-        return movieService.getListMoviesRated(id_user, genre);
+    public Response getListMoviesRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
+        List<Movie> movies = movieService.getListMoviesRated(id_user, genre);
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
     }
 
     @GET
     @Path("/genres")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getGenres() {
-        return movieService.getGenres();
+    public Response getGenres() {
+        List<String> genres = movieService.getGenres();
+        if (genres == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(genres).build();
     }
 }

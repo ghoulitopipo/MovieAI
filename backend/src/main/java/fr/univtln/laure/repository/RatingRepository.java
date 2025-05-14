@@ -41,17 +41,6 @@ public class RatingRepository {
             return null;
         }
     }
-
-    public float getRatingFloat(long id_movie, long id_user) {
-        try {
-            return em.createQuery("SELECT r.rating FROM Rating r WHERE r.movie.id = :id_movie AND r.user.id = :id_user", Float.class)
-                    .setParameter("id_movie", id_movie)
-                    .setParameter("id_user", id_user)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return -1.0f;
-        }
-    }
     
     public void persist(Rating rating) {
         em.persist(rating);
@@ -78,19 +67,25 @@ public class RatingRepository {
     }
 
     @Transactional
-    public void addRating(long id_movie, long id_user, float rating) {
-        if (getRating(id_movie, id_user) != null) {
-            modifyRating(id_movie, id_user, rating);    
-        } else{
-            Movie movie = em.find(Movie.class, id_movie);
-            Users user = em.find(Users.class, id_user);
-            Rating newRating = new Rating();
-            newRating.setMovie(movie);
-            newRating.setUser(user);
-            newRating.setRating(rating);
-            newRating.setDate(LocalDate.now());
-            em.persist(newRating);
+    public Rating addRating(long id_movie, long id_user, float rating) {
+        try {
+            if (getRating(id_movie, id_user) != null) {
+                return modifyRating(id_movie, id_user, rating); 
+            } else{
+                Movie movie = em.find(Movie.class, id_movie);
+                Users user = em.find(Users.class, id_user);
+                Rating newRating = new Rating();
+                newRating.setMovie(movie);
+                newRating.setUser(user);
+                newRating.setRating(rating);
+                newRating.setDate(LocalDate.now());
+                em.persist(newRating);
+                return newRating;
+            }
+        } catch (Exception e) {
+            return null;
         }
+    
         
     }
 
@@ -103,14 +98,21 @@ public class RatingRepository {
     }
 
     @Transactional
-    public void modifyRating(long id_movie, long id_user, float rating) {
-        Rating existingRating = getRating(id_movie, id_user);
-        if (existingRating.getRating() != rating) {
-            existingRating.setRating(rating);
-            em.merge(existingRating);
-        } else{
-            deleteRating(id_movie, id_user);
+    public Rating modifyRating(long id_movie, long id_user, float rating) {
+        try {
+            Rating existingRating = getRating(id_movie, id_user);
+            if (existingRating.getRating() != rating) {
+                existingRating.setRating(rating);
+                em.merge(existingRating);
+                return existingRating;
+            } else{
+                deleteRating(id_movie, id_user);
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
         }
+        
     }
     
 }

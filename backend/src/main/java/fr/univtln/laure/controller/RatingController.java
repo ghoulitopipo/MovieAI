@@ -5,7 +5,10 @@ import fr.univtln.laure.service.RatingService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+
 import java.util.List;
+
+import jakarta.ws.rs.core.Response;
 
 @Path("/ratings")
 public class RatingController {
@@ -15,45 +18,56 @@ public class RatingController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Rating> getAllRatings() {
-        return ratingService.getAllRatings();
+    public Response getAllRatings() {
+        List<Rating> rate = ratingService.getAllRatings();
+        if (rate == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(rate).build();
     }
 
     @GET
     @Path("/average/{id_movie}")
     @Produces(MediaType.APPLICATION_JSON)
-    public float getaverageRating(@PathParam("id_movie") long id_movie) {
-        return ratingService.getaverageRating(id_movie);
-    }
-
-    @GET
-    @Path("/getFloat/{id_movie}/{id_user}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public float getRatingFloat(@PathParam("id_movie") long id_movie, @PathParam("id_user") long id_user) {
-        return ratingService.getRatingFloat(id_movie, id_user);
+    public Response getaverageRating(@PathParam("id_movie") long id_movie) {
+        float rate = ratingService.getaverageRating(id_movie);
+        if (rate == -1.f) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(rate).build();
     }
 
     @GET
     @Path("/get/{id_movie}/{id_user}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Rating getRating(@PathParam("id_movie") long id_movie, @PathParam("id_user") long id_user) {
-        return ratingService.getRating(id_movie, id_user);
+    public Response getRating(@PathParam("id_movie") long id_movie, @PathParam("id_user") long id_user) {
+        Rating rate = ratingService.getRating(id_movie, id_user);
+        if (rate == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(rate).build();
     }
 
     @POST
-    @Path("/add/{id_movie}/{id_user}/{rating}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void addRating(@PathParam("id_movie") long id_movie, @PathParam("id_user") long id_user, @PathParam("rating") float rating) {
-        ratingService.addRating(id_movie, id_user, rating);
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response addRating(@FormParam("id_movie") long id_movie, @FormParam("id_user") long id_user, @FormParam("rating") float rating) {
+        Rating rate = ratingService.addRating(id_movie, id_user, rating);
+        if (rate == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(rate).build();
     }
 
     @PUT
-    @Path("/modify/{id_movie}/{id_user}/{rating}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void modifyRating(@PathParam("id_movie") long id_movie, @PathParam("id_user") long id_user, @PathParam("rating") float rating) {
-        ratingService.modifyRating(id_movie, id_user, rating);
+    @Path("/modify")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response modifyRating(@FormParam("id_movie") long id_movie, @FormParam("id_user") long id_user, @FormParam("rating") float rating) {
+        Rating rate = ratingService.modifyRating(id_movie, id_user, rating);
+        if (rate == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(rate).build();
     }
     
 }

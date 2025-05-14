@@ -11,12 +11,13 @@ public class ApiTags {
     private static final HttpClient client = HttpClient.newHttpClient();
 
     public void addTag(long id_movie, long id_user, String tag) throws Exception {
-        String url = String.format("%s/tags/add/%d/%d/%f", BASE_URL, id_movie, id_user, tag);
+
+        String form = "id_movie=" + id_movie + "&id_user=" + id_user + "&tag=" + tag;
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(BASE_URL + "/tags/add"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.noBody())
+                .POST(HttpRequest.BodyPublishers.ofString(form)) 
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -33,7 +34,6 @@ public class ApiTags {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .DELETE()
                 .build();
 
