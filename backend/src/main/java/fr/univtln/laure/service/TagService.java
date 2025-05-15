@@ -27,4 +27,12 @@ public class TagService {
     public Tag deleteTag(long id_movie, long id_user, String tag) {
         return tagRepository.deleteTag(id_movie, id_user, tag);
     }
+
+    public List<Tag> getAll(long id_movie) {
+        return tagRepository.getAll(id_movie);
+    }
+    
+    public List<Tag> getUser(long id_movie, long id_user) {
+        return tagRepository.getUser(id_movie, id_user);
+    }
 }

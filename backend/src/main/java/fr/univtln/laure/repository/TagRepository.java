@@ -74,4 +74,27 @@ public class TagRepository {
         }
 
     }
+
+    public List<Tag> getAll(long id_movie) {
+        try {
+            return em.createQuery("SELECT t FROM Tag t WHERE t.movie.id = :id_movie", Tag.class)
+                .setParameter("id_movie", id_movie)
+                .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+        
+    }
+
+    public List<Tag> getUser(long id_movie, long id_user) {
+        try{
+            return em.createQuery("SELECT t FROM Tag t WHERE t.movie.id = :id_movie AND t.user.id = :id_user", Tag.class)
+                .setParameter("id_movie", id_movie)
+                .setParameter("id_user", id_user)
+                .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+        
+    }
 }
