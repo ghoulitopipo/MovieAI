@@ -42,4 +42,26 @@ public class TagController {
         }
         return Response.ok(tagf).build();
     }
+
+    @GET
+    @Path("/get/{id_movie}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAll(@PathParam("id_movie") long id_movie) {
+        List<Tag> tagf = tagService.getAll(id_movie);
+        if (tagf == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(tagf).build();
+    }
+
+    @GET
+    @Path("/get/{id_movie}/{id_user}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUser(@PathParam("id_movie") long id_movie, @PathParam("id_movie") long id_user) {
+        List<Tag> tagf = tagService.getUser(id_movie, id_user);
+        if (tagf == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(tagf).build();
+    }
 }

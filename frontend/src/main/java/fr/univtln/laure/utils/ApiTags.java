@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.json.JSONArray;
+
 public class ApiTags {
     /*
      * This class is used to interact with the ratings API.
@@ -50,5 +52,39 @@ public class ApiTags {
         if (response.statusCode() != 200) {
             throw new IOException("Request failed with status: " + response.statusCode());
         }
+    }
+
+    public JSONArray getAll(long id_movie) throws Exception {
+        String url = String.format("%s/tags/get/%d", BASE_URL, id_movie);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+
+        return new JSONArray(response.body());
+    }
+    
+    public JSONArray getUser(long id_movie, long id_user) throws Exception {
+        String url = String.format("%s/tags/get/%d/%d", BASE_URL, id_movie, id_user);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+
+        return new JSONArray(response.body());
     }
 }
