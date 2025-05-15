@@ -1,59 +1,24 @@
-from flask import Flask, jsonify
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import requests
 
-app = Flask(__name__)
+BASE_URL = "http://localhost:8080"  # Backend Java
 
-def get_db_connection():
-    return psycopg2.connect(
-        dbname='your_db_name',
-        user='your_username',
-        password='your_password',
-        host='localhost',
-        port='5432'
-    )
+def get_not_rated(user_id, genre):
+    url = f"{BASE_URL}/movies/notrate/{user_id}/{genre}"
+    return requests.get(url).json()
 
-@app.route('/ratings/by-genre/<int:user_id>')
-def ratings_by_genre(user_id):
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+def get_rated(user_id, genre):
+    url = f"{BASE_URL}/movies/rated/{user_id}/{genre}"
+    return requests.get(url).json()
 
-    query = """
-        SELECT M.genre, AVG(R.rating) AS avg_rating, COUNT(*) AS count
-        FROM Ratings R
-        JOIN Movies M ON R.movie_id = M.id
-        WHERE R.user_id = %s AND R.rating != 0
-        GROUP BY M.genre
-    """
-    cur.execute(query, (user_id,))
-    rows = cur.fetchall()
+def get_genres():
+    url = f"{BASE_URL}/movies/genres"
+    return requests.get(url).json()
 
-    cur.close()
-    conn.close()
+def get_rating(movie_id, user_id):
+    url = f"{BASE_URL}/{movie_id}/{user_id}"
+    return requests.get(url).json()
 
-    return jsonify(rows)
+def get_average(movie_id):
+    url = f"{BASE_URL}/average/{movie_id}"
+    return requests.get(url).json()
 
-@app.route('/unrated-movies/<int:user_id>/<genre>')
-def unrated_movies(user_id,genre):
-
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-
-    query = """
-        SELECT M.*
-        FROM Ratings R
-        JOIN Movies M ON R.movie_id = M.id
-        WHERE R.user_id = %s AND R.rating = 0 AND M.genre = %s
-    """
-    cur.execute(query, (user_id, genre))
-    rows = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    return jsonify(rows)
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
