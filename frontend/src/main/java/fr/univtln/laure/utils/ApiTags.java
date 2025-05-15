@@ -16,6 +16,10 @@ public class ApiTags {
      * - addTag(long id_movie, long id_user, String tag): to add a tag by a user (return void)
      *
      * - deleteTags(long id_movie, long id_user, String tag): to delete a tag by a user (return void)
+     *
+     * - getAll(long id_movie): to get all tags for a movie (return JSONArray)
+     * 
+     * - getUser(long id_movie, long id_user): to get all tags for a movie by a user (return JSONArray)
      */
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
