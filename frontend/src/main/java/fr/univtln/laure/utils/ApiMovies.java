@@ -11,43 +11,18 @@ import java.util.List;
 import org.json.JSONArray;
 
 public class ApiMovies {
+    /*
+     * This class is used to interact with the ratings API.
+     * It provides methods:
+     * 
+     * - ListNotRate(long id_user, String genre): to get the list of movies not rated by a user with a genre (return JSONArray)
+     * 
+     * - ListRated(long id_user, String genre): to get the list of movies rated by a user with a genre (return JSONArray)
+     * 
+     * - genres(): to get the list of genres (return List<String>)
+     */
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
-
-
-    public static JSONArray ListNotRate(long id_user, String genre) throws Exception {
-
-        String url = String.format("%s/movies/notrate/%d/%s", BASE_URL, id_user, genre);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET() 
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        
-        if (response.statusCode() != 200) {
-            throw new IOException("Request failed with status: " + response.statusCode());
-        }
-        return new JSONArray(response.body());
-    }
-
-    public static JSONArray ListRated(long id_user, String genre) throws Exception {
-
-        String url = String.format("%s/movies/rated/%d/%s", BASE_URL, id_user, genre);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET() 
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        
-        if (response.statusCode() != 200) {
-            throw new IOException("Request failed with status: " + response.statusCode());
-        }
-        return new JSONArray(response.body());
-    }
 
     public static List<String> genres() throws Exception {
 

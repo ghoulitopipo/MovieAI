@@ -23,7 +23,7 @@ public class MoviePage {
     @Setter
     private static long idMovie;    
 
-    private float rating = -1.f;
+    private float rating;
     private final Image halfStar = new Image(getClass().getResource("/images/star/star-half.png").toExternalForm());
     private final Image fullStar = new Image(getClass().getResource("/images/star/star-full.png").toExternalForm());
     private final Image blankStar = new Image(getClass().getResource("/images/star/star-blank.png").toExternalForm());
@@ -35,8 +35,9 @@ public class MoviePage {
         try {
             rating = ApiRatings.getRating(idMovie, Home.getIdConnexion());
         } catch (Exception e) {
-            e.printStackTrace();
+            rating = -1.f;
         }
+        
     }
 
     public void closeMovie(){

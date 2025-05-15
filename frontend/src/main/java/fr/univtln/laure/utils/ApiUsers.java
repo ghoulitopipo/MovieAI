@@ -6,6 +6,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ApiUsers {
+    /*
+     * This class is used to interact with the ratings API.
+     * It provides methods:
+     * 
+     * - login(String email, String password): to log in a user (return String)
+     * 
+     * - create(String username, String email, String password): to create a user (return String)
+     */
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
 

@@ -7,6 +7,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ApiTags {
+    /*
+     * This class is used to interact with the ratings API.
+     * It provides methods:
+     * 
+     * - addTag(long id_movie, long id_user, String tag): to add a tag by a user (return void)
+     *
+     * - deleteTags(long id_movie, long id_user, String tag): to delete a tag by a user (return void)
+     */
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
 

@@ -12,6 +12,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ApiRatings {
+    /*
+     * This class is used to interact with the ratings API.
+     * It provides methods:
+     * 
+     * - getRating(long id_movie, long id_user): to get the rating of a movie by a user (return float)
+     * 
+     * - averageRating(long id_movie): to get the average rating of a movie by all users (return float)
+     * 
+     * - averageRatingAndCount(JSONArray movies, long id_user): to get the average rating and count of ratings for a list of movies by a user (return Map<String, Object>)
+     * 
+     * - addRating(long id_movie, long id_user, float rating): to add, modify or delete a rating by a user (return void)
+     */
     private static final String BASE_URL = "http://localhost:8080"; // Base URL
     private static final HttpClient client = HttpClient.newHttpClient();
 
@@ -48,44 +60,13 @@ public class ApiRatings {
         return Float.parseFloat(response.body());
     }
 
-    public static Map<String, Object> averageRatingAndCount(JSONArray movies, long id_user) throws Exception {
-        float total = 0f;
-        int count = 0;
-
-        for (int i = 0; i < movies.length(); i++) {
-            long id_movie = movies.getLong(i);
-
-            String url = String.format("%s/ratings/get/%d/%d", BASE_URL, id_movie, id_user);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                JSONObject jsonResponse = new JSONObject(response.body());
-                float rating = (float) jsonResponse.getLong("rating");
-                total += rating;
-                count++;
-            } else {
-                System.err.println("Failed to get rating for movie ID " + id_movie);
-            }
-        }
-
-        if (count == 0) {
-            throw new IllegalStateException("No valid responses received.");
-        }
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("average", total / count);
-        result.put("count", count);
-
-        return result;
-    }
-
     public void addRating(long id_movie, long id_user, float rating) throws Exception {
+        /*
+         * This method is used to add, modify or delete a rating by a user.
+         * If the user has already rated the movie, it modifies the rating.
+         * If the user has not rated the movie, it adds a new rating.
+         * If the old and new rate are equal, it deletes the rating.
+         */
 
         String url = String.format("%s/ratings/%d/%d", BASE_URL, id_movie, id_user);
 
