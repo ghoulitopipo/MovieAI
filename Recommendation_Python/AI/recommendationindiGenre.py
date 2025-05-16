@@ -1,35 +1,39 @@
-import recommendationflask
+import ApiBackend
 import sys
 import json
 
 def Notratedonegenre(u=0, genre="Action"):
-    LM = recommendationflask.get_not_rated(u, genre)
+    LM = ApiBackend.get_not_rated(u, genre)
     MM = []
     for movie_id in LM:
-        avg = recommendationflask.get_average(movie_id)
-        MM.append((movie_id, avg))
+        avg = ApiBackend.get_average(movie_id)
+        if avg is not None:
+            MM.append((movie_id, avg))
     MM.sort(key=lambda x: x[1], reverse=True)
     return MM
 
 def Matrixgenrerating(u=0):
-    LG = recommendationflask.get_genres()
+    LG = ApiBackend.get_genres()
     M = []
     for genre in LG:
-        LMG = recommendationflask.get_rated(u, genre)
+        LMG = ApiBackend.get_rated(u, genre)
         c = len(LMG)
         if c == 0:
             avg = 0
         else:
             s = 0
             for movie_id in LMG:
-                rating = recommendationflask.get_rating(movie_id, u)
-                s += rating
+                rating = ApiBackend.get_rating(movie_id, u)
+                if rating is not None:
+                    s += rating
+                else:
+                    print(f"Warning: rating is None for movie {movie_id} user {u}, skipping")
             avg = s / c
         M.append([genre, avg, c])
     return M
 
 def Allgenre():
-    LG = recommendationflask.get_genres()
+    LG = ApiBackend.get_genres()
     G = []
     for genre in LG:
         G.append([genre, 0])
@@ -86,9 +90,9 @@ def generate_recommendations(u=0):
     return LM
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        u = int(sys.argv[1])
+def launch(id_user):
+    if id_user >= 1:
+        u = id_user
     else:
         u = 0
 
@@ -96,4 +100,4 @@ if __name__ == "__main__":
 
     output = [movie_id for movie_id, score in recommendations]
 
-    print(json.dumps(output, ensure_ascii=False, indent=4))
+    return json.dumps(output, ensure_ascii=False, indent=4)
