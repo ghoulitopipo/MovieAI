@@ -36,10 +36,9 @@ public class RatingService {
         int count = 0;
 
         for (Rating rating : ratings) {
-            if (rating.getMovie().getId() == id_movie) {
-                sum += rating.getRating();
-                count++;
-            }
+            sum += rating.getRating();
+            count++;
+            
         }
  
         return sum / count;
