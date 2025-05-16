@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>fr.univtln.laure.tp</groupId>
+  <groupId>fr.univtln.laure</groupId>
   <artifactId>frontend</artifactId>
   <name>MovieAI</name>
   <version>1.0-SNAPSHOT</version>
@@ -26,7 +26,7 @@
               </artifactSet>
               <transformers>
                 <transformer>
-                  <mainClass>fr.univtln.laure.tp.Main</mainClass>
+                  <mainClass>fr.univtln.laure.Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -45,7 +45,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>fr.univtln.laure.tp.Main</mainClass>
+          <mainClass>fr.univtln.laure.Main</mainClass>
         </configuration>
       </plugin>
       <plugin>
@@ -76,9 +76,17 @@
       <version>20090211</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>11.1.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <properties>
     <version.lombok>1.18.36</version.lombok>
-    <version.javafx>23.0.2</version.javafx>
+    <java.version>17</java.version>
+    <version.javafx>17.0.2</version.javafx>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

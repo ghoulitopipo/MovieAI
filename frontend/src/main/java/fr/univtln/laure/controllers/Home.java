@@ -28,9 +28,15 @@ public class Home{
     @FXML
     private HBox recommendedContainer;
 
-    @Getter
-    @Setter
     private static int IdConnexion;
+
+    public static int getIdConnexion() {
+        return IdConnexion;
+    }
+
+    public static void setIdConnexion(int idConnexion) {
+        IdConnexion = idConnexion;
+    }
 
     private int scrollPaneElement = 0; 
 

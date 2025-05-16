@@ -39,9 +39,15 @@ public class MoviePage {
     @FXML private Button discoButton;
     @FXML private Label ratingLabel;
 
-    @Getter
-    @Setter
     private static long idMovie;    
+
+    public static void setIdMovie(long id) {
+    idMovie = id;
+    }
+
+    public static long getIdMovie() {
+    return idMovie;
+    }
 
     @FXML
     public void initialize() {
