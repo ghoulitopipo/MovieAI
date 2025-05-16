@@ -6,6 +6,9 @@ frontend/target/
 backend/target/
 
 .vscode/
+.venv/
 
 frontend/dependency-reduced-pom.xml
 frontend/modifiedPom.xml
+
+Recommendation_Python/AI/__pycache__/
