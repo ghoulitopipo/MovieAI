@@ -32,7 +32,7 @@ public class MovieService {
         String line;
         boolean firstLine = true;
         while ((line = reader.readLine()) != null) {
-            if (firstLine) { // ignorer l'en-tête
+            if (firstLine) {
                 firstLine = false;
                 continue;
             }
@@ -66,5 +66,9 @@ public class MovieService {
 
         public List<Movie> get8movies(int x) {
         return movieRepository.get8movies(x);
+    }
+
+    public Movie getMovieById(long id) {
+        return movieRepository.findById(id);
     }
 }

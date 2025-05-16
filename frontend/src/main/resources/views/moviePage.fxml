@@ -1,69 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.Rating?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="fr.univtln.laure.controllers.MoviePage"
-            prefWidth="900" prefHeight="650"
-            styleClass="root-pane"
-            stylesheets="@../styles/moviePage.css">
+            stylesheets="@../styles/moviePage.css" prefWidth="600" prefHeight="400">
 
-       <Label text="Bienvenue sur votre espace"
-            styleClass="welcome-label"
-            AnchorPane.topAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-            alignment="CENTER"/>
+    <left>
+        <VBox alignment="CENTER" spacing="10" styleClass="image-container">
+            <ImageView fx:id="posterImageView" fitWidth="200" fitHeight="300"/>
+        </VBox>
+    </left>
 
-       <GridPane xmlns:fx="http://javafx.com/fxml/1"
-            styleClass="button-bar" prefWidth="900" prefHeight="50"
-            alignment="CENTER" hgap="25" vgap="10"
-            AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="45">
-  
-      <!-- Colonne vide pour centrer -->
-      <Label GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-  
-       <Button fx:id="deconnexionButton" text="Déconnexion" onAction="#handleDisconnect" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-       <Button fx:id="retourButton" text="Retour" onAction="#closeMovie" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <center>
+        <VBox spacing="15" alignment="TOP_LEFT" styleClass="info-container">
+            <Label fx:id="titleLabel" styleClass="movie-title"/>
+            <Label fx:id="genresLabel" styleClass="movie-genres"/>
+        <Label text="Tags:"/>
+        <ScrollPane fitToWidth="true" prefHeight="100" prefWidth="180" vbarPolicy="ALWAYS">
+            <FlowPane fx:id="tagsBar" hgap="8" vgap="8" alignment="TOP_LEFT"/>
+        </ScrollPane>
 
-      <!-- Colonne vide pour centrer -->
-      <Label GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-  </GridPane>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Note :"/>
+                <Rating fx:id="rating" max="5"/>
+            </HBox>
 
-    <!-- Cours de la journée -->
-    <Label text="Aujourd'hui"
-           styleClass="today-label"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="160"/>
-
-    <!-- Ajout du VBox ici pour afficher les cours -->
-    <VBox fx:id="coursBox" styleClass="cours-box"
-          AnchorPane.leftAnchor="16" AnchorPane.topAnchor="150"
-          prefWidth="400" prefHeight="600">
-        <!-- Les cours s'afficheront ici dynamiquement -->
-    </VBox>
-
-    <!-- Devoirs -->
-    <Label text="Notes"
-           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="640"/>
-
-
-    <ScrollPane fx:id="noteScrollPane" styleClass="note-scroll-pane"
-                AnchorPane.leftAnchor="460" AnchorPane.topAnchor="150"
-                prefWidth="400" prefHeight="600">
-        <VBox fx:id="notesBox" styleClass="notes-box"
-              spacing="10" alignment="TOP_CENTER"/>
-    </ScrollPane>
-
-    <!-- Absences -->
-    <Label text="Absences"
-           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"
-           AnchorPane.topAnchor="110" AnchorPane.leftAnchor="1068"/>
-    <ScrollPane fx:id="absencesScrollPane" styleClass="absences-scroll-pane"
-                AnchorPane.leftAnchor="903" AnchorPane.topAnchor="150"
-                prefWidth="400" prefHeight="600">
-        <VBox fx:id="absencesBox" styleClass="absences-box"
-              spacing="10" alignment="TOP_CENTER"/>
-    </ScrollPane>
-
-</AnchorPane>
+            <Button fx:id="backButton" text="Retour" onAction="#handleHome"/>
+            <Button fx:id="discoButton" text="Deconnexion" onAction="#handleDisconnect"/>
+        </VBox>
+    </center>
+</BorderPane>
