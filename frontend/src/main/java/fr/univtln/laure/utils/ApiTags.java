@@ -58,7 +58,7 @@ public class ApiTags {
         }
     }
 
-    public JSONArray getAll(long id_movie) throws Exception {
+    public static JSONArray getAll(long id_movie) throws Exception {
         String url = String.format("%s/tags/get/%d", BASE_URL, id_movie);
 
         HttpRequest request = HttpRequest.newBuilder()

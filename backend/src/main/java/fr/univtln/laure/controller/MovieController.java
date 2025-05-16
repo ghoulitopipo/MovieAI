@@ -68,4 +68,15 @@ public class MovieController {
         }
         return Response.ok(movie).build();
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMovieById(@PathParam("id") long id) {
+        Movie movie = movieService.getMovieById(id);
+        if (movie == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movie).build();
+    }
 }

@@ -64,4 +64,29 @@ public class ApiMovies {
         JSONArray jsonArray = new JSONArray(response.body());
         return jsonArray;
     }
+
+public static JSONArray getMoviebyID(long x) throws Exception {
+    String url = String.format("%s/movies/%d", BASE_URL, x);
+
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .GET() 
+            .build();
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    
+    if (response.statusCode() != 200) {
+        throw new IOException("Request failed with status: " + response.statusCode());
+    }
+
+    String body = response.body().trim();
+    JSONArray jsonArray;
+    if (body.startsWith("{")) {
+        jsonArray = new JSONArray();
+        jsonArray.put(new org.json.JSONObject(body));
+    } else {
+        jsonArray = new JSONArray(body);
+    }
+    return jsonArray;
+}
 }
