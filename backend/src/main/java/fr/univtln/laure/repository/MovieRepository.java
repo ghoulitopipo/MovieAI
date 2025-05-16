@@ -76,8 +76,8 @@ public class MovieRepository{
 
     }
 
-        public List<String> get8movies(int x) {
-        return em.createQuery("SELECT m.title FROM Movie m", String.class)
+    public List<Movie> get8movies(int x) {
+        return em.createQuery("SELECT m FROM Movie m", Movie.class)
                 .setFirstResult(x)
                 .setMaxResults(8)
                 .getResultList();

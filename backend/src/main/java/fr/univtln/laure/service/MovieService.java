@@ -64,7 +64,7 @@ public class MovieService {
         return movieRepository.getGenres();
     }
 
-        public List<String> get8movies(int x) {
+        public List<Movie> get8movies(int x) {
         return movieRepository.get8movies(x);
     }
 }

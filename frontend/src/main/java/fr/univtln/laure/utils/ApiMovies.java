@@ -47,7 +47,7 @@ public class ApiMovies {
         return genres;
     }
 
-        public static List<String> get8movies(int x) throws Exception {
+        public static JSONArray get8movies(int x) throws Exception {
         String url = String.format("%s/movies/8movies/%d", BASE_URL, x);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -62,12 +62,6 @@ public class ApiMovies {
         }
 
         JSONArray jsonArray = new JSONArray(response.body());
-        List<String> movie = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            movie.add(jsonArray.getString(i));
-        }
-
-        return movie;
+        return jsonArray;
     }
 }
