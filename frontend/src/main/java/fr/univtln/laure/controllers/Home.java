@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import fr.univtln.laure.utils.ApiMovies;
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.fxml.FXML;
@@ -14,12 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
-
-import org.json.JSONArray;
 
 public class Home{
     @FXML
@@ -46,7 +43,7 @@ public class Home{
     @FXML
     public void initialize() {
         for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
-            int index = i; // nécessaire pour la lambda
+            int index = i; 
             if (recommendedContainer.getChildren().get(i) instanceof StackPane) {
                 StackPane stack = (StackPane) recommendedContainer.getChildren().get(i);
                 System.out.println("StackPane " + i);
@@ -79,10 +76,8 @@ public class Home{
         JSONArray MovieArr = ApiMovies.get8movies(scrollPaneElement);
         for (int i = 0; i < MovieArr.length(); i++) {
             org.json.JSONObject movieObj = MovieArr.getJSONObject(i);
-            // Extraction de l'id
             long id = movieObj.getLong("id");
             listIDMovie.add(id);
-            // Extraction du titre (ou adapte selon la clé)
             String title = movieObj.getString("title");
             listNameMovie.add(title);
         }
@@ -101,7 +96,7 @@ public class Home{
                     stack.getChildren().clear();
                     Label label = new Label(listNameMovie.get(i));
                     label.setWrapText(true);
-                    label.setMaxWidth(110); // un peu moins que le StackPane pour la marge
+                    label.setMaxWidth(110); 
                     stack.getChildren().add(label);
                 }
             }
@@ -126,7 +121,7 @@ public class Home{
                         stack.getChildren().clear();
                         Label label = new Label(listNameMovie.get(i));
                         label.setWrapText(true);
-                        label.setMaxWidth(110); // un peu moins que le StackPane pour la marge
+                        label.setMaxWidth(110); 
                         stack.getChildren().add(label);
                     }
                 }
