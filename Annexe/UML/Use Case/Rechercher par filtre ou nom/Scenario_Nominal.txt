@@ -1,0 +1,15 @@
+Scenario Nominal "Recherche par filtre ou nom":
+Description: L'utilisateur souhaite rechercher un film par son nom ou par des filtres (trie alros les recommendations)
+Acteur: Utilisateur, Base de donné.
+Pré-condition: avoir effécteur le cas d'usage : "Consulter les recommendations"
+Post_condition: aucune
+
+1- L'utilisateur saisit le nom du film et choisis le bon film.
+2- Le système envoie la recherche du film correspondant.
+3- La base de donné envoie le résultat.
+4- Le système affiche la page du film.
+
+A1- L'utilisateur recherche par filtre (prend place après la ligne 1 du scénario nominal):
+
+1- L'utilisateur saisit un ou des filtres.
+2- Le système affiche les films recommender correspondant à ces filtres.
