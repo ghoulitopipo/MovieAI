@@ -1,4 +1,4 @@
-from read_data import *
+import ApiBackend
 import math
 import time
 import numpy as np
@@ -43,8 +43,7 @@ def create_user_item_matrix(null_values=True):
     if null_values:
         user_rating_matrix[user_rating_matrix == 0] = np.nan
     else:
-        user_rating_matrix.fillna(0, inplace=True)
-        
+        user_rating_matrix = np.nan_to_num(user_rating_matrix)
     return user_rating_matrix
 
 def recommend_movies(ratings, user_index, k=20, n_recommendations=50):
@@ -98,7 +97,7 @@ if __name__ == "__main__":
     start = time.time()
 
     # Chargement des données
-    movies_data, links_data, ratings_data, tags_data = get_all_data()
+    movies_data, ratings_data, tags_data = ApiBackend.get_all_data()
     ratings_count = len(ratings_data)
     users_count = len(np.unique(ratings_data[:, 0]))
     movies_count = len(np.unique(movies_data[:, 0]))
@@ -125,7 +124,7 @@ if __name__ == "__main__":
     # Et on garde dans la liste seulement les notes "cachées"
 
     # Nombre de notes à enlever
-    n_ratings_to_remove = int(len(user_test_ratings) * 0.4)
+    n_ratings_to_remove = int(len(user_test_ratings) * 0.1)
 
     # Indices des notes à enlever choisis aléatoirement
     indices_to_remove = np.random.choice(len(user_test_ratings), n_ratings_to_remove, replace=False)
@@ -170,3 +169,22 @@ if __name__ == "__main__":
 
     end = time.time()
     print(f"Temps d'exécution : {end - start:.4f} secondes")
+
+
+def launch(id_user):
+    if id_user >= 1:
+        u = id_user
+    else:
+        u = 0
+    movies_data, ratings_data, tags_data = ApiBackend.get_all_data()
+    ratings_count = len(ratings_data)
+    users_count = len(np.unique(ratings_data[:, 0]))
+    movies_count = len(np.unique(movies_data[:, 0]))
+    max_movies_id = int(ratings_data[:, 1].max())
+    movies_id_dict, movies_index_dict = get_movies_id_dict()
+    R = create_user_item_matrix(True)
+    recommendations = recommend_movies(R,u,20,50)
+
+    output = [movie_id for movie_id in recommendations]
+
+    return json.dumps(output, ensure_ascii=False, indent=4)
