@@ -82,5 +82,11 @@ public class MovieRepository{
                 .setMaxResults(8)
                 .getResultList();
     }
+
+    public List<Movie> getMoviesByTitle(String title) {
+        return em.createQuery("SELECT m FROM Movie m WHERE m.title ILIKE :title", Movie.class)
+                .setParameter("title", "%" + title + "%")
+                .getResultList();
+    }
 }
 

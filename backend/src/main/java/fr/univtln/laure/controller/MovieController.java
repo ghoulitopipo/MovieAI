@@ -79,4 +79,15 @@ public class MovieController {
         }
         return Response.ok(movie).build();
     }
+
+    @GET
+    @Path("/title/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMoviesByTitle(@PathParam("title") String title) {
+        List<Movie> movies = movieService.getMoviesByTitle(title);
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
+    }
 }

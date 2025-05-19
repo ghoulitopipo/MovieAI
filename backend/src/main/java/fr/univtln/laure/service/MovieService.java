@@ -21,37 +21,6 @@ public class MovieService {
         return movieRepository.findAllMovies();
     }
 
-    public List<Movie> readMoviesFromCsv() {
-    List<Movie> movies = new ArrayList<>();
-    try {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("movies.csv");
-        if (is == null) {
-            throw new RuntimeException("movies.csv non trouvé dans resources");
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        boolean firstLine = true;
-        while ((line = reader.readLine()) != null) {
-            if (firstLine) {
-                firstLine = false;
-                continue;
-            }
-            String[] parts = line.split(",", 3);
-            if (parts.length == 3) {
-                Movie movie = new Movie();
-                movie.setId(Long.parseLong(parts[0]));
-                movie.setTitle(parts[1]);
-                movie.setGenre(parts[2]);
-                movies.add(movie);
-            }
-        }
-        reader.close();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return movies;
-}
-
     public List<Movie> getListMoviesNotRated(long id_user, String genre) {
         return movieRepository.getListMoviesNotRated(id_user, genre);
     }
@@ -70,5 +39,9 @@ public class MovieService {
 
     public Movie getMovieById(long id) {
         return movieRepository.findById(id);
+    }
+
+    public List<Movie> getMoviesByTitle(String title) {
+        return movieRepository.getMoviesByTitle(title);
     }
 }
