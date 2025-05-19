@@ -5,6 +5,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -20,4 +23,7 @@ public class Movie {
 
     @Column
     private String genre;
+
+    @Column
+    private Long tmdb;
 }
