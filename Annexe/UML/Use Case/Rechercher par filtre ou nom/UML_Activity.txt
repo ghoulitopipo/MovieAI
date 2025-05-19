@@ -1,0 +1,17 @@
+@startuml
+title Noter un film - Diagramme d'activité
+
+start
+
+:Effectue le Diagramme "Consulter les recommendations";
+
+if (Recherche par nom ou filtre?) then (nom)
+    :Utilisateur saisit un nom;
+  
+else (filtre)
+  :Choisis un ou des filtre(s);
+endif
+  :click sur un film;
+
+stop
+@enduml

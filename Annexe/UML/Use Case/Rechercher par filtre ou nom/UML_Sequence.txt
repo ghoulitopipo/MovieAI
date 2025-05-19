@@ -1,0 +1,21 @@
+@startuml
+title Recherche par filtre ou nom - Diagramme de séquence
+
+participant User as U
+participant System as S
+database Database as D
+
+ref over U,S,D : Cas d’usage "Consulter les recommandations" : Consulter un film ? = faux
+alt Recherche par nom
+  U -> S : Saisit le nom d'un film et le Sélectionne
+  S -> D : Demande le film qui correspondent au nom
+  D --> S : Retourne les informations du film
+  S --> U : Affiche les détails du film
+ 
+else Recherche avec filtres
+  U -> S : Lance une recherche de films avec filtres
+  S --> U : Affiche la liste de films recommandés possèdent ce filtre
+end
+
+@enduml
+
