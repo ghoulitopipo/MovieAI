@@ -25,8 +25,8 @@ public class MovieService {
         return movieRepository.getListMoviesNotRated(id_user, genre);
     }
 
-    public List<Movie> getListMoviesRated(long id_user, String genre) {
-        return movieRepository.getListMoviesRated(id_user, genre);
+    public List<Movie> getListMoviesRated(long id_user) {
+        return movieRepository.getListMoviesRated(id_user);
     }
     
     public List<String> getGenres() {

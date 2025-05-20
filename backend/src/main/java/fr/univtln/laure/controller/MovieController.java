@@ -37,10 +37,10 @@ public class MovieController {
 }
 
     @GET
-    @Path("/rated/{id_user}/{genre}")
+    @Path("/rated/{id_user}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getListMoviesRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
-        List<Movie> movies = movieService.getListMoviesRated(id_user, genre);
+    public Response getListMoviesRated(@PathParam("id_user") long id_user) {
+        List<Movie> movies = movieService.getListMoviesRated(id_user);
         if (movies == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
