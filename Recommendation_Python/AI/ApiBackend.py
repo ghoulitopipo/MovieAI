@@ -1,6 +1,4 @@
 import requests
-import os
-import pandas as pd
 import numpy as np
 
 BASE_URL = "http://localhost:8080"  # Backend Java
@@ -10,16 +8,24 @@ def get_not_rated(user_id, genre):
     try:
         url = f"{BASE_URL}/movies/notrate/{user_id}/{genre}"
         response = requests.get(url)
-        return response.json()
+        data = response.json()
+        LM =[]
+        for el in data:
+            LM.append(el.get('id'))
+        return LM
     except:
         print("Error: Unable to fetch data from the server. (get_not_rated)")
         return None
 
-def get_rated(user_id):
+def get_rated(user_id, genre):
     try:
-        url = f"{BASE_URL}/movies/rated/{user_id}"
+        url = f"{BASE_URL}/movies/rated/{user_id}/{genre}"
         response = requests.get(url)
-        return response.json()
+        data = response.json()
+        LM =[]
+        for el in data:
+            LM.append(el.get('id'))
+        return LM
     except:
         print("Error: Unable to fetch data from the server. (get_rated)")
         return None
@@ -81,6 +87,14 @@ def get_all_tags():
         print("Error: Unable to fetch data from the server. (get_all_tags)")
         return None
 
+def get_movietags(movie_id):
+    try:
+        url = f"{BASE_URL}/tags/get/{movie_id}"
+        response = requests.get(url)
+        return response.json()
+    except:
+        print("Error: Unable to fetch data from the server. (get_movietags)")
+        return None
 
 
 def get_all_data():
@@ -88,19 +102,12 @@ def get_all_data():
     Retourne toutes les données sous forme de tabeau numpy.
     """
     data = []
-    md = get_all_movies.to_numpy()
+    md = nparray(get_all_movies())
     data.append(md)
-    rd = get_all_ratings.to_numpy()
+    rd = nparray(get_all_ratings())
     data.append(rd)
-    td= get_all_tags.to_numpy()
+    td= nparray(get_all_tags())
     data.append(td)
     return data
-
-def parse_genres(genre_str):
-    """
-    Parse une chaîne de genres au format 'genre1|genre2|genre3'
-    et retourne une liste de genres [genre1, genre2, genre3].
-    """
-    return genre_str.split('|')
 
 
