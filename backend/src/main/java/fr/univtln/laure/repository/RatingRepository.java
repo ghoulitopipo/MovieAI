@@ -32,13 +32,16 @@ public class RatingRepository {
     }
 
 
-    public List<Rating> findAllRatingsMovies(long id_movie) {
+    public float getaverageRating(long id_movie) {
         try {
-            return em.createQuery("SELECT r FROM Rating r WHERE r.movie.id = :id_movie", Rating.class)
-                    .setParameter("id_movie", id_movie)
-                    .getResultList();
+            Double avg = em.createQuery(
+                "SELECT AVG(r.rating) FROM Rating r WHERE r.movie.id = :id_movie", Double.class)
+                .setParameter("id_movie", id_movie)
+                .getSingleResult();
+
+            return avg != null ? avg.floatValue() : 0.0f;
         } catch (NoResultException e) {
-            return null;
+            return -1.f;
         }
     }
     

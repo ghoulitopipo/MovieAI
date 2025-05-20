@@ -31,18 +31,23 @@ public class MovieRepository{
 
 
     public List<Movie> getListMoviesNotRated(long id_user, String genre) {
-        genre = "%" + genre + "%";
-        return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id NOT IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
-                .setParameter("id_user", id_user)
-                .setParameter("genre", genre)
-                .getResultList();
+        return em.createQuery(
+                "SELECT m FROM Movie m " +
+                "JOIN Rating r ON r.movie.id = m.id " +
+                "WHERE m.genre LIKE :genre " +
+                "AND m.id NOT IN ( " +
+                "    SELECT r2.movie.id FROM Rating r2 WHERE r2.user.id = :id_user) " +
+                "GROUP BY m.id " +
+                "ORDER BY AVG(r.rating) DESC", Movie.class
+            ).setParameter("genre", genre)
+            .setParameter("id_user", id_user)
+            .setMaxResults(100)
+            .getResultList();
     }
 
-    public List<Movie> getListMoviesRated(long id_user, String genre) {
-        genre = "%" + genre + "%";
-        return em.createQuery("SELECT m FROM Movie m WHERE m.genre LIKE :genre AND m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
+    public List<Movie> getListMoviesRated(long id_user) {
+        return em.createQuery("SELECT m FROM Movie m WHERE m.id IN (SELECT r.movie.id FROM Rating r WHERE r.user.id = :id_user)", Movie.class)
                 .setParameter("id_user", id_user)
-                .setParameter("genre", genre)
                 .getResultList();
     }
     

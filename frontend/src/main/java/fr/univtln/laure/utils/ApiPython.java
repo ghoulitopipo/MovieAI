@@ -25,9 +25,7 @@ public class ApiPython {
         if (response.statusCode() != 200) {
             throw new IOException("Request failed with status: " + response.statusCode());
         }
-
-        System.out.println("Response: " + response.body());
-
+        
         return new JSONArray(response.body());
     }
 }
