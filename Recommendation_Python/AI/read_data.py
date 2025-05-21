@@ -3,16 +3,14 @@ import pandas as pd
 import numpy as np
 
 movies_file = "movies"
-links_file = "links"
 ratings_file = "ratings"
 tags_file = "tags"
-fileNames = [movies_file, links_file, ratings_file, tags_file]
+fileNames = [movies_file, ratings_file, tags_file]
 
 movies_data = None
-links_data = None
 ratings_data = None
 tags_data = None
-datas = [movies_data, links_data, ratings_data, tags_data]
+datas = [movies_data, ratings_data, tags_data]
 
 def read_file(fileName):
     """
@@ -30,7 +28,7 @@ def get_all_data():
     """
     Retourne toutes les données sous forme de tabeau numpy.
     """
-    global data, movies_data, links_data, ratings_data, tags_data
+    global data, movies_data, ratings_data, tags_data
     data = []
     for fileName in fileNames:
         df = read_file(fileName).to_numpy()
@@ -46,5 +44,5 @@ def parse_genres(genre_str):
     return genre_str.split('|')
 
 if __name__ == "__main__":
-    movies_data, links_data, ratings_data, tags_data = get_all_data()
+    movies_data, ratings_data, tags_data = get_all_data()
     print(movies_data)

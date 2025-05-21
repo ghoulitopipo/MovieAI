@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-
 import recommendationindiGenre
 import cosine_sim
 

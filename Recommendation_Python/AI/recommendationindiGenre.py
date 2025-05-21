@@ -1,41 +1,35 @@
 import ApiBackend
+import sys
 import json
 
-def Notratedonegenre(genre, u=0):
+def Notratedonegenre(u=0, genre="Action"):
     LM = ApiBackend.get_not_rated(u, genre)
-
     MM = []
-    for movie in LM:
-        avg = ApiBackend.get_average(movie.get('id'))
-        genres = movie.get('genre').split("|")
+    for movie_id in LM:
+        avg = ApiBackend.get_average(movie_id)
         if avg is not None:
-            MM.append((movie.get('id'), avg, genres))
-
+            MM.append((movie_id, avg))
     MM.sort(key=lambda x: x[1], reverse=True)
     return MM
 
-def Matrixgenrerating(LG, u=0):
+def Matrixgenrerating(u=0):
+    LG = ApiBackend.get_genres()
     M = []
-    LMG = ApiBackend.get_rated(u)
-
-    G = {}
     for genre in LG:
-        G[genre[0]] = [0 ,0]
-
-    for movie in LMG:
-        rating = ApiBackend.get_rating(movie.get('id'), u)
-        genres = movie.get('genre').split("|")
-        
-        for genre in genres:
-            G[genre][0] += rating
-            G[genre][1] += 1
-
-    for genre in LG:
-        if G[genre[0]][1] == 0:
-            M.append([genre[0], 0, 0])
+        LMG = ApiBackend.get_rated(u, genre)
+        c = len(LMG)
+        if c == 0:
+            avg = 0
         else:
-            M.append([genre[0], G[genre[0]][0]/G[genre[0]][1], G[genre[0]][1]])
-
+            s = 0
+            for movie_id in LMG:
+                rating = ApiBackend.get_rating(movie_id, u)
+                if rating is not None:
+                    s += rating
+                else:
+                    print(f"Warning: rating is None for movie {movie_id} user {u}, skipping")
+            avg = s / c
+        M.append([genre, avg, c])
     return M
 
 def Allgenre():
@@ -46,56 +40,51 @@ def Allgenre():
     return G
 
 def Likedgenres(u=0):
-    M = Matrixgenrerating(Allgenre(), u)
+    CW = 1
+    RW = 1
+    N = 100
+    M = Matrixgenrerating(u)
 
-    total_notes = 0
-    total_films = 0
-    for genre, note_moy, nb_films in M:
-        total_notes += note_moy * nb_films
-        total_films += nb_films
-    if total_films != 0 :
-        C = total_notes / total_films 
-    else:
-        C = 0
+    G = Allgenre()
 
-    G = {}
-    for genre in M:
-        G[genre[0]] = 0
+    sc = sum(m[2] for m in M)
+    if sc == 0:
+        sc = 1
 
-    s = 0 
+    s = 0
     i = 0
     j = 0
+
     while i < len(M) and j < len(G):
-        genre_M = M[i][0]
-        if genre_M in G:
-            R = M[i][1]
-            v = M[i][2]
-            if v == 0:
-                score_bayesien = 0
-            else:
-                score_bayesien = (v / (v + 5)) * R + (5 / (v + 5)) * C
-            G[genre_M] = score_bayesien
-            s += score_bayesien
+        if G[j][0] == M[i][0]:
+            G[j][1] = M[i][1] * RW + (M[i][2] * CW) / sc
+            s += G[j][1]
             i += 1
         j += 1
 
-    
+    j = 0
+    while j < len(G):
+        if s != 0:
+            G[j][1] = (G[j][1] * N) // s
+        else:
+            G[j][1] = 0
+        j += 1
+
+    G.sort(key=lambda x: x[1], reverse=True)
     return G
 
 def generate_recommendations(u=0):
     G = Likedgenres(u)
-    
+
     DM = {}
-    for genre, weight in G.items():
-        if weight > 3.0:
-            LMG = Notratedonegenre(genre, u)
-            for movie_id, avg, genres in LMG:
-                if movie_id not in DM:
-                    Wgenres = 0
-                    for genre in genres:
-                        Wgenres += G[genre]
-                    Wgenres /= len(genres)
-                    DM[movie_id] = (avg * Wgenres)/5
+    for genre, weight in G:
+        if weight != 0:
+            LMG = Notratedonegenre(u, genre)
+            for movie_id, avg in LMG:
+                if movie_id in DM:
+                    DM[movie_id] += avg * weight
+                else:
+                    DM[movie_id] = avg * weight
 
     LM = sorted(DM.items(), key=lambda item: item[1], reverse=True)
     return LM
@@ -109,6 +98,6 @@ def launch(id_user):
 
     recommendations = generate_recommendations(u)
 
-    output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
+    output = [movie_id for movie_id, score in recommendations]
 
-    return output
+    return json.dumps(output, ensure_ascii=False, indent=4)

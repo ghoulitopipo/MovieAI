@@ -1,8 +1,8 @@
 import requests
+import pandas as pd
 import numpy as np
 
 BASE_URL = "http://localhost:8080"  # Backend Java
-
 
 def get_not_rated(user_id, genre):
     try:
@@ -49,7 +49,6 @@ def get_rating(movie_id, user_id):
     except:
         print("Error: Unable to fetch data from the server. (get_rating)")
         return None
-    
 
 def get_average(movie_id):
     try:
@@ -87,27 +86,22 @@ def get_all_tags():
         print("Error: Unable to fetch data from the server. (get_all_tags)")
         return None
 
-def get_movietags(movie_id):
-    try:
-        url = f"{BASE_URL}/tags/get/{movie_id}"
-        response = requests.get(url)
-        return response.json()
-    except:
-        print("Error: Unable to fetch data from the server. (get_movietags)")
-        return None
-
-
 def get_all_data():
     """
     Retourne toutes les données sous forme de tabeau numpy.
     """
     data = []
-    md = nparray(get_all_movies())
+    md = np.array(get_all_movies)
     data.append(md)
-    rd = nparray(get_all_ratings())
+    rd = np.array(get_all_ratings)
     data.append(rd)
-    td= nparray(get_all_tags())
+    td = np.array(get_all_tags)
     data.append(td)
     return data
 
-
+def parse_genres(genre_str):
+    """
+    Parse une chaîne de genres au format 'genre1|genre2|genre3'
+    et retourne une liste de genres [genre1, genre2, genre3].
+    """
+    return genre_str.split('|')
