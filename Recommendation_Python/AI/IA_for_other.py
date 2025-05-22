@@ -175,3 +175,17 @@ def cosine_content_recommend_user(user_id, sim_matrix, n_reco=30, min_rating=4.0
         recommendations.append((movie_id, title, score))
 
     return recommendations
+
+
+def launch(id_user):
+    if id_user >= 1:
+        u = id_user
+    else:
+        u = 0
+    
+    ratings = create_user_item_matrix()
+    recommendations = cosine_user_recommend(ratings,u)
+
+    output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
+
+    return output

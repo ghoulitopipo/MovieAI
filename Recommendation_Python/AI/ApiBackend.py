@@ -86,11 +86,22 @@ def get_all_tags():
         print("Error: Unable to fetch data from the server. (get_all_tags)")
         return None
 
+def get_len_users():
+    try:
+        url = f"{BASE_URL}/users/count"
+        response = requests.get(url)
+        return response.json()
+    except:
+        print("Error: Unable to fetch data from the server. (get_all_tags)")
+        return None
+
 def get_all_data():
     """
     Retourne toutes les données sous forme de tabeau numpy.
     """
     data = []
+    ud = get_len_users()
+    data.append(ud)
     md = np.array(get_all_movies())
     data.append(md)
     rd = np.array(get_all_ratings())
