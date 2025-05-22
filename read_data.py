@@ -16,7 +16,7 @@ def read_file(fileName):
     """
     Lit un fichier CSV et retourne les données sous forme de DataFrame pandas.
     """
-    filePath = os.path.join('../data', fileName + '.csv')
+    filePath = os.path.join('./data', fileName + '.csv')
     if os.path.exists(filePath):
         df = pd.read_csv(filePath)
         return df

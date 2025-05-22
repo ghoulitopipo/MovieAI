@@ -7,15 +7,22 @@ movies_index_dict = {}
 
 def get_movies_id_dict():
     """
-    Crée et retourne deux dictionnaires stockant les ID des films et leurs indices dans la table movies.
-    Le premier stocke les ID en valeur et le deuxième les ID en clés
+    Crée et retourne deux dictionnaires stockant les ID des films et leurs indices de la table movies.
+    
+    ID MovieLens = de 1 à 193 000 environ
+    indices (numéro de ligne) = de 0 à 9 000 environ
+
+    movies_id_dict stocke les indices de ligne en clés et les ID MovieLens en valeur
+    movies_index_dict stocke les ID MovieLens en clés et les indices de ligne en valeur
     """
     movies_id_dict = {}
     movies_index_dict = {}
+
     for i in range(movies_count):
         movie_id = int(movies_data[i, 0])
         movies_id_dict[i] = movie_id
         movies_index_dict[movie_id] = i
+    
     return movies_id_dict, movies_index_dict
 
 def create_user_item_matrix(null_values=True):
@@ -136,7 +143,7 @@ if __name__ == "__main__":
     # print("")
 
     movies_id_dict, movies_index_dict = get_movies_id_dict()
-    print(len(movies_id_dict), len(movies_index_dict))
+    #print(len(movies_id_dict), len(movies_index_dict))
 
     # for i in range(5000, 5200):
     #     print(f"i : {i} --- movie_id_dict : {movies_id_dict[i]}")

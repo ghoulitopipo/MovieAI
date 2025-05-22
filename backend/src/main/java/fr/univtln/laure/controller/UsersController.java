@@ -44,4 +44,15 @@ public class UsersController {
         return Response.ok(user).build();
     }
 
+    @GET
+    @Path("/count")
+    public Response createUser() {
+        
+        Long count = usersService.count();
+        if (count == 0) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(count).build();
+    }
+
 }

@@ -27,4 +27,8 @@ public class UsersService {
     public Users createUser(String username, String email, String password) {
         return usersRepository.addNewUser(username, email, password);
     }
+
+    public Long count(){
+        return usersRepository.count();
+    }
 }

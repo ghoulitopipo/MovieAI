@@ -28,4 +28,20 @@ public class ApiPython {
         
         return new JSONArray(response.body());
     }
+
+    public static JSONArray RecommendationForOther(long id_user) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/api/RecoByOther/" + id_user))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+        
+        return new JSONArray(response.body());
+    }
 }

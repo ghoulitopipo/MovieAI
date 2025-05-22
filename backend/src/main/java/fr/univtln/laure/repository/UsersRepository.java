@@ -99,4 +99,10 @@ public class UsersRepository {
         return hashedPassword.equals(hashedStoredPassword);
     }
 
+    public Long count(){
+        return em.createQuery(
+            "SELECT COUNT(u) FROM Users u", Long.class)
+            .getSingleResult();
+    }
+
 }
