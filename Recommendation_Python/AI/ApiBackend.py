@@ -91,17 +91,10 @@ def get_all_data():
     Retourne toutes les données sous forme de tabeau numpy.
     """
     data = []
-    md = np.array(get_all_movies)
+    md = np.array(get_all_movies())
     data.append(md)
-    rd = np.array(get_all_ratings)
+    rd = np.array(get_all_ratings())
     data.append(rd)
-    td = np.array(get_all_tags)
+    td = np.array(get_all_tags())
     data.append(td)
     return data
-
-def parse_genres(genre_str):
-    """
-    Parse une chaîne de genres au format 'genre1|genre2|genre3'
-    et retourne une liste de genres [genre1, genre2, genre3].
-    """
-    return genre_str.split('|')
