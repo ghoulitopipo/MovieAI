@@ -83,12 +83,15 @@ def Likedgenres(u=0):
     return G
 
 def generate_recommendations(u=0):
+    print("start")
     G = Likedgenres(u)
+    print("genre")
     
     DM = {}
     for genre, weight in G.items():
         if weight > 3.0:
             LMG = Notratedonegenre(genre, u)
+            print("notrated")
             for movie_id, avg, genres in LMG:
                 if movie_id not in DM:
                     Wgenres = 0
@@ -96,7 +99,7 @@ def generate_recommendations(u=0):
                         Wgenres += G[genre]
                     Wgenres /= len(genres)
                     DM[movie_id] = (avg * Wgenres)/5
-
+    print("finito")
     LM = sorted(DM.items(), key=lambda item: item[1], reverse=True)
     return LM
 

@@ -29,7 +29,7 @@ public class MovieController {
     @Path("/notrate/{id_user}/{genre}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getListMoviesNotRated(@PathParam("id_user") long id_user, @PathParam("genre") String genre) {
-        List<Movie> movies = movieService.getListMoviesNotRated(id_user, genre);
+        List<List<Object>> movies = movieService.getListMoviesNotRated(id_user, genre);
         if (movies == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -40,7 +40,7 @@ public class MovieController {
     @Path("/rated/{id_user}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getListMoviesRated(@PathParam("id_user") long id_user) {
-        List<Movie> movies = movieService.getListMoviesRated(id_user);
+        List<List<Object>> movies = movieService.getListMoviesRated(id_user);
         if (movies == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
