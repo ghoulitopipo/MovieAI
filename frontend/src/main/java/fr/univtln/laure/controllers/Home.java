@@ -45,6 +45,7 @@ public class Home{
     public void initialize() {
         
             //ApiPython.RecommendationForYou(IdConnexion)
+            //ApiPython.RecommendationForOther(IdConnexion)
         
         for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
             int index = i; 
