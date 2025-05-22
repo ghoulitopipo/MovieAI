@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import fr.univtln.laure.utils.ApiMovies;
+import fr.univtln.laure.utils.ApiPython;
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,9 @@ public class Home{
 
     @FXML
     public void initialize() {
+        
+            //ApiPython.RecommendationForYou(IdConnexion)
+        
         for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
             int index = i; 
             if (recommendedContainer.getChildren().get(i) instanceof StackPane) {

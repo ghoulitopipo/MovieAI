@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 
-import recommendationindiGenre
+import recommendationindiGenreTag
 import cosine_sim
 
 app = Flask(__name__)
 
 @app.route("/api/RecoForYou/<int:id_user>", methods=["GET"])
 def greet(id_user):
-    return jsonify(recommendationindiGenre.launch(id_user))
+    return jsonify(recommendationindiGenreTag.launch(id_user))
 
 @app.route("/api/RecoByOther/<int:id_user>", methods=["GET"])
 def getrecobyother(id_user):
