@@ -14,6 +14,8 @@ max_movies_id = int(ratings_data[:, 1].max())
 ratings_count = len(ratings_data)
 tags_count = len(tags_data)
 
+
+#Une seule fois car pas de changement dans le nombre de films
 def get_movies_id_dict():
     """
     Crée et retourne deux dictionnaires stockant les ID des films et leurs indices de la table movies.
@@ -34,6 +36,7 @@ def get_movies_id_dict():
     
     return movies_id_dict, movies_index_dict
 
+#une fois par changement dans base (note ou tags)
 def create_user_item_matrix(null_values=True):
     """
     Crée une matrice utilisateur/film à partir de la table ratings.
