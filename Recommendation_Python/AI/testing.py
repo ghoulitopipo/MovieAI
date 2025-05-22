@@ -68,12 +68,12 @@ def test_cosine_user():
     # Compter puis afficher le nombre de recommandations pour chaque tranche de notes
     ratings_count = [0] * 6
     for movie_id, rating in reco:
-        int_rating = np.floor(rating)
+        int_rating = int(np.floor(rating))
         ratings_count[int_rating] += 1
     print("Nombre de notes pour chaque recommandation :")
     for i in range(6):
         print(f"Notes à {i} : {ratings_count[i]}")
-    return
+    return -1
 
 def test_cosine_content():
     """
@@ -149,5 +149,5 @@ def get_user_rating_stats(ratings_data, user_id):
     return len(user_ratings), round(mean_rating, 2)
 
 if __name__ == "__main__":
-    #measure_time(test_cosine_user)
-    measure_time(test_cosine_content)
+    measure_time(test_cosine_user)
+    #measure_time(test_cosine_content)
