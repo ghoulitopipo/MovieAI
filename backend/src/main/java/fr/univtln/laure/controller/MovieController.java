@@ -1,13 +1,16 @@
 package fr.univtln.laure.controller;
 
+import java.util.List;
+
 import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.service.MovieService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.List;
 
 @Path("/movies")
 public class MovieController {

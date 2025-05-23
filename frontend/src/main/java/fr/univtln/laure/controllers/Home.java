@@ -15,6 +15,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -25,6 +27,9 @@ public class Home{
 
     @FXML
     private HBox recommendedContainer;
+
+    @FXML
+    private TextField searchField;
 
     private static int IdConnexion;
 
@@ -151,5 +156,21 @@ public class Home{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void searchName(){
+        searchField.setVisible(true);
+
+        searchField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String searchText = searchField.getText();
+                try {
+                    JSONArray MovieArr = ApiMovies.getMoviebyTitle(searchText);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

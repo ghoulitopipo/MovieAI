@@ -2,7 +2,6 @@
 Algorithmes de recommandation CF et CB basés sur le calcul de la similarité cosinus.
 """
 
-from read_data import *
 from utils import *
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.feature_extraction.text import TfidfVectorizer
