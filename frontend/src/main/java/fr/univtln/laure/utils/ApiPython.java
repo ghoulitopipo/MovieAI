@@ -9,6 +9,14 @@ import java.net.http.HttpResponse;
 import org.json.JSONArray;
 
 public class ApiPython {
+    /*
+     * This class is used to interact with the pyhton recommendation API.
+     * It provides methods:
+     * 
+     * - RecommendationForYou(long id_user): to get recommendations for the user (return JSONArray)
+     * 
+     * - RecommendationForOther(long id_user): to get recommendations for other users (return JSONArray)
+     */
     private static final String BASE_URL = "http://localhost:5000";
     private static final HttpClient client = HttpClient.newHttpClient();
 

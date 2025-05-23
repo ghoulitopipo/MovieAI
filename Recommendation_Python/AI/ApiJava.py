@@ -4,6 +4,16 @@ import IA_for_other
 import IA_for_you
 import IA_for_no_user
 
+"""
+ApiJava.py, this file is used to create a Flask API that will be used by the Java application.
+The API has three endpoints:
+
+1. /api/RecoForYou/<int:id_user>: this endpoint is used to get recommendations for a user.
+
+2. /api/RecoByOther/<int:id_user>: this endpoint is used to get recommendations for a user based on other users.
+
+3. /api/RecoNoUser: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
+"""
 
 app = Flask(__name__)
 

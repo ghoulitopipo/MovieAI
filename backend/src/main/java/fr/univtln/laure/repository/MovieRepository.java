@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import fr.univtln.laure.model.Movie;
-import fr.univtln.laure.model.Rating;
 
 @ApplicationScoped
 public class MovieRepository{
