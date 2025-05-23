@@ -3,20 +3,20 @@ import numpy as np
 
 BASE_URL = "http://localhost:8080"  # Backend Java
 
-def get_most_rated():
+def get_most_count():
     try:
-        url = f"{BASE_URL}/movies/mostrated"
+        url = f"{BASE_URL}/movies/best/count"
         response = requests.get(url)
-        return reponse.json()
+        return response.json()
     except:
         print("Error: Unable to fetch data from the server. (get_most_rated)")
         return None
 
-def get_most_meaned():
+def get_most_average():
     try:
-        url = f"{BASE_URL}/movies/mostmeaned"
+        url = f"{BASE_URL}/movies/best/average"
         response = requests.get(url)
-        return reponse.json()
+        return response.json()
     except:
         print("Error: Unable to fetch data from the server. (get_most_meaned)")
         return None

@@ -1,8 +1,8 @@
 import ApiBackend
 
 def generate_recommendations():
-    LN = ApiBackend.get_most_rated()
-    LM = ApiBackend.get_most_meaned()
+    LN = ApiBackend.get_most_count()
+    LM = ApiBackend.get_most_average()
 
     Reco = {}
 

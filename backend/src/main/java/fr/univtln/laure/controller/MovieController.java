@@ -93,4 +93,24 @@ public class MovieController {
         }
         return Response.ok(movies).build();
     }
+
+    @GET
+    @Path("/best/count")
+    public Response getBestMoviesCount() {
+        List<Long> movies = movieService.getBestMoviesCount();
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
+    }
+
+    @GET
+    @Path("/best/average")
+    public Response getBestMoviesAverage() {
+        List<Long> movies = movieService.getBestMoviesAverage();
+        if (movies == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(movies).build();
+    }
 }

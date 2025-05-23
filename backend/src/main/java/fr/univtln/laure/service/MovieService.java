@@ -44,4 +44,14 @@ public class MovieService {
     public List<Movie> getMoviesByTitle(String title) {
         return movieRepository.getMoviesByTitle(title);
     }
+
+    public List<Long> getBestMoviesAverage() {
+        return movieRepository.getBestMoviesAverage();
+    }
+
+    public List<Long> getBestMoviesCount() {
+        return movieRepository.getBestMoviesCount();
+    }
+
+
 }

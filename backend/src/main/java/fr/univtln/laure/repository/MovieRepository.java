@@ -162,5 +162,28 @@ public class MovieRepository{
                 .setParameter("title", "%" + title + "%")
                 .getResultList();
     }
+
+    public List<Long> getBestMoviesAverage() {
+        List<Long> bestMovies = em.createQuery(
+                "SELECT m.id FROM Movie m " +
+                "JOIN Rating r ON r.movie.id = m.id " +
+                "GROUP BY m.id " +
+                "ORDER BY AVG(r.rating) DESC", Long.class)
+                .setMaxResults(100)
+                .getResultList();
+        return bestMovies;
+    }
+
+    public List<Long> getBestMoviesCount() {
+        List<Long> bestMovies = em.createQuery(
+                "SELECT m.id FROM Movie m " +
+                "JOIN Rating r ON r.movie.id = m.id " +
+                "GROUP BY m.id " +
+                "ORDER BY count(r.rating) DESC", Long.class)
+                .setMaxResults(100)
+                .getResultList();
+        return bestMovies;
+    }
+
 }
 
