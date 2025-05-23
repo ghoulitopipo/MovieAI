@@ -8,6 +8,8 @@ backend/target/
 .vscode/
 .venv/
 
+config.properties
+
 frontend/dependency-reduced-pom.xml
 frontend/modifiedPom.xml
 
