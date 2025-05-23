@@ -1,8 +1,25 @@
 import requests
-import pandas as pd
 import numpy as np
 
 BASE_URL = "http://localhost:8080"  # Backend Java
+
+def get_most_rated():
+    try:
+        url = f"{BASE_URL}/movies/mostrated"
+        response = requests.get(url)
+        return reponse.json()
+    except:
+        print("Error: Unable to fetch data from the server. (get_most_rated)")
+        return None
+
+def get_most_meaned():
+    try:
+        url = f"{BASE_URL}/movies/mostmeaned"
+        response = requests.get(url)
+        return reponse.json()
+    except:
+        print("Error: Unable to fetch data from the server. (get_most_meaned)")
+        return None
 
 def get_not_rated(user_id, genre):
     try:
