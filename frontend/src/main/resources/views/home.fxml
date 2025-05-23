@@ -14,7 +14,7 @@
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <TextField fx:id="searchField" visible="false" />
-            <Button fx:id="searchButton" text="🔍" styleClass="search-button" onAction="#searchName"/>
+            <Button fx:id="searchButton" text="🔍" styleClass="search-button"/>
             <Button fx:id="disconectButton" text="Deconnexion" styleClass="disconect-button" onAction="#handleDisconnect" />
         </HBox>
     </top>

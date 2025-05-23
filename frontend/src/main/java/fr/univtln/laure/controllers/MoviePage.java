@@ -29,6 +29,9 @@ import fr.univtln.laure.utils.SceneChanger;
 import fr.univtln.laure.utils.ApiTags;
 import fr.univtln.laure.utils.ApiMovies;
 
+import fr.univtln.laure.utils.ImgLoader;
+import fr.univtln.laure.utils.MovieCache;
+
 public class MoviePage {
     @FXML private ImageView posterImageView;
     @FXML private Label titleLabel;
@@ -39,15 +42,7 @@ public class MoviePage {
     @FXML private Button discoButton;
     @FXML private Label ratingLabel;
 
-    private static long idMovie;    
-
-    public static void setIdMovie(long id) {
-    idMovie = id;
-    }
-
-    public static long getIdMovie() {
-    return idMovie;
-    }
+    private long idMovie = MovieCache.getId();
 
     @FXML
     public void initialize() {
@@ -56,18 +51,22 @@ public class MoviePage {
         rating.setRating(0);
         rating.setPartialRating(true);
         rating.setMax(5);
+        posterImageView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                posterImageView.fitHeightProperty().bind(newScene.heightProperty());
+            }
+        });
 
         rating.ratingProperty().addListener((obs, oldVal, newVal) -> {
             double rounded = Math.round(newVal.doubleValue() * 2) / 2.0;
             rating.setRating(rounded);
         });
+    
     }
-
     @FXML
     public void handleDisconnect(){
         try {
             Home.setIdConnexion(0);
-            MoviePage.setIdMovie(0);
             URL fxmlUrl = getClass().getResource("/views/login.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load()); 
@@ -102,46 +101,42 @@ public class MoviePage {
 }
 
     private void loadMovie(long idMovie) {
-    try {
-        JSONArray result = ApiMovies.getMoviebyID(idMovie);
+    String posterUrl = MovieCache.getPosterUrl();
+    String title = MovieCache.getTitle();
+    String genresRaw = MovieCache.getGenres();
+    String genres = genresRaw != null ? genresRaw.replace("|", ", ") : "";
 
-        if (result.length() > 0) {
-    JSONObject movie = result.getJSONObject(0);
-
-    System.out.println(movie.toString(2));
-
-    String title = movie.optString("title", "Titre inconnu");
-    titleLabel.setText(title);
-
-    String genresRaw = movie.optString("genres", movie.optString("genre", ""));
-    String genres = genresRaw.replace("|", ", ");
+    titleLabel.setText(title != null ? title : "");
     genresLabel.setText(genres);
-}
-    } catch (Exception e) {
-        e.printStackTrace();
-        titleLabel.setText("Erreur de chargement");
-        genresLabel.setText("");
+
+    if (posterUrl != null && !posterUrl.isEmpty()) {
+        Image image = new Image(posterUrl, true);
+        posterImageView.setImage(image);
+    } else {
+        posterImageView.setImage(null);
     }
 }
 
-private void loadtags(long idMovie) {
-    ObservableList<String> tags = FXCollections.observableArrayList();
-    try {
-        JSONArray result = ApiTags.getAll(idMovie);
-        if (result.length() > 0) {
-            for (int i = 0; i < result.length(); i++) {
-                JSONObject tag = result.getJSONObject(i);
-                String tagName = tag.optString("tag", "Tag inconnu");
-                tags.add(tagName);
+    private void loadtags(long idMovie) {
+        ObservableList<String> tags = FXCollections.observableArrayList();
+        try {
+            System.out.println("ID Movie: " + idMovie);
+            JSONArray result = ApiTags.getAll(idMovie);
+            if (result.length() > 0) {
+                for (int i = 0; i < result.length(); i++) {
+                    JSONObject tag = result.getJSONObject(i);
+                    String tagName = tag.optString("tag", "Tag inconnu");
+                    tags.add(tagName);
+                }
             }
+            System.out.println(tags);
+            updateTagsBar(tags);
+        } catch (Exception e) {
+            e.printStackTrace();
+            titleLabel.setText("Erreur de chargement");
+            genresLabel.setText("");
         }
-        updateTagsBar(tags);
-    } catch (Exception e) {
-        e.printStackTrace();
-        titleLabel.setText("Erreur de chargement");
-        genresLabel.setText("");
     }
-}
 
     @FXML
     public void handleHome(){

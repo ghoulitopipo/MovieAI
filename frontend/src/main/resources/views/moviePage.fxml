@@ -9,11 +9,11 @@
             fx:controller="fr.univtln.laure.controllers.MoviePage"
             stylesheets="@../styles/moviePage.css" prefWidth="600" prefHeight="400">
 
-    <left>
-        <VBox alignment="CENTER" spacing="10" styleClass="image-container">
-            <ImageView fx:id="posterImageView" fitWidth="200" fitHeight="300"/>
-        </VBox>
-    </left>
+<left>
+    <VBox>
+        <ImageView fx:id="posterImageView" preserveRatio="true"/>
+    </VBox>
+</left>
 
     <center>
         <VBox spacing="15" alignment="TOP_LEFT" styleClass="info-container">

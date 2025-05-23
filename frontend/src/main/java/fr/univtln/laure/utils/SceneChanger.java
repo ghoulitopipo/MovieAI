@@ -39,8 +39,8 @@ public class SceneChanger {
                 stage.setY(130);
                 break;
             default:
-                stage.setWidth(1020);
-                stage.setHeight(630);
+                stage.setWidth(1200);
+                stage.setHeight(800);
                 stage.setX(460);
                 stage.setY(180);
                 break;

@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Login"
-            prefWidth="1000" prefHeight="600" stylesheets="@../styles/login.css">
-
-    <left>
-        <VBox alignment="CENTER" spacing="20" styleClass="left-pane" prefWidth="400">
-            <Label text="OverPlanning" styleClass="logo-text"/>
-            <ImageView fitWidth="300" fitHeight="300" preserveRatio="true">
-                <image>
-                    <Image url="@../images/logo/logo.png"/>
-                </image>
+<AnchorPane prefHeight="800" prefWidth="1200" stylesheets="@../styles/login.css" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Login">
+    <children>
+        <StackPane prefHeight="800" prefWidth="1200" style="-fx-background-color: #2A2E37;" styleClass="background">
+            <VBox alignment="CENTER" maxHeight="500.0" maxWidth="400" prefHeight="470.0" prefWidth="400.0" spacing="20" styleClass="login-card">
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo/logo.png"/>
+               </image>
+               <VBox.margin>
+                  <Insets top="-80.0" />
+               </VBox.margin>
             </ImageView>
-        </VBox>
-    </left>
-
-    <center>
-        <VBox alignment="CENTER" spacing="25" styleClass="right-pane">
-            <VBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="Email" styleClass="form-label"/>
-                <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
-                <Label text="Mot de passe" styleClass="form-label"/>
-                <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field"/>
+                <TextField fx:id="emailField" promptText="Adresse mail" styleClass="input-field" />
+                <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field" />
+                <Button styleClass="login-button" text="Connexion" fx:id="connexionButton" onAction="#handleLogin"/>
+                <HBox alignment="CENTER">
+                    <Label text="Pas de compte ?" textFill="#ffff8d"/>
+                    <Button text="Créer un compte" fx:id="accountButton" styleClass="create-button" onAction="#handleLoginCA"/>
+                </HBox>
             </VBox>
-            <Button fx:id="connexionButton" text="Connexion" onAction="#handleLogin" styleClass="login-button"/>
-            <Button fx:id="accountButton" text="Pas de compte ?" onAction="#handleLoginCA" styleClass="login-button"/>
-        </VBox>
-    </center>
-</BorderPane>
+        </StackPane>
+    </children>
+</AnchorPane>
