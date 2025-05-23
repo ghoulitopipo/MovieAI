@@ -1,6 +1,31 @@
 import requests
 import numpy as np
 
+"""
+ApiBackend.py, this file is used to communicate with the backend Java server.
+it contains functions to get data from the server:
+
+1. get_most_count: this function is used to get the most rated movies.
+
+2. get_most_average: this function is used to get the movies with the highest average average.
+
+3. get_not_rated: this function is used to get the movies that the user has not rated. (return id, average, genres, tags)
+
+4. get_rated: this function is used to get the movies that the user has rated. (genres, rating, tags)
+
+5. get_genres: this function is used to get all the genres in the database.
+
+6. get_all_movies: this function is used to get all the movies in the database.
+
+7. get_all_ratings: this function is used to get all the ratings in the database.
+
+8. get_all_tags: this function is used to get all the tags in the database.
+
+9. get_len_users: this function is used to get the number of users in the database.
+
+10. get_all_data: this function is used to get all the data in the database. (call the 4 previous methods)
+"""
+
 BASE_URL = "http://localhost:8080"  # Backend Java
 
 def get_most_count():
@@ -46,26 +71,6 @@ def get_genres():
         return response.json()
     except:
         print("Error: Unable to fetch data from the server. (get_genres)")
-        return None
-    
-
-def get_rating(movie_id, user_id):
-    try:
-        url = f"{BASE_URL}/ratings/get/{movie_id}/{user_id}"
-        response = requests.get(url)
-        data = response.json()
-        return data.get('rating')
-    except:
-        print("Error: Unable to fetch data from the server. (get_rating)")
-        return None
-
-def get_average(movie_id):
-    try:
-        url = f"{BASE_URL}/ratings/average/{movie_id}"
-        response = requests.get(url)
-        return response.json()
-    except:
-        print("Error: Unable to fetch data from the server. (get_average)")
         return None
     
 def get_all_movies():
