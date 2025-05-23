@@ -9,11 +9,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600" prefWidth="1000" stylesheets="@../styles/createAccount.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="fr.univtln.laure.controllers.CreateAccount" styleClass="background">
+<BorderPane prefHeight="600" prefWidth="1000" stylesheets="@../styles/createAccount.css" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.CreateAccount" styleClass="background">
 
     <left>
         <VBox alignment="CENTER" prefWidth="400" spacing="20" styleClass="left-pane">
-            <Label styleClass="logo-text" text="ON A PAS DE NOM" textOverrun="CLIP" />
             <ImageView fitHeight="300" fitWidth="300" preserveRatio="true">
                 <image>
                     <Image url="@../images/logo/logo.png" />
