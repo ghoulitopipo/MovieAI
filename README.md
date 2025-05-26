@@ -1,10 +1,21 @@
 # 🎬 MovieAI
 
-This project consists of a multi-tier architecture with:
+**MovieAI** is a desktop application that gives a microservices architecture to offer intelligent movie recommendations. It integrates different technologies across multiple layers:
 
-- ⚙️ Quarkus backend (Java) for core services and data (connexion with postgres thanks to jpa)
-- 🐍 Flask backend (Python) for recommendation algorithm
-- 💻 JavaFX frontend (Java) for the desktop user interface
+-  **Quarkus backend (Java)** — Core services and PostgreSQL database access via JPA
+-  **Flask backend (Python)** — Handles recommendation logic using IA algorithm
+-  **JavaFX frontend (Java)** — Desktop graphical user interface
+
+
+
+## 📥 How to Download This Repository
+
+To get started, clone the repository using Git:
+
+```bash
+git clone https://github.com/ghoulitopipo/MovieAI.git
+cd MovieAI
+```
 
 ## 📁 Project Structure
 
@@ -16,21 +27,38 @@ MOVIEAI-(root)/
 └── frontend-(javafx)/ 
 </pre>
 
+## 🛠️ Requirements
 
+Make sure the following tools are installed and configured:
+
+###  General Tools
+
+- **Docker** (must be running before launching)
+- **Python 3.8+**
+  - `pip` and `virtualenv` are recommended for managing dependencies
+- **Java 21+**
+- **Maven** (for building both frontend and backend)
+
+###  JavaFX Specific
+
+- **JavaFX SDK 17.0.2** (required if not bundled with your JDK)
+  - Required modules: `javafx.controls`, `javafx.fxml`
+  - Set the `--module-path` in your VM options if needed
+
+###  Port Availability
+
+Ensure the following ports are free (not used by any other services):
+
+- `http://localhost:8080` → used by **Quarkus backend**
+- `http://localhost:5000` → used by **Flask Python API**
+
+> ⚠️ If ports are occupied, you may need to stop conflicting services or change the configurations manually.
 
 ## 🚀 Launch Instructions
-
-> Prerequisites: docker launched and make sure that those port are free:
-
-- "http://localhost:8080"
-
-- "http://localhost:5000"
 
 ### Option 1: Manual launch
 
 ### 1️⃣ Start the Quarkus Backend
-
-> Prerequisites: Java 17+, Maven
 
 ```bash
 cd backend
@@ -39,8 +67,6 @@ mvnw quarkus:dev
 
 ### 2️⃣ Start the Flask API
 
-> Prerequisites: Python 3.8+, pip, virtualenv (recommended)
-
 ```bash
 cd Recommendation_Python/AI
 python ApiJava.py
@@ -48,21 +74,13 @@ python ApiJava.py
 
 ### 3️⃣ Launch the JavaFX Frontend
 
-> Prerequisites: JavaFX SDK (and set PATH_TO_FX if necessary), Java 17+
-
-### If using an IDE (e.g., IntelliJ, Eclipse)
-
-1. Open the `frontend` project.
-2. Set **VM options** if needed:
-
-   ```bash
-   --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml
-   ```
-
 ```bash
 cd frontend
 mvn javafx:run
 ```
+
+---
+
 ### Option 2: Launch everything with the provided script (launch.sh)
 
 
@@ -75,18 +93,25 @@ You will see an interactive menu with options:
 
 1. Launch the JavaFX frontend.
 
-2. Reload the Flask API without restarting the whole stack.
+2. Reload the Flask API (without restarting everything)
 
-3. Quit and shut down all running services cleanly.
+3. Quit and cleanly shut down all services
 
 > **Notes:**
-> - The script checks that required ports (8080 for Quarkus, 5000 for Flask) are free before starting.
-> - It waits for each backend to be fully ready before continuing.
-> - Use option 2 to reload the Python Flask API if you change the recommendation code, without restarting Quarkus or JavaFX.
-> - Option 3 cleanly shuts down all running processes, no manual Ctrl+C needed.
-> - You can run the frontend multiple times without restarting backends.
+> - Ports are checked before services start
+> - Each backend waits until it's fully ready
+> - Reload the Flask API (option 2) after modifying the recommendation code
+> - Shut down everything cleanly with option 3
+> - You can run the frontend multiple times without restarting backends
 
 > ⚠️ **Warning:**  
-> The launch process may take some time, especially when starting the Quarkus backend for the first time or after code changes.  
-> Please be patient while the services fully initialize before interacting with the application.
+> The launch process will take some time, because of the Quarkus backend (importing of all the database).  
+> Please be patient while the services fully initialize before interacting with the menu.
 
+## 📝 License
+
+This is a private academic project created for demonstration and educational purposes only.
+
+No part of this repository is licensed for public or commercial use.
+
+© 2025 Pierre Nicolas, Lilian Laure, Mattéo Bonavita, Stéphane Rossi. All rights reserved.
