@@ -1,13 +1,13 @@
 .welcome-text {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333;
+    -fx-text-fill: #FFFF8D;
 }
 
 .section-title {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #555;
+    -fx-text-fill: #FFFF8D;
 }
 
 .movie-poster {
@@ -21,35 +21,44 @@
 .arrow-button {
     -fx-background-color: transparent;
     -fx-font-size: 20px;
-    -fx-text-fill: #444;
+    -fx-text-fill: #FFFF8D;
     -fx-cursor: hand;
 }
 
 .arrow-button:hover {
-    -fx-text-fill: #222;
+    -fx-text-fill: #ffff3a;
 }
 
 .search-button {
     -fx-background-color: transparent;
     -fx-font-size: 18px;
-    -fx-text-fill: #444;
+    -fx-text-fill: #FFFF8D;
     -fx-cursor: hand;
     -fx-padding: 5 10;
 }
 
 .search-button:hover {
-    -fx-text-fill: #222;
+    -fx-text-fill: #ffff3a;
 }
 
 .disconect-button {
-    -fx-background-color: transparent;
-    -fx-border-color: black;
-    -fx-font-size: 18px;
-    -fx-text-fill: #444;
+    -fx-background-color: linear-gradient(to bottom, #2A2E37, #15171a);
+    -fx-border-color: #FFFF8D;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-padding: 5 10;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-size: 16px;
+    -fx-text-fill: #FFFF8D;
 }
 
 .disconect-button:hover {
-    -fx-text-fill: #222;
+    -fx-border-color: #FFFF8D;
+    -fx-background-color: #FFFF8D;
+    -fx-text-fill: #2A2E37;
+}
+
+.home-view {
+    -fx-background-color: #2A2E37;
+    -fx-padding: 20;
 }

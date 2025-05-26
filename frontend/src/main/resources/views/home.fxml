@@ -1,79 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Home" stylesheets="@../styles/home.css">
-
-    <!-- BARRE SUPÉRIEURE : bouton recherche -->
-    <top>
-        <HBox alignment="TOP_RIGHT" spacing="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <TextField fx:id="searchField" visible="false" />
-            <Button fx:id="searchButton" text="🔍" styleClass="search-button"/>
-            <Button fx:id="disconectButton" text="Deconnexion" styleClass="disconect-button" onAction="#handleDisconnect" />
-        </HBox>
-    </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1000.0" styleClass="home-view" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univtln.laure.controllers.Home">
 
     <!-- CENTRE : Message + listes -->
     <center>
         <VBox alignment="CENTER" spacing="30" BorderPane.alignment="CENTER">
-            <Label text="Bienvenue dans votre catalogue de films !" styleClass="welcome-text"/>
 
             <!-- SECTION : Recommandé pour vous -->
             <VBox spacing="10">
-                <Label text="Recommandé pour vous" styleClass="section-title"/>
-                <HBox spacing="10" alignment="CENTER">
-
-                    <!-- Flèche gauche -->
-                    <Button text="◀" styleClass="arrow-button" fx:id="recommendedLeft" onAction="#updateMoviesB"/>
-
-                    <!-- Films -->
-                    <HBox spacing="15" alignment="CENTER" fx:id="recommendedContainer">
-                        <StackPane fx:id="recommended1" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended2" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended3" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended4" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended5" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended6" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended7" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="recommended8" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                <Label styleClass="section-title" text="Recommandé pour vous" />
+                <HBox alignment="CENTER" spacing="10">
+                    <Button fx:id="recommendedLeft" onAction="#updateMoviesB" styleClass="arrow-button" text="◀" />
+                    <HBox fx:id="recommendedContainer" alignment="CENTER" spacing="15">
+                        <StackPane fx:id="recommended1" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended2" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended3" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended4" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended5" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended6" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended7" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="recommended8" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
                     </HBox>
-
-                    <!-- Flèche droite -->
-                    <Button text="▶" styleClass="arrow-button" fx:id="recommendedRight" onAction="#updateMoviesN"/>
+                    <Button fx:id="recommendedRight" onAction="#updateMoviesN" styleClass="arrow-button" text="▶" />
                 </HBox>
             </VBox>
 
             <!-- SECTION : D'autres comme vous ont aimé -->
             <VBox spacing="10">
-                <Label text="D'autres comme vous ont aimé" styleClass="section-title"/>
-                <HBox spacing="10" alignment="CENTER">
-
-                    <!-- Flèche gauche -->
-                    <Button text="◀" styleClass="arrow-button" fx:id="likedLeft" onAction="#updateMoviesOB"/>
-
-                    <!-- Films -->
-                    <HBox spacing="15" alignment="CENTER" fx:id="likedContainer">
-                        <StackPane fx:id="liked1" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked2" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked3" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked4" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked5" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked6" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked7" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
-                        <StackPane fx:id="liked8" styleClass="movie-poster" maxWidth="120" maxHeight="180"/>
+                <Label styleClass="section-title" text="D'autres comme vous ont aimé" />
+                <HBox alignment="CENTER" spacing="10">
+                    <Button fx:id="likedLeft" onAction="#updateMoviesOB" styleClass="arrow-button" text="◀" />
+                    <HBox fx:id="likedContainer" alignment="CENTER" spacing="15">
+                        <StackPane fx:id="liked1" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked2" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked3" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked4" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked5" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked6" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked7" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
+                        <StackPane fx:id="liked8" maxHeight="180" maxWidth="120" styleClass="movie-poster" />
                     </HBox>
-
-                    <!-- Flèche droite -->
-                    <Button text="▶" styleClass="arrow-button" fx:id="likedRight" onAction="#updateMoviesON"/>
+                    <Button fx:id="likedRight" onAction="#updateMoviesON" styleClass="arrow-button" text="▶" />
                 </HBox>
             </VBox>
 
         </VBox>
     </center>
+
+    <top>
+        <HBox alignment="CENTER" spacing="10" BorderPane.alignment="CENTER">
+            <Region minWidth="10" HBox.hgrow="ALWAYS" />
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="welcome-text" text="Bienvenue dans votre catalogue de films !" textAlignment="CENTER" />
+            <Region minWidth="10" HBox.hgrow="ALWAYS" />
+        </HBox>
+    </top>
+
+    <bottom>
+        <BorderPane>
+            <left>
+                <HBox spacing="0">
+                    <TextField fx:id="searchField" alignment="CENTER_LEFT" visible="false" />
+                    <Button fx:id="searchButton" alignment="CENTER_LEFT" contentDisplay="RIGHT" styleClass="search-button" text="🔍" textAlignment="RIGHT" />
+                </HBox>
+            </left>
+            <right>
+                <Button fx:id="disconectButton" onAction="#handleDisconnect" styleClass="disconect-button" text="Deconnexion" BorderPane.alignment="BOTTOM_RIGHT">
+                    <BorderPane.margin>
+                        <Insets />
+                    </BorderPane.margin>
+                </Button>
+            </right>
+        </BorderPane>
+    </bottom>
 </BorderPane>
