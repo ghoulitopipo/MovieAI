@@ -7,6 +7,8 @@ from ApiBackend import *
 # Charger les données dans des tableaux Numpy
 users_count, movies_data, ratings_data, tags_data = get_all_data()
 
+print(users_count, len(movies_data), len(ratings_data), len(tags_data))
+
 # Tailles des données
 movies_count = len(movies_data)
 ratings_count = len(ratings_data)

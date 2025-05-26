@@ -20,7 +20,6 @@ wait_for_port() {
 check_port_free 8080
 check_port_free 5000
 
-# Track process IDs
 PIDS=()
 FLASK_PID=
 QUARKUS_PID=
@@ -71,17 +70,46 @@ cleanup() {
     kill -9 "$pid" && echo "🗑️ Killed leftover process on port 5000 (PID $pid)"
   done
 
+  # Delete quarkus.log if it exists
+  if [[ -f quarkus.log ]]; then
+    echo "🧹 Removing quarkus.log file..."
+    rm -f quarkus.log
+  fi
+
   exit 0
 }
 
 trap cleanup SIGINT
 
-# Start Quarkus
-echo "▶️ Starting Quarkus backend..."
-(cd backend && ./mvnw quarkus:dev > quarkus.log 2>&1 < /dev/null &)  
-QUARKUS_PID=$!
-PIDS+=($QUARKUS_PID)
-wait_for_port 8080
+start_quarkus() {
+  echo "▶️ Starting Quarkus backend..."
+  cd backend || { echo "❌ backend directory not found"; exit 1; }
+  
+  # Crée un fichier vide pour éviter erreur tail
+  touch quarkus.log
+  
+  ./mvnw quarkus:dev > quarkus.log 2>&1 < /dev/null &
+  QUARKUS_PID=$!
+  PIDS+=($QUARKUS_PID)
+
+  # On attend que le port 8080 soit ouvert (après démarrage)
+  wait_for_port 8080
+
+  # On lit le fichier de logs en temps réel, on arrête quand on voit la ligne clé
+  tail -n +1 -f quarkus.log | while read -r line; do
+    echo "$line"
+    if [[ "$line" == *"Importation des tags terminée."* ]]; then
+      echo "✅ Quarkus import finished."
+      pkill -P $$ tail  # tue le tail lancé ici
+      break
+    fi
+  done
+
+  # Supprime le log maintenant qu'on a fini
+  rm -f quarkus.log
+
+  cd - > /dev/null || true
+}
 
 start_flask() {
   echo "▶️ Starting Flask API..."
@@ -89,8 +117,6 @@ start_flask() {
   FLASK_PID=$!
   wait_for_port 5000
 }
-
-start_flask
 
 reload_flask() {
   echo "🔄 Reloading Flask API..."
@@ -109,7 +135,11 @@ run_frontend() {
   (cd frontend && mvn javafx:run)
 }
 
-# Interactive menu
+# Lancement services
+start_quarkus
+start_flask
+
+# Affiche le menu seulement APRES chargements terminés
 while true; do
   echo ""
   echo "💡 Options:"
