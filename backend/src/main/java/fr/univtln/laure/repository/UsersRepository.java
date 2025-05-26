@@ -65,6 +65,7 @@ public class UsersRepository {
             user.setPassword(createStoredPassword(password));
                 
             em.persist(user);
+            System.out.println(createStoredPassword("motdepasse"));
             return user;
         }
         
@@ -93,7 +94,6 @@ public class UsersRepository {
         String[] parts = storedPassword.split(":");
         String hashedStoredPassword = parts[0]; 
         String salt = parts[1];
-
         String hashedPassword = hashPassword(password, salt);
 
         return hashedPassword.equals(hashedStoredPassword);

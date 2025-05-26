@@ -109,21 +109,19 @@ public class Login {
     }
 
     private void changeToAccueilSceneWithId(int connexionId) {
-        try {
-            URL fxmlUrl = getClass().getResource("/views/home.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Scene scene = new Scene(loader.load());
+    try {
+        Home.setIdConnexion(connexionId);
 
-            // Récupération du contrôleur et injection de l'ID
-            Home controller = loader.getController();
-            controller.setIdConnexion(connexionId);
+        URL fxmlUrl = getClass().getResource("/views/home.fxml");
+        FXMLLoader loader = new FXMLLoader(fxmlUrl);
+        Scene scene = new Scene(loader.load());
 
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Home");
-            SceneChanger.setWindow(stage, "home");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Home");
+        SceneChanger.setWindow(stage, "home");
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 }

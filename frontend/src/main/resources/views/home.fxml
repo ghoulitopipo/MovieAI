@@ -55,7 +55,7 @@
                 <HBox spacing="10" alignment="CENTER">
 
                     <!-- Flèche gauche -->
-                    <Button text="◀" styleClass="arrow-button" fx:id="likedLeft" onAction="#updateMoviesB"/>
+                    <Button text="◀" styleClass="arrow-button" fx:id="likedLeft" onAction="#updateMoviesOB"/>
 
                     <!-- Films -->
                     <HBox spacing="15" alignment="CENTER" fx:id="likedContainer">
@@ -70,7 +70,7 @@
                     </HBox>
 
                     <!-- Flèche droite -->
-                    <Button text="▶" styleClass="arrow-button" fx:id="likedRight" onAction="#updateMoviesN"/>
+                    <Button text="▶" styleClass="arrow-button" fx:id="likedRight" onAction="#updateMoviesON"/>
                 </HBox>
             </VBox>
 

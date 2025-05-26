@@ -7,7 +7,7 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def cosine_user_recommend(ratings, user_index, k=20, n_recommendations=50):
+def cosine_user_recommend(ratings, user_index, k=20, n_recommendations=100):
     """
     Algorithme CF user based basé uniquement sur les notes des films.
     La méthode retourne une liste de n films recommandés avec leurs notes prédites.
