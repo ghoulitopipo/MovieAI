@@ -8,14 +8,14 @@ def generate_recommendations():
 
     for i in range(len(LM)):
         movie = LM[i]
-        Reco[movie.get('id')]= (100 - i)
+        Reco[movie]= (100 - i)
 
     for i in range(len(LN)):
         movie = LN[i]
-        if movie.get('id') in Reco:
-            Reco[movie.get('id')]+=  (100- i)
+        if movie in Reco:
+            Reco[movie]+=  (100- i)
         else:
-            Reco[movie.get('id')]= (100 - i)
+            Reco[movie]= (100 - i)
 
     RM = sorted(Reco.items(), key=lambda item: item[1], reverse=True)
     return RM
