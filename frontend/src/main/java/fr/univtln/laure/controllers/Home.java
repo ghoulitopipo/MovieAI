@@ -2,14 +2,13 @@ package fr.univtln.laure.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import fr.univtln.laure.utils.ApiMovies;
+import fr.univtln.laure.utils.ApiPython;
 import fr.univtln.laure.utils.ImgLoader;
 import fr.univtln.laure.utils.MovieCache;
 import fr.univtln.laure.utils.SceneChanger;
@@ -20,67 +19,218 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.input.KeyCode;
 
-public class Home{
+public class Home {
 
     private static final Map<Long, Image> posterCache = new HashMap<>();
+
+    private static JSONArray cachedMovieForYou = null;
+    private static JSONArray cachedMovieByOthers = null;
 
     @FXML
     private Button disconectButton;
 
     @FXML
     private HBox recommendedContainer;
+    @FXML
+    private HBox likedContainer;
 
     @FXML
     private TextField searchField;
 
-    private static int IdConnexion;
+    private static long IdConnexion;
 
-    public static int getIdConnexion() {
+    public static long getIdConnexion() {
         return IdConnexion;
     }
 
-    public static void setIdConnexion(int idConnexion) {
+    public static void setIdConnexion(long idConnexion) {
         IdConnexion = idConnexion;
     }
 
-    private int scrollPaneElement = 0; 
+    private int scrollPaneElement = 0;
+    private int otherPaneElement = 0;
 
-    private List<Long> listIDMovie;
-    private List<String> listTitles; 
-    private List<String> listURL;
-    private List<String> listGenres;
-    private List<Long> listIMDB;
+    private JSONArray listMovieForYou;
+    private JSONArray listMovieByOthers;
+
+    private static class MoviePageData {
+        List<Long> ids = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
+        List<String> genres = new ArrayList<>();
+        List<Long> tmdbIds = new ArrayList<>();
+        List<String> urls = new ArrayList<>();
+    }
+
+    private final MoviePageData recommendedData = new MoviePageData();
+    private final MoviePageData likedData = new MoviePageData();
 
     @FXML
     public void initialize() {
+        try {
+            if (cachedMovieForYou == null) {
+                cachedMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
+                if (cachedMovieForYou != null && cachedMovieForYou.length() == 0) {
+                    cachedMovieForYou = ApiPython.RecommendationForNoData();
+                }
+                else {
+                    if (cachedMovieByOthers == null) {
+                        cachedMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
+                    }
+                }
+            }
+            listMovieForYou = cachedMovieForYou;
+            listMovieByOthers = cachedMovieByOthers;
 
-                
-            //ApiPython.RecommendationForYou(IdConnexion)
-            //ApiPython.RecommendationForOther(IdConnexion)
-            
+            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
+            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
-            int index = i; 
+            int index = i;
             if (recommendedContainer.getChildren().get(i) instanceof StackPane) {
                 StackPane stack = (StackPane) recommendedContainer.getChildren().get(i);
-                System.out.println("StackPane " + i);
-                stack.setOnMouseClicked(e -> openMovie(index));
+                stack.setOnMouseClicked(e -> openMovie(recommendedData, index));
+            }
+        }
+
+        for (int i = 0; i < likedContainer.getChildren().size(); i++) {
+            int index = i;
+            if (likedContainer.getChildren().get(i) instanceof StackPane) {
+                StackPane stack = (StackPane) likedContainer.getChildren().get(i);
+                stack.setOnMouseClicked(e -> openMovie(likedData, index));
+            }
+        }
+    }
+
+    private void showMovies(JSONArray movieArray, HBox container, int startIndex, MoviePageData data) {
+        data.ids.clear();
+        data.titles.clear();
+        data.genres.clear();
+        data.tmdbIds.clear();
+        data.urls.clear();
+
+        int end = Math.min(startIndex + 8, movieArray.length());
+
+        for (int i = 0; i < container.getChildren().size(); i++) {
+            if (container.getChildren().get(i) instanceof StackPane) {
+                ((StackPane) container.getChildren().get(i)).getChildren().clear();
+            }
+        }
+
+        for (int i = startIndex; i < end; i++) {
+            try {
+                JSONObject obj = movieArray.getJSONObject(i);
+                long movieId = obj.getLong("movie_id");
+                JSONArray movieArr = ApiMovies.getMoviebyID(movieId);
+                if (movieArr.length() == 0) continue;
+                JSONObject movieObj = movieArr.getJSONObject(0);
+
+                String title = movieObj.getString("title");
+                String genre = movieObj.getString("genre");
+                long tmdbID = movieObj.getLong("tmdb");
+
+                data.ids.add(movieId);
+                data.titles.add(title);
+                data.genres.add(genre);
+                data.tmdbIds.add(tmdbID);
+
+                String imgUrl = ImgLoader.getImg(tmdbID);
+                Image image = posterCache.computeIfAbsent(tmdbID, id -> {
+                    if (imgUrl.startsWith("/images/placeholder/")) {
+                        return new Image(getClass().getResourceAsStream("/images/placeholder/placeholderPoster.jpg"));
+                    } else {
+                        return new Image(imgUrl);
+                    }
+                });
+                data.urls.add(imgUrl);
+
+                if (i - startIndex < container.getChildren().size()) {
+                    StackPane stack = (StackPane) container.getChildren().get(i - startIndex);
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(110);
+                    imageView.setPreserveRatio(true);
+                    stack.getChildren().add(imageView);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
 
     @FXML
-    public void handleDisconnect(){
+    private void updateMoviesN() {
+        if (scrollPaneElement + 8 < listMovieForYou.length()) {
+            scrollPaneElement += 8;
+            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
+        }
+    }
+
+    @FXML
+    private void updateMoviesB() {
+        if (scrollPaneElement >= 8) {
+            scrollPaneElement -= 8;
+            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
+        }
+    }
+
+    @FXML
+    private void updateMoviesON() {
+        if (otherPaneElement + 8 < listMovieByOthers.length()) {
+            otherPaneElement += 8;
+            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
+        }
+    }
+
+    @FXML
+    private void updateMoviesOB() {
+        if (otherPaneElement >= 8) {
+            otherPaneElement -= 8;
+            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
+        }
+    }
+
+    private void openMovie(MoviePageData data, int stackPaneId) {
+        if (stackPaneId >= data.ids.size()) return;
+        try {
+            long id = data.ids.get(stackPaneId);
+            String title = data.titles.get(stackPaneId);
+            Long tmdbID = data.tmdbIds.get(stackPaneId);
+            String posterUrl = ImgLoader.getImg(tmdbID);
+            String genre = data.genres.get(stackPaneId);
+
+            MovieCache.setId(id);
+            MovieCache.setTitle(title);
+            MovieCache.setPosterUrl(posterUrl);
+            MovieCache.setGenres(genre);
+
+            URL fxmlUrl = getClass().getResource("/views/moviePage.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) disconectButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("MoviePage");
+            SceneChanger.setWindow(stage, "moviePage");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleDisconnect() {
         try {
             Home.setIdConnexion(0);
+            clearCache();
 
             URL fxmlUrl = getClass().getResource("/views/login.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Scene scene = new Scene(loader.load()); 
+            Scene scene = new Scene(loader.load());
             Stage stage = (Stage) disconectButton.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Login");
@@ -90,123 +240,20 @@ public class Home{
         }
     }
 
-        private void getData(int nb){
-        try {
-            listIDMovie = new ArrayList<>();
-            listURL = new ArrayList<>();
-            listTitles = new ArrayList<>();
-            listGenres = new ArrayList<>();
-            listIMDB = new ArrayList<>();
-            JSONArray MovieArr = ApiMovies.get8movies(scrollPaneElement);
-            for (int i = 0; i < MovieArr.length(); i++) {
-                org.json.JSONObject movieObj = MovieArr.getJSONObject(i);
-                long id = movieObj.getLong("id");
-                String title = movieObj.getString("title");
-                String genre = movieObj.getString("genre");
-                long tmdbID = movieObj.getLong("tmdb");
-
-                listIDMovie.add(id);
-                listTitles.add(title);
-                listGenres.add(genre);
-                listIMDB.add(tmdbID);
-
-
-                if (!posterCache.containsKey(tmdbID)) {
-                    String posterUrl = ImgLoader.getImg(tmdbID);
-                    Image posterImage = new Image(posterUrl, true);
-                    posterCache.put(tmdbID, posterImage);
-                    listURL.add(posterUrl);
-                } else {
-                    listURL.add("CACHED");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateMovies() {
-    try {
-        getData(scrollPaneElement);
-
-        for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
-            if (recommendedContainer.getChildren().get(i) instanceof StackPane) {
-                StackPane stack = (StackPane) recommendedContainer.getChildren().get(i);
-                stack.getChildren().clear();
-
-                long tmdbID = ApiMovies.get8movies(scrollPaneElement).getJSONObject(i).getLong("tmdb");
-
-                Image image;
-                if (posterCache.containsKey(tmdbID)) {
-                    image = posterCache.get(tmdbID);
-                } else {
-                    String url = ImgLoader.getImg(tmdbID);
-                    image = new Image(url, true);
-                    posterCache.put(tmdbID, image);
-                }
-
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(110);
-                imageView.setPreserveRatio(true);
-                stack.getChildren().add(imageView);
-            }
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-        @FXML
-    private void updateMoviesN() {
-        scrollPaneElement += 8;
-        updateMovies();
-        getData(scrollPaneElement+8);
-        System.out.println("scrollPaneElement: " + scrollPaneElement);
+    public static void clearCache() {
+        cachedMovieForYou = null;
+        cachedMovieByOthers = null;
     }
 
     @FXML
-    private void updateMoviesB() {
-        if (scrollPaneElement == 0) return;
-        scrollPaneElement -= 8;
-        updateMovies();
-    }
-
-    @FXML
-public void openMovie(int StackPaneid){
-    try {
-        long id = listIDMovie.get(StackPaneid);
-        String title = listTitles.get(StackPaneid);
-        Long tmdbID = listIMDB.get(StackPaneid);
-        String posterUrl = ImgLoader.getImg(tmdbID);
-        System.out.println("Poster URL: " + posterUrl);
-        String genre = listGenres.get(StackPaneid);
-
-        MovieCache.setId(id);
-        MovieCache.setTitle(title);
-        MovieCache.setPosterUrl(posterUrl);
-        MovieCache.setGenres(genre);
-
-        URL fxmlUrl = getClass().getResource("/views/moviePage.fxml");
-        FXMLLoader loader = new FXMLLoader(fxmlUrl);
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) disconectButton.getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("MoviePage");
-        SceneChanger.setWindow(stage, "moviePage");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-    @FXML
-    public void searchName(){
+    public void searchName() {
         searchField.setVisible(true);
 
         searchField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 String searchText = searchField.getText();
                 try {
-                    JSONArray MovieArr = ApiMovies.getMoviebyTitle(searchText);
+                    JSONArray movieArr = ApiMovies.getMoviebyTitle(searchText);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

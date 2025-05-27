@@ -1,11 +1,11 @@
 package fr.univtln.laure.utils;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class SceneChanger {
 
@@ -27,8 +27,8 @@ public class SceneChanger {
     public static void setWindow(Stage stage, String fileName) {
         switch(fileName) {
             case "home":
-                stage.setWidth(1340);
-                stage.setHeight(800);
+                stage.setWidth(1100);
+                stage.setHeight(650);
                 stage.setX(360);
                 stage.setY(130);
                 break;

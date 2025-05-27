@@ -40,8 +40,8 @@ public class ImgLoader {
             return null;
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return "/images/placeholder/placeholderPoster.jpg";
+            
         }
     }
 }

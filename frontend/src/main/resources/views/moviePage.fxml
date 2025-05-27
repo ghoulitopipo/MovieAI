@@ -19,13 +19,13 @@
         <VBox spacing="15" alignment="TOP_LEFT" styleClass="info-container">
             <Label fx:id="titleLabel" styleClass="movie-title"/>
             <Label fx:id="genresLabel" styleClass="movie-genres"/>
-        <Label text="Tags:"/>
-        <ScrollPane fitToWidth="true" prefHeight="100" prefWidth="180" vbarPolicy="ALWAYS">
-            <FlowPane fx:id="tagsBar" hgap="8" vgap="8" alignment="TOP_LEFT"/>
+        <Label text="Tags:" styleClass="labelTag"/>
+        <ScrollPane fx:id="tagsScrollPane" styleClass="tags-scrollpane" fitToWidth="true" prefHeight="100" prefWidth="180" vbarPolicy="ALWAYS">
+            <FlowPane fx:id="tagsBar" hgap="8" vgap="8" alignment="TOP_LEFT" styleClass="PaneTag"/>
         </ScrollPane>
 
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Note :"/>
+                <Label text="Note :" styleClass="labelNote"/>
                 <Rating fx:id="rating" max="5"/>
             </HBox>
 

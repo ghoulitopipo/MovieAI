@@ -4,30 +4,37 @@
 
 .info-container {
     -fx-padding: 20;
+    -fx-background-color: #2A2E37;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #FFFF8D;
+    -fx-border-width: 2;
 }
 
 .movie-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
+    -fx-text-fill: #FFFF8D;
 }
 
 .movie-genres {
     -fx-font-size: 16px;
-    -fx-text-fill: #666;
+    -fx-text-fill: #FFFF8D;
 }
 
 .tag-item {
-    -fx-background-color: #f5f5f5;
+    -fx-background-color: #2A2E37;
     -fx-background-radius: 12;
     -fx-border-radius: 12;
-    -fx-border-color: #cccccc;
+    -fx-border-color: #FFFF8D;
     -fx-border-width: 1;
     -fx-padding: 4 10 4 10;
     -fx-alignment: center;
-    -fx-spacing: 6;}
+    -fx-spacing: 6;
+}
 .tag-label {
     -fx-font-size: 13px;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #FFFF8D;
 }
 .tag-close-btn {
     -fx-background-color: transparent;
@@ -39,4 +46,78 @@
 }
 .tag-close-btn:hover {
     -fx-text-fill: #b71c1c;
+}
+
+.root, .background {
+    -fx-background-color: linear-gradient(to bottom, #2A2E37, #0b0c0e);
+}
+
+.labelTag {
+    -fx-text-fill: #FFFF8D;
+    -fx-font-size: 14px;
+}
+
+.labelNote {
+    -fx-text-fill: #FFFF8D;
+    -fx-font-size: 14px;
+}
+
+.tags-scrollpane {
+    -fx-background-color: #2A2E37;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #FFFF8D;
+    -fx-border-width: 1;
+    -fx-padding: 5;
+}
+.tags-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.PaneTag {
+    -fx-background-color: #2A2E37;
+    -fx-padding: 10;
+}
+
+.button {
+    -fx-background-color: linear-gradient(to bottom, #2A2E37, #15171a);
+    -fx-border-color: #FFFF8D;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-font-size: 16px;
+    -fx-text-fill: #FFFF8D;
+}
+
+.button:hover {
+    -fx-border-color: #FFFF8D;
+    -fx-background-color: #FFFF8D;
+    -fx-text-fill: #2A2E37;
+}
+
+.tags-scrollpane .scroll-bar {
+    -fx-background-color: #2A2E37;
+    -fx-background-radius: 10;
+}
+
+.tags-scrollpane .thumb {
+    -fx-background-color: #FFFF8D;
+    -fx-background-radius: 8;
+}
+
+.tags-scrollpane .track {
+    -fx-background-color: #15171a;
+    -fx-background-radius: 10;
+}
+
+.tags-scrollpane .increment-button,
+.tags-scrollpane .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.tags-scrollpane .increment-arrow,
+.tags-scrollpane .decrement-arrow {
+    -fx-background-color: #FFFF8D;
 }

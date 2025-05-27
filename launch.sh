@@ -98,7 +98,7 @@ start_quarkus() {
   # On lit le fichier de logs en temps réel, on arrête quand on voit la ligne clé
   tail -n +1 -f quarkus.log | while read -r line; do
     echo "$line"
-    if [[ "$line" == *"Importation des tags terminée."* ]]; then
+    if [[ "$line" == *"Importation des ratings terminée."* ]]; then
       echo "✅ Quarkus import finished."
       pkill -P $$ tail  # tue le tail lancé ici
       break
