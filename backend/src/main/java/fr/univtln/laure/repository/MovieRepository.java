@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import fr.univtln.laure.model.Movie;
+import fr.univtln.laure.service.DPUtils;
 
 @ApplicationScoped
 public class MovieRepository{
@@ -110,6 +111,11 @@ public class MovieRepository{
                 entry.add(new ArrayList<>());
                 grouped.put(key, entry);
             }
+
+            List<Object> group = grouped.get(key);
+            float originalRating = (float) group.get(1);
+            float privatizedRating = (float) DPUtils.privatizeRating(originalRating, 5.0);
+            group.set(1, privatizedRating);
 
             ((List<String>) grouped.get(key).get(2)).add(tag);
         }

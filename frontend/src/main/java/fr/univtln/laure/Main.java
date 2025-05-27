@@ -21,6 +21,9 @@ public class Main extends Application{
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println(ApiPython.RecommendationForYou(2));
+        System.out.println("________________________________");
+        System.out.println(ApiPython.RecommendationForOther(2));
         launch(args);
     }
 }
