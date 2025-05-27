@@ -2,7 +2,8 @@
 Module qui contient des parties du code réutilisables par les différents algorithmes Python.
 """
 
-from ApiBackend import *
+#from ApiBackend import *
+from read_data import *
 
 # Charger les données dans des tableaux Numpy
 users_count, movies_data, ratings_data, tags_data = get_all_data()
@@ -13,7 +14,6 @@ print(users_count, len(movies_data), len(ratings_data), len(tags_data))
 movies_count = len(movies_data)
 ratings_count = len(ratings_data)
 tags_count = len(tags_data)
-
 
 #Une seule fois car pas de changement dans le nombre de films
 def get_movies_id_dict():

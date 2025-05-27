@@ -19,19 +19,11 @@ app = Flask(__name__)
 
 @app.route("/api/RecoForYou/<int:id_user>", methods=["GET"])
 def greet(id_user):
-    data = jsonify(IA_for_you.launch(id_user))
-    if len(data.json) <= 16:
-        return jsonify(IA_for_no_data.launch())
-    else:
-        return data
+    return jsonify(IA_for_you.launch(id_user))
 
 @app.route("/api/RecoByOther/<int:id_user>", methods=["GET"])
 def getrecobyother(id_user):
-    return jsonify(IA_for_other.launch_U(id_user))
-
-@app.route("/api/RecoForMovie/<int:id_movie>", methods=["GET"])
-def getrecobymovie(id_movie):
-    return jsonify(IA_for_other.launch_M(id_movie))
+    return jsonify(IA_for_other.launch(id_user))
 
 @app.route("/api/RecoNoData", methods=["GET"])
 def getnouser():

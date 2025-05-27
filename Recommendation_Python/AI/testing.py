@@ -4,11 +4,13 @@ Module de test des algorithmes Python.
 
 import time
 from utils import *
-from cosine_sim import *
+from IA_for_other import *
+from IA_for_you import *
+from IA_for_no_data import *
 
 def measure_time(func, *args, **kwargs):
     """
-    Appelle une méthode et renvoie le résultat et le temps d'exécution de l'algorithme.
+    Appelle une méthode et renvoie son résultat et son temps d'exécution.
     """
     start_time = time.time()
     result = func(*args, **kwargs)
@@ -49,7 +51,7 @@ def test_cosine_user():
     #     print(f"Film {user_test_ratings[idx][0]} : {user_test_ratings[idx][1]}")
 
     # Recommandations pour l'utilisateur test
-    reco = cosine_user_recommend(R, user_index=test_user)
+    reco = cosine_user_recommend(test_user)
     print("Recommandations pour l'utilisateur test :")
     print(len(reco), "films recommandés")
 
@@ -119,7 +121,7 @@ def test_cosine_content():
         test_movie_ids = user_test_ratings[:, 1].astype(int)
 
         note_count, avg_rating = get_user_rating_stats(ratings_data, test_user)
-        print(f"\n📊 Résultats pour l'utilisateur {test_user} — {note_count} films notés | moyenne des notes : {avg_rating} | {len(user_test_ratings)} notes cachées")
+        print(f"\nRésultats pour l'utilisateur {test_user} — {note_count} films notés | moyenne des notes : {avg_rating} | {len(user_test_ratings)} notes cachées")
 
         found = False
         for i, movie_id in enumerate(test_movie_ids):
@@ -128,11 +130,11 @@ def test_cosine_content():
                 title = movies_data[movies_index_dict[movie_id], 1] if movie_id in movies_index_dict else "Inconnu"
                 rank = recommended_ids.index(movie_id) + 1
                 score = [r[2] for r in reco if r[0] == movie_id][0]
-                print(f"✅ {title} (ID {movie_id}) — recommandé en position {rank} sur {n_recommendations} avec score {score:.2f} | note réelle : {rating}")
+                print(f"{title} (ID {movie_id}) — recommandé en position {rank} sur {n_recommendations} avec score {score:.2f} | note réelle : {rating}")
                 found = True
 
         if not found:
-            print("❌ Aucun des films cachés n'a été recommandé.")
+            print("Aucun des films cachés n'a été recommandé.")
 
         tested_users += 1
         if tested_users >= max_users_to_test:
