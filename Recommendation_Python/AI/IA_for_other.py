@@ -148,10 +148,9 @@ def cosine_content_recommend_similar(movie_id, sim_matrix, n_reco=30, min_rating
     top_indices = np.argsort(similarities)[::-1][:n_reco]
     recommendations = []
 
-    movies_data = ApiBackend.get_all_movies()
 
     for i in top_indices:
-        mid = int(movies_data[i].get('id'))
+        mid = int(movies_data[i,0])
         score = similarities[i]
         recommendations.append((mid, score))
 
