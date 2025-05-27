@@ -16,6 +16,10 @@ public class ApiPython {
      * - RecommendationForYou(long id_user): to get recommendations for the user (return JSONArray)
      * 
      * - RecommendationForOther(long id_user): to get recommendations for other users (return JSONArray)
+     * 
+     * - RecommendationForMovie(long id_movie): to get recommendations for a specific movie (return JSONArray)
+     * 
+     * - RecommendationForNoData(): to get recommendations when a user doesn't have enough ratings (return JSONArray)
      */
     private static final String BASE_URL = "http://localhost:5000";
     private static final HttpClient client = HttpClient.newHttpClient();

@@ -3,6 +3,10 @@ package fr.univtln.laure.service;
 import java.util.Random;
 
 public class DPUtils {
+    /*
+     * This class provides methods for differential privacy.
+     * It includes methods to generate Laplace noise and to privatize ratings.
+     */
     private static Random rand = new Random();
 
     public static double laplaceNoise(double epsilon) {
