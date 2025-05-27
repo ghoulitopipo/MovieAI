@@ -30,7 +30,7 @@ def get_movies_id_dict():
     movies_index_dict = {}
 
     for i in range(movies_count):
-        movie_id = int(movies_data[i].get('id'))
+        movie_id = int(movies_data[i, 0])
         movies_id_dict[i] = movie_id
         movies_index_dict[movie_id] = i
     
@@ -45,9 +45,9 @@ def create_user_item_matrix(null_values=True):
     user_rating_matrix = np.zeros((users_count, movies_count))
 
     for i in range(ratings_count):
-        user_id = int(ratings_data[i].get('user').get('id'))
-        movie_id = int(ratings_data[i].get('movie').get('id'))
-        rating = ratings_data[i].get('rating')
+        user_id = int(ratings_data[i, 0])
+        movie_id = int(ratings_data[i, 1])
+        rating = ratings_data[i, 2]
         user_rating_matrix[user_id - 1, movies_index_dict[movie_id]] = rating
 
     # Remplir par des zéros ou des valeurs nulles pour les films sans note

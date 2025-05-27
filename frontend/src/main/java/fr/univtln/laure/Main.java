@@ -21,7 +21,7 @@ public class Main extends Application{
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ApiPython.RecommendationForNoData());
+        System.out.println(ApiPython.RecommendationForMovie(1));
         launch(args);
     }
 }
