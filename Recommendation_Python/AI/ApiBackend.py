@@ -114,12 +114,20 @@ def get_all_data():
     Retourne toutes les données sous forme de tabeau numpy.
     """
     data = []
+
     ud = get_len_users()
     data.append(ud)
-    md = np.array(get_all_movies())
+    
+    md = get_all_movies()
+    md = np.array([[movie.get("id"), movie.get("title"), movie.get("genre")] for movie in md])
     data.append(md)
+
     rd = np.array(get_all_ratings())
+    rd = np.array([[rating.get("user").get("id"), rating.get("movie").get("id"), rating.get("rating")] for rating in rd])
     data.append(rd)
+    
     td = np.array(get_all_tags())
+    td = np.array([[tag.get("user").get("id"), tag.get("movie").get("id"), tag.get("tag")] for tag in td])
     data.append(td)
+
     return data

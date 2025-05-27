@@ -53,6 +53,22 @@ public class ApiPython {
         return new JSONArray(response.body());
     }
 
+    public static JSONArray RecommendationForMovie(long id_movie) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/api/RecoForMovie/" + id_movie))
+                .GET() 
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+        
+        return new JSONArray(response.body());
+    }
+
     public static JSONArray RecommendationForNoData() throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
