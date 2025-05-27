@@ -1,6 +1,5 @@
 package fr.univtln.laure;
 
-import fr.univtln.laure.utils.ApiPython;
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +20,6 @@ public class Main extends Application{
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ApiPython.RecommendationForYou(2));
-        System.out.println("________________________________");
-        System.out.println(ApiPython.RecommendationForOther(2));
         launch(args);
     }
 }

@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import fr.univtln.laure.model.Users;
-import fr.univtln.laure.service.UsersService;
-import io.quarkus.security.User;
 
 @ApplicationScoped
 public class RatingRepository {

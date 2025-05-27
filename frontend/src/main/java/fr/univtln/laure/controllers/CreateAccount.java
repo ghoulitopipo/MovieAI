@@ -3,8 +3,6 @@ package fr.univtln.laure.controllers;
 import java.io.IOException;
 import java.net.URL;
 
-import org.json.JSONObject;
-
 import fr.univtln.laure.utils.ApiUsers;
 import fr.univtln.laure.utils.SceneChanger;
 import javafx.application.Platform;
@@ -15,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateAccount {
