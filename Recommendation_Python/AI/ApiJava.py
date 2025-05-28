@@ -12,7 +12,7 @@ The API has three endpoints:
 
 2. /api/RecoByOther/<int:id_user>: this endpoint is used to get recommendations for a user based on other users.
 
-3. /api/RecoNoUser: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
+3. /api/RecoNoData: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
 """
 
 app = Flask(__name__)
