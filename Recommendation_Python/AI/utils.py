@@ -5,10 +5,8 @@ Module qui contient des parties du code réutilisables par les différents algor
 #from ApiBackend import *
 from read_data import *
 
-# Charger les données dans des tableaux Numpy
+# Charger les données
 users_count, movies_data, ratings_data, tags_data = get_all_data()
-
-print(users_count, len(movies_data), len(ratings_data), len(tags_data))
 
 # Tailles des données
 movies_count = len(movies_data)

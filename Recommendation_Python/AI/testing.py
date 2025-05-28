@@ -1,8 +1,8 @@
 """
 Module de test des algorithmes Python.
 """
-
 import time
+import matplotlib.pyplot as plt
 from utils import *
 from IA_for_other import *
 from IA_for_you import *
@@ -149,6 +149,24 @@ def get_user_rating_stats(ratings_data, user_id):
         return 0, 0.0
     mean_rating = np.mean(user_ratings[:, 2])
     return len(user_ratings), round(mean_rating, 2)
+
+def launch_F(id_user):
+    print("User Factors:\n", U)
+    print("Item Factors:\n", V)
+    print("\nShapes :", U.shape, V.shape)
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(rmse_list, label='RMSE', marker='o')
+    plt.plot(mae_list, label='MAE', marker='x')
+    plt.title('RMSE and MAE over Iterations')
+    plt.xlabel('Iteration')
+    plt.ylabel('Error')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    print("\nMatching Movies for User", id_user, ":")
+    print(matching_movies[:20])
 
 if __name__ == "__main__":
     measure_time(test_cosine_user)

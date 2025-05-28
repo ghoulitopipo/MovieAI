@@ -1,33 +1,40 @@
-from flask import Flask, request, jsonify
-
-import IA_for_other
-import IA_for_you
-import IA_for_no_data
-
 """
 ApiJava.py, this file is used to create a Flask API that will be used by the Java application.
-The API has three endpoints:
+
+The API has four endpoints:
 
 1. /api/RecoForYou/<int:id_user>: this endpoint is used to get recommendations for a user.
 
 2. /api/RecoByOther/<int:id_user>: this endpoint is used to get recommendations for a user based on other users.
 
-3. /api/RecoNoUser: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
+3. /api/RecoForMovie/<int:id_movie> : this endpoint is used to get recommandations based on similarities with a given movie.
+
+4. /api/RecoNoData: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
 """
+from flask import Flask, request, jsonify
+
+import IA_for_other
+import IA_for_you
+import IA_for_no_data
+import IA_similar
 
 app = Flask(__name__)
 
 @app.route("/api/RecoForYou/<int:id_user>", methods=["GET"])
 def greet(id_user):
-    return jsonify(IA_for_you.launch(id_user))
+    return jsonify(IA_for_you.launch_Y(id_user))
 
 @app.route("/api/RecoByOther/<int:id_user>", methods=["GET"])
 def getrecobyother(id_user):
-    return jsonify(IA_for_other.launch(id_user))
+    return jsonify(IA_for_other.launch_U(id_user))
+
+@app.route("/api/RecoForMovie/<int:id_movie>", methods=["GET"])
+def getrecobymovie(id_movie):
+    return jsonify(IA_similar.launch_M(id_movie))
 
 @app.route("/api/RecoNoData", methods=["GET"])
 def getnouser():
-    return jsonify(IA_for_no_data.launch())
+    return jsonify(IA_for_no_data.launch_N())
 
 if __name__ == "__main__":
     app.run(port=5000)

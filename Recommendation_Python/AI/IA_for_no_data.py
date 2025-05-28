@@ -1,6 +1,9 @@
 import ApiBackend
 
 def generate_recommendations():
+    """
+    Generates a recommendation score for movies by combining ranking from most counted and highest average rated lists.
+    """
     LN = ApiBackend.get_most_count()
     LM = ApiBackend.get_most_average()
 
@@ -20,10 +23,10 @@ def generate_recommendations():
     RM = sorted(Reco.items(), key=lambda item: item[1], reverse=True)
     return RM
 
-def launch():
-
+def launch_N():
+    """
+    Launches the recommendation generation and formats the result as a list of dictionaries with movie ID and score
+    """
     recommendations = generate_recommendations()
-
     output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
-
     return output

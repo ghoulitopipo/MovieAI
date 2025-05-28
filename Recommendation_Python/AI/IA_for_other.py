@@ -1,13 +1,78 @@
 """
-Algorithmes de filtrage collaboratif et basé sur le contenu.
-A son éxécution, le script crée les matrices de similarité :
-    - sim_user : similarité entre les utilisateurs (basée sur les notes)
-    - sim_movies : similarité entre les films (basée sur les genres et les tags)
+Algorithmes de filtrage collaboratif.
+A son éxécution, le script crée la matrice de similarité sim_user,
+qui indique la similarité entre les utilisateurs (basée sur les notes seulement).
 """
 from utils import *
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+def sgd_als(num_factors, learning_rate, regularization, iterations=10):
+    """
+    Factorisation matricielle avec ALS et SGD.
+
+    num_factors: Number of latent factors to use.
+    Higher values can capture more nuanced patterns but risk overfitting.
+    regularization: Helps prevent overfitting by penalizing large parameter values.
+    """
+    rmse_list = []
+    mae_list = []
+    
+    # Initialize user and item latent factor matrices with small random values
+    user_factors = np.random.normal(scale=1./num_factors, size=(users_count, num_factors))
+    item_factors = np.random.normal(scale=1./num_factors, size=(movies_count, num_factors))
+    
+    for iteration in range(iterations):
+        total_rmse_error = 0
+        total_mae_error = 0
+        count = 0
+        for u in range(users_count):
+            for i in range(users_count):
+                if R[u, i] > 0:
+                    # Calcul de l'erreur entre la note réelle et la prédiction
+                    error = R[u, i] - np.dot(user_factors[u, :], item_factors[i, :].T)
+                    total_rmse_error += error**2
+                    total_mae_error += np.abs(error)
+
+                    # Mise à jour des features
+                    user_factors[u, :] += learning_rate * (error * item_factors[i, :] - regularization * user_factors[u, :])
+                    item_factors[i, :] += learning_rate * (error * user_factors[u, :] - regularization * item_factors[i, :])
+        
+                    count += 1
+
+        # Calcul de la RMSE et de la MAE
+        # rmse = np.sqrt(total_rmse_error / np.count_nonzero(R))
+        # mae = total_mae_error / np.count_nonzero(R)
+
+        rmse = np.sqrt(total_rmse_error / count)
+        mae = total_mae_error / count
+
+        rmse_list.append(rmse)
+        mae_list.append(mae)
+
+    return user_factors, item_factors, rmse_list, mae_list
+
+def get_matching_movies(user_id, U, V):
+    """
+    Retourne les films avec les features recherchées par l'utilisateur.
+    """
+    # Pour chaque film, calculer le produit scalaire entre le vecteur utilisateur et le vecteur item du film
+    similarities = np.zeros(V.shape[0])
+    for i in range(V.shape[0]):
+        similarities[i] = np.dot(U[user_id], V[i])
+
+    # Pour chaque film, si le film a été noté par l'utilisateur, on le met à -1 pour ne pas le recommander
+    for i in range(R.shape[1]):
+        if R[user_id, i] > 0:
+            similarities[i] = 0
+
+    # Liste des indices des films triés par pertinence avec l'utilisateur
+    # similarities = np.argsort(similarities)[::-1]
+
+    # Ensuite on remplace les indices par les ID des films dans la table movies
+    # for i in range(len(similarities)):
+    #     similarities[i] = movies_id_dict[similarities[i]]
+
+    return similarities
 
 def cosine_sim_user():
     """
@@ -26,7 +91,7 @@ def cosine_sim_user():
 
     return sim_user
 
-def cosine_user_recommend(user_index, n_reco=50, k=20):
+def cosine_user_recommend(user_index, k=20):
     """
     Algorithme CF user based basé uniquement sur les notes des films.
     La méthode retourne une liste de n films recommandés avec leurs notes prédites.
@@ -43,184 +108,53 @@ def cosine_user_recommend(user_index, n_reco=50, k=20):
     # Prédictions des notes
     user_ratings = R[user_index]
     unrated_indices = np.where(np.isnan(user_ratings))[0]
+    predicted_ratings = np.zeros(movies_count)
 
-    predicted_ratings = {}
-
-    for movie_idx in unrated_indices:
+    for id in unrated_indices:
         sim_sum = 0
         weighted_sum = 0
         for other_user in similar_users:
-            rating = R[other_user, movie_idx]
+            rating = R[other_user, id]
             if not np.isnan(rating):
                 sim = sim_scores[other_user]
                 weighted_sum += sim * rating
                 sim_sum += sim
         if sim_sum > 0:
-            predicted_ratings[movie_idx] = weighted_sum / sim_sum
+            predicted_ratings[id] = round(weighted_sum / sim_sum, 2)
 
     # Recommande les n films avec la plus haute prédiction
-    recommended = sorted(predicted_ratings.items(), key=lambda x: x[1], reverse=True)[:n_reco]
+    # recommended = sorted(predicted_ratings.items(), key=lambda x: x[1], reverse=True)[:n_reco]
 
     # Arrondie les notes et remplace les indices de ligne par les ID MovieLens des films
-    recommended = [(movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
+    # recommended = [(movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
 
-    return recommended
+    return predicted_ratings
 
-def cosine_sim_genre():
-    """
-    Calcule et retourne la similarité entre tous les films basée uniquement sur leurs genres.
-
-    Retourne une matrice carrée de taille movies_count
-    avec pour la case (i, j) la similarité entre le film i et le film j.
-    """
-    genres_raw = movies_data[:, 2]
-    genre_lists = [g.split('|') if g else [] for g in genres_raw]
-
-    mlb = MultiLabelBinarizer()
-    genre_matrix = mlb.fit_transform(genre_lists)
-    sim_movies = cosine_similarity(genre_matrix)
-
-    return sim_movies
-
-def cosine_sim_tag():
-    """
-    Calcule et retourne la similarité entre tous les films basée uniquement sur leurs tags.
-
-    Retourne une matrice carrée de taille movies_count
-    avec pour la case (i, j) la similarité entre le film i et le film j.
-    """
-    # Construire une liste de tags combinés pour chaque film dans l'ordre de movies_data
-    tag_dict = {}
-
-    for row in tags_data:
-        movie_id = int(row[1])
-        tag_text = str(row[2])
-        if movie_id not in tag_dict:
-            tag_dict[movie_id] = []
-        tag_dict[movie_id].append(tag_text)
-
-    movie_ids = movies_data[:, 0].astype(int)
-    tag_strings = []
-
-    for mid in movie_ids:
-        if mid in tag_dict:
-            tag_string = ' '.join(tag_dict[mid])
-        else:
-            tag_string = ''
-        tag_strings.append(tag_string)
-
-    # Calcul de similarité
-    vectorizer = TfidfVectorizer()
-    tag_matrix = vectorizer.fit_transform(tag_strings)
-    sim_tag = cosine_similarity(tag_matrix)
-
-    return sim_tag
-
-def similarite_genre_tag(alpha=0.65):
-    """
-    Calcule la similarité entre les films en fonction des genres et des tags.
-    Les notes ne sont pas prises en compte.
-
-    Retourne une matrice carrée de taille movies_count
-    avec pour la case (i, j) la similarité entre le film i et le film j.
-
-    La méthode calcule la similarité pour les genres et pour les tags séparément,
-    puis calcule une moyenne pondérée entre les deux similarités.
-
-    alpha = poids des genres dans la moyenne
-    """
-    # Calcul de similarité
-    sim_genre = cosine_sim_genre()
-    sim_tag = cosine_sim_tag()
-
-    return alpha * sim_genre + (1 - alpha) * sim_tag
-
-def cosine_content_recommend_similar(movie_id, sim_matrix, n_reco=30, min_rating=4.0):
-    """
-    Algorithme CB basé uniquement sur les genres des films.
-    Retourne les n films les plus similaires au film choisi.
-    """
-    if movie_id not in movies_index_dict:
-        print(f"Film {movie_id} introuvable.")
-        return []
-
-    idx = movies_index_dict[movie_id]
-    similarities = sim_matrix[idx]
-    
-    # Exclure le film lui-même
-    similarities[idx] = -1
-    similarities = np.nan_to_num(similarities, nan=-1)
-    top_indices = np.argsort(similarities)[::-1][:n_reco]
-    recommendations = []
-
-    for i in top_indices:
-        mid = int(movies_data[i, 0])
-        score = similarities[i]
-        recommendations.append((mid, score))
-
-    return recommendations
-
-def cosine_content_recommend_user(user_id, sim_matrix, n_reco=30, min_rating=3.0):
-    """
-    Recommande n films à un utilisateur en se basant sur la version content-based
-    de l'algorithme cosine similarity.
-    """
-    # Récupère les films notés par l'utilisateur
-    user_ratings = ratings_data[ratings_data[:, 0] == (user_id + 1)]
-    liked_movies = user_ratings[user_ratings[:, 2] >= min_rating]
-
-    # Calcul du score de recommandation
-    scores = np.zeros(sim_matrix.shape[0])
-    for row in liked_movies:
-        movie_id = int(row[1])
-        rating = float(row[2])
-        if movie_id in movies_index_dict:
-            idx = movies_index_dict[movie_id]
-            scores += sim_matrix[idx] * rating
-
-    # Éviter les films déjà vus par l'utilisateur
-    seen_movie_ids = user_ratings[:, 1].astype(int)
-    seen_indices = [movies_index_dict[mid] for mid in seen_movie_ids if mid in movies_index_dict]
-    scores[seen_indices] = -1  # on les exclut des recommandations
-
-    # Recommander les n premiers films
-    top_indices = np.argsort(scores)[::-1][:n_reco]
-
-    # Convertit les indices en movieIds et titres
-    recommendations = []
-    for idx in top_indices:
-        movie_id = int(movies_data[idx, 0])
-        score = round(scores[idx], 2)
-        recommendations.append((movie_id, score))
-
-    return recommendations
-
-def launch_U(id_user):
+def launch_U(id_user, n_reco=50):
     u_id = id_user if id_user >= 1 else 0
-    
+
     recommendations = cosine_user_recommend(u_id)
-    output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
+    matching_movies = get_matching_movies(id_user, U, V)
 
-    return output
+    # Moyenne des deux recommandations
+    results = recommendations * 0.4 + matching_movies * 0.6
 
-def launch_M(id_movie):    
-    m_id = id_movie if id_movie >= 1 else 0
+    # Tri des recommnandations par ordre décroissant de score
+    # La méthode argsort retourne la liste des indices triés sans les scores
+    results = (np.argsort(results)[::-1])[:n_reco]
 
-    recommendations = cosine_content_recommend_similar(m_id, sim_genre_tag, n_reco=4)
-    output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
+    # On remplace les indices des lignes par les ID MovieLens
+    for i in range(n_reco):
+        results[i] = movies_id_dict[results[i]]
 
-    return output
+    return results
 
-# Création des matrices de similarité
+# Création de la matrice de similarité
 sim_user = cosine_sim_user()
-sim_genre_tag = similarite_genre_tag()
+
+U, V, rmse_list, mae_list = sgd_als(num_factors=10, learning_rate=0.01, regularization=0.01, iterations=10)
 
 if __name__ == "__main__":
-    test_user_id = 0
-    test_movie_id = 1
-
+    test_user_id = 4
     user_recommendations = launch_U(test_user_id)
     print("Recommandations pour l'utilisateur:", user_recommendations)
-
-    movie_recommendations = launch_M(test_movie_id)
-    print("Recommandations pour le film:", movie_recommendations)
