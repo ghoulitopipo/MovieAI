@@ -137,3 +137,8 @@ def launch(id_user):
     output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
 
     return output
+
+if __name__ == "__main__":
+    print(launch(1))
+    print("\n --------------------------- \n")
+    print(launch(2))  # Example usage with user ID 0

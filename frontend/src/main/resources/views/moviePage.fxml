@@ -27,6 +27,7 @@
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="Note :" styleClass="labelNote"/>
                 <Rating fx:id="rating" max="5"/>
+                <Label fx:id="ratingLabel" styleClass="labelNote"/>
             </HBox>
 
             <Button fx:id="backButton" text="Retour" onAction="#handleHome"/>

@@ -1,19 +1,5 @@
 package fr.univtln.laure.controllers;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
-
-import javafx.scene.image.Image;
-
 import java.io.IOException;
 import java.net.URL;
 
@@ -21,10 +7,22 @@ import org.controlsfx.control.Rating;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import fr.univtln.laure.utils.SceneChanger;
+import fr.univtln.laure.utils.ApiRatings;
 import fr.univtln.laure.utils.ApiTags;
-
 import fr.univtln.laure.utils.MovieCache;
+import fr.univtln.laure.utils.SceneChanger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class MoviePage {
     @FXML private ImageView posterImageView;
@@ -52,15 +50,31 @@ public class MoviePage {
         });
 
         rating.ratingProperty().addListener((obs, oldVal, newVal) -> {
-            double rounded = Math.round(newVal.doubleValue() * 2) / 2.0;
+        double rounded = Math.round(newVal.doubleValue() * 2) / 2.0;
+        if (rounded == 0) {
+            return;
+        }
+        if (rounded != newVal.doubleValue()) {
             rating.setRating(rounded);
-        });
-    
-    }
+            return;
+        }
+        try {
+            long userId = Home.getIdConnexion();
+            ApiRatings apiRatings = new ApiRatings();
+            apiRatings.addRating(idMovie, userId, (float) rounded);
+            ratingLabel.setText("Votre note : " + rounded + " / 5");
+        } catch (Exception e) {
+            e.printStackTrace();
+            rating.setRating(0);
+            ratingLabel.setText("Note supprimée");
+        }
+    });}
+
     @FXML
     public void handleDisconnect(){
         try {
             Home.setIdConnexion(0);
+            Home.clearCache();
             URL fxmlUrl = getClass().getResource("/views/login.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load()); 
@@ -74,42 +88,42 @@ public class MoviePage {
     }
 
     private void updateTagsBar(ObservableList<String> tags) {
-    tagsBar.getChildren().clear();
-    for (String tag : tags) {
-        HBox tagBox = new HBox(4);
-        tagBox.getStyleClass().add("tag-item");
-        Label tagLabel = new Label(tag);
-        tagLabel.getStyleClass().add("tag-label");
-        tagLabel.setWrapText(true);
+        tagsBar.getChildren().clear();
+        for (String tag : tags) {
+            HBox tagBox = new HBox(4);
+            tagBox.getStyleClass().add("tag-item");
+            Label tagLabel = new Label(tag);
+            tagLabel.getStyleClass().add("tag-label");
+            tagLabel.setWrapText(true);
 
-        Button closeBtn = new Button("✖");
-        closeBtn.getStyleClass().add("tag-close-btn");
-        closeBtn.setOnAction(e -> {
-            tags.remove(tag);
-            updateTagsBar(tags);
-        });
+            Button closeBtn = new Button("✖");
+            closeBtn.getStyleClass().add("tag-close-btn");
+            closeBtn.setOnAction(e -> {
+                tags.remove(tag);
+                updateTagsBar(tags);
+            });
 
-        tagBox.getChildren().addAll(tagLabel, closeBtn);
-        tagsBar.getChildren().add(tagBox);
+            tagBox.getChildren().addAll(tagLabel, closeBtn);
+            tagsBar.getChildren().add(tagBox);
+        }
     }
-}
 
     private void loadMovie(long idMovie) {
-    String posterUrl = MovieCache.getPosterUrl();
-    String title = MovieCache.getTitle();
-    String genresRaw = MovieCache.getGenres();
-    String genres = genresRaw != null ? genresRaw.replace("|", ", ") : "";
+        String posterUrl = MovieCache.getPosterUrl();
+        String title = MovieCache.getTitle();
+        String genresRaw = MovieCache.getGenres();
+        String genres = genresRaw != null ? genresRaw.replace("|", ", ") : "";
 
-    titleLabel.setText(title != null ? title : "");
-    genresLabel.setText(genres);
+        titleLabel.setText(title != null ? title : "");
+        genresLabel.setText(genres);
 
-    if (posterUrl != null && !posterUrl.isEmpty()) {
-        Image image = new Image(posterUrl, true);
-        posterImageView.setImage(image);
-    } else {
-        posterImageView.setImage(null);
+        if (posterUrl != null && !posterUrl.isEmpty()) {
+            Image image = new Image(posterUrl, true);
+            posterImageView.setImage(image);
+        } else {
+            posterImageView.setImage(null);
+        }
     }
-}
 
     private void loadtags(long idMovie) {
         ObservableList<String> tags = FXCollections.observableArrayList();
