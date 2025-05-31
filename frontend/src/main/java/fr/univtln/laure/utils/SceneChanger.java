@@ -38,6 +38,12 @@ public class SceneChanger {
                 stage.setX(360);
                 stage.setY(130);
                 break;
+            case "login":
+                stage.setWidth(1200);
+                stage.setHeight(800);
+                stage.setX(360);
+                stage.setY(130);
+                break;
             default:
                 stage.setWidth(1200);
                 stage.setHeight(800);

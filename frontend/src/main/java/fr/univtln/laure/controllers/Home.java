@@ -23,9 +23,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Home {
@@ -64,6 +64,8 @@ public class Home {
 
     private JSONArray listMovieForYou;
     private JSONArray listMovieByOthers;
+    @FXML
+    private VBox likedSection;
 
     private static class MoviePageData {
         List<Long> ids = new ArrayList<>();
@@ -76,17 +78,28 @@ public class Home {
     private final MoviePageData recommendedData = new MoviePageData();
     private final MoviePageData likedData = new MoviePageData();
 
-    @FXML
+
+@   FXML
     public void initialize() {
         try {
+            ApiPython.update_values();
             if (ApiRatings.nbRatings(IdConnexion) == 0) {
                 listMovieForYou = ApiPython.RecommendationForNoData();
-                listMovieByOthers = ApiPython.RecommendationForNoData();
+                likedSection.setVisible(false);
+                listMovieByOthers = listMovieForYou;
             }
             else {
-                listMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
+                likedSection.setVisible(true);
+                JSONArray temp = ApiPython.RecommendationForYou(IdConnexion);
+                if (temp.length() > 0) {
+                    listMovieForYou = temp;
+                } else {
+                    listMovieForYou = ApiPython.RecommendationForNoData();
+                }
                 listMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
             }
+            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
+            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +152,7 @@ public class Home {
             });
         }
     }
-
+    
     private void showMovies(JSONArray movieArray, HBox container, int startIndex, MoviePageData data) {
         data.ids.clear();
         data.titles.clear();

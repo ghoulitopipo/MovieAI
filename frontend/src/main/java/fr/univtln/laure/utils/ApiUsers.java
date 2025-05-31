@@ -50,7 +50,6 @@ public class ApiUsers {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            ApiPython.update_values();
             return response.body();
         } else {
             return null; 

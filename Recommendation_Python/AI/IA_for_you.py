@@ -121,23 +121,22 @@ def generate_recommendations(u=0):
     
     DM = {}
     for genre, weight in G.items():
-        if weight > 3.0:
-            LMG = Notratedonegenre(genre, u)
-            for movie_id, avg, genres, tags in LMG:
-                if movie_id not in DM:
-                    Wgenres = 0
+        LMG = Notratedonegenre(genre, u)
+        for movie_id, avg, genres, tags in LMG:
+            if movie_id not in DM:
+                Wgenres = 0
+                Wtags = 0
+                for tag in tags:
+                    if tag in T:
+                        Wtags += T[tag]
+                for genre in genres:
+                    Wgenres += G[genre]
+                Wgenres /= len(genres)
+                if len(tags) == 0:
                     Wtags = 0
-                    for tag in tags:
-                        if tag in T:
-                            Wtags += T[tag]
-                    for genre in genres:
-                        Wgenres += G[genre]
-                    Wgenres /= len(genres)
-                    if len(tags) == 0:
-                        Wtags = 0
-                    else:
-                        Wtags /= len(tags)
-                    DM[movie_id] = (avg * Wgenres)/5 + ((avg * Wtags)/5)/3
+                else:
+                    Wtags /= len(tags)
+                DM[movie_id] = (avg * Wgenres)/5 + ((avg * Wtags)/5)/3
     LM = sorted(DM.items(), key=lambda item: item[1], reverse=True)
     return LM
 

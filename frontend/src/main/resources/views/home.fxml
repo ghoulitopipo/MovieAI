@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1000.0" styleClass="home-view" stylesheets="@../styles/home.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="fr.univtln.laure.controllers.Home">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1000.0" styleClass="home-view" stylesheets="@../styles/home.css" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.univtln.laure.controllers.Home">
 
     <!-- CENTRE : Message + listes -->
     <center>
@@ -37,7 +37,7 @@
             </VBox>
 
             <!-- SECTION : D'autres comme vous ont aimé -->
-            <VBox spacing="10">
+            <VBox spacing="10" fx:id="likedSection">
                 <Label styleClass="section-title" text="D'autres comme vous ont aimé" />
                 <HBox alignment="CENTER" spacing="10">
                     <Button fx:id="likedLeft" onAction="#updateMoviesOB" styleClass="arrow-button" text="◀" />

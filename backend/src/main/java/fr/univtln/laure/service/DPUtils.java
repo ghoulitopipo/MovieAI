@@ -16,8 +16,7 @@ public class DPUtils {
     }
 
     public static double privatizeRating(double rating, double epsilon) {
-        double scale = 4.5 / epsilon;
-        double noisy = rating + laplaceNoise(scale);
+        double noisy = rating + laplaceNoise(epsilon);
         noisy = Math.max(0, Math.min(5, noisy));
         return Math.round(noisy * 2) / 2.0;
     }

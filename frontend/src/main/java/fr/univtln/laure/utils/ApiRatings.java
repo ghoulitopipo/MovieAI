@@ -107,7 +107,6 @@ public class ApiRatings {
             if (response.statusCode() != 201 && response.statusCode() != 200) {
                 throw new IOException("Ajout échoué, code: " + response.statusCode());
             } else {
-                ApiPython.update_values();
             System.out.println("Note ajoutée : " + rating + " pour le film " + id_movie + " par l'utilisateur " + id_user);
         }
             } else {

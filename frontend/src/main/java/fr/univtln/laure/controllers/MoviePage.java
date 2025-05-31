@@ -50,25 +50,26 @@ public class MoviePage {
         });
 
         rating.ratingProperty().addListener((obs, oldVal, newVal) -> {
-        double rounded = Math.round(newVal.doubleValue() * 2) / 2.0;
-        if (rounded == 0) {
-            return;
-        }
-        if (rounded != newVal.doubleValue()) {
-            rating.setRating(rounded);
-            return;
-        }
-        try {
-            long userId = Home.getIdConnexion();
-            ApiRatings apiRatings = new ApiRatings();
-            apiRatings.addRating(idMovie, userId, (float) rounded);
-            ratingLabel.setText("Votre note : " + rounded + " / 5");
-        } catch (Exception e) {
-            e.printStackTrace();
-            rating.setRating(0);
-            ratingLabel.setText("Note supprimée");
-        }
-    });}
+            double rounded = Math.round(newVal.doubleValue() * 2) / 2.0;
+            if (rounded == 0) {
+                return;
+            }
+            if (rounded != newVal.doubleValue()) {
+                rating.setRating(rounded);
+                return;
+            }
+            try {
+                long userId = Home.getIdConnexion();
+                ApiRatings apiRatings = new ApiRatings();
+                apiRatings.addRating(idMovie, userId, (float) rounded);
+                ratingLabel.setText("Votre note : " + rounded + " / 5");
+            } catch (Exception e) {
+                e.printStackTrace();
+                rating.setRating(0);
+                ratingLabel.setText("Note supprimée");
+            }   
+        });
+    }
 
     @FXML
     public void handleDisconnect(){
