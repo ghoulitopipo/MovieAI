@@ -1,9 +1,5 @@
 package fr.univtln.laure.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.EntityManager;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -13,6 +9,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import fr.univtln.laure.model.Movie;
+import fr.univtln.laure.service.DPUtils;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @ApplicationScoped
 public class MovieRepository{
@@ -20,10 +20,12 @@ public class MovieRepository{
     private EntityManager em;
 
     public List<Movie> findAllMovies() {
+        // This method retrieves all movies from the database.
         return em.createQuery("SELECT m FROM Movie m", Movie.class).getResultList();
     }
 
     public Movie findById(Long id) {
+        // This method retrieves a movie by its ID.
         return em.find(Movie.class, id);
     }
 
@@ -33,6 +35,11 @@ public class MovieRepository{
 
 
     public List<List<Object>> getListMoviesNotRated(long id_user, String genres) {
+        /*
+         * This method retrieves a list of movies that the user has not rated yet,
+         * along with their average rating, genre, and associated tags.
+         * It groups the results by movie ID, genre, and tag, and orders them by average rating in descending order.
+         */
         List<Object[]> rows = em.createQuery(
                     "SELECT m.id, " +
                     "    AVG(r.rating) as avgRating, " +
@@ -83,6 +90,11 @@ public class MovieRepository{
     }
 
     public List<List<Object>> getListMoviesRated(long id_user) {
+        /*
+         * This method retrieves a list of movies that the user has rated,
+         * along with their genre, rating, and associated tags.
+         * It groups the results by genre and rating, and collects tags for each movie.
+         */
         List<Object[]> rows = em.createQuery(
                             "SELECT m.genre, r.rating, t.tag " +
                             "FROM Rating r " +
@@ -111,6 +123,11 @@ public class MovieRepository{
                 grouped.put(key, entry);
             }
 
+            List<Object> group = grouped.get(key);
+            float originalRating = (float) group.get(1);
+            float privatizedRating = (float) DPUtils.privatizeRating(originalRating, 7.0);
+            group.set(1, privatizedRating);
+
             ((List<String>) grouped.get(key).get(2)).add(tag);
         }
 
@@ -120,6 +137,7 @@ public class MovieRepository{
     }
     
     public List<String> getGenres() {
+        // This method retrieves all unique genres from the Movie entity.
         List<String> badgenres = em.createQuery("SELECT DISTINCT m.genre FROM Movie m", String.class).getResultList();
         
         Set<String> uniqueGenres = new TreeSet<>(); 
@@ -137,14 +155,17 @@ public class MovieRepository{
     }
 
     public void persist(Movie movie) {
+        // This method persists a Movie entity to the database.
         em.persist(movie);
     }
     
     public Movie merge(Movie movie) {
+        // This method merges a Movie entity with the current persistence context.
         return em.merge(movie);
     }
 
     public void deleteAll() {
+        // This method deletes all Movie entities from the database.
         em.createQuery("DELETE FROM Movie").executeUpdate();
 
     }
@@ -157,12 +178,14 @@ public class MovieRepository{
     }
 
     public List<Movie> getMoviesByTitle(String title) {
+        // This method retrieves movies by title, using a case-insensitive search.
         return em.createQuery("SELECT m FROM Movie m WHERE m.title ILIKE :title", Movie.class)
                 .setParameter("title", "%" + title + "%")
                 .getResultList();
     }
 
     public List<Long> getBestMoviesAverage() {
+        // This method retrieves the IDs of the top 100 movies based on their average rating.
         List<Long> bestMovies = em.createQuery(
                 "SELECT m.id FROM Movie m " +
                 "JOIN Rating r ON r.movie.id = m.id " +
@@ -174,6 +197,7 @@ public class MovieRepository{
     }
 
     public List<Long> getBestMoviesCount() {
+        // This method retrieves the IDs of the top 100 movies based on the count of ratings.
         List<Long> bestMovies = em.createQuery(
                 "SELECT m.id FROM Movie m " +
                 "JOIN Rating r ON r.movie.id = m.id " +

@@ -10,6 +10,8 @@ The API has four endpoints:
 3. /api/RecoForMovie/<int:id_movie> : this endpoint is used to get recommandations based on similarities with a given movie.
 
 4. /api/RecoNoData: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
+
+5. /api/update_values: this endpoint is used  to update the values after modifications.
 """
 from flask import Flask, request, jsonify
 
@@ -34,7 +36,17 @@ def getrecobymovie(id_movie):
 
 @app.route("/api/RecoNoData", methods=["GET"])
 def getnouser():
-    return jsonify(IA_for_no_data.launch_N())
+    return jsonify(IA_for_no_data.launch_N()
+                   
+     
+@app.route("/api/update_values", methods=["POST"])
+def update_values():
+    """
+    Endpoint to update the values in the database.
+    This is a placeholder for the actual implementation.
+    """
+    utils.refresh_all()
+    return jsonify({"message": "Values updated successfully"}), 200
 
 if __name__ == "__main__":
     app.run(port=5000)

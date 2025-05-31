@@ -16,6 +16,10 @@ public class ApiPython {
      * - RecommendationForYou(long id_user): to get recommendations for the user (return JSONArray)
      * 
      * - RecommendationForOther(long id_user): to get recommendations for other users (return JSONArray)
+     * 
+     * - RecommendationForMovie(long id_movie): to get recommendations for a specific movie (return JSONArray)
+     * 
+     * - RecommendationForNoData(): to get recommendations when a user doesn't have enough ratings (return JSONArray)
      */
     private static final String BASE_URL = "http://localhost:5000";
     private static final HttpClient client = HttpClient.newHttpClient();
@@ -84,4 +88,18 @@ public class ApiPython {
         
         return new JSONArray(response.body());
     }
+
+    public static void update_values() throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(BASE_URL + "/api/update_values"))
+            .POST(HttpRequest.BodyPublishers.noBody())
+            .build();
+    System.out.println("requete faite");
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    if (response.statusCode() != 200) {
+        throw new IOException("Request failed with status: " + response.statusCode());
+    }
+}
+    
 }

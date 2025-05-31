@@ -1,7 +1,3 @@
-"""
-
-"""
-
 import ApiBackend
 
 def Notratedonegenre(genre, u=0):
@@ -158,5 +154,4 @@ def launch_Y(id_user):
     recommendations = generate_recommendations(u)
 
     output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
-
     return output

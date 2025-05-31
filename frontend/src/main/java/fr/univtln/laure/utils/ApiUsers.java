@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import fr.univtln.laure.utils.ApiPython;
 
 public class ApiUsers {
     /*
@@ -49,6 +50,7 @@ public class ApiUsers {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
+            ApiPython.update_values();
             return response.body();
         } else {
             return null; 

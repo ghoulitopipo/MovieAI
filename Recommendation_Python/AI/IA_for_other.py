@@ -3,7 +3,13 @@ Algorithmes de filtrage collaboratif.
 A son éxécution, le script crée la matrice de similarité sim_user,
 qui indique la similarité entre les utilisateurs (basée sur les notes seulement).
 """
-from utils import *
+
+
+import numpy as np
+import ApiBackend
+import utils
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 def sgd_als(num_factors, learning_rate, regularization, iterations=10):
@@ -126,9 +132,11 @@ def cosine_user_recommend(user_index, k=20):
     # recommended = sorted(predicted_ratings.items(), key=lambda x: x[1], reverse=True)[:n_reco]
 
     # Arrondie les notes et remplace les indices de ligne par les ID MovieLens des films
-    # recommended = [(movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
+    recommended = [(utils.movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
+
 
     return predicted_ratings
+
 
 def launch_U(id_user, n_reco=50):
     u_id = id_user if id_user >= 1 else 0
@@ -136,25 +144,7 @@ def launch_U(id_user, n_reco=50):
     recommendations = cosine_user_recommend(u_id)
     matching_movies = get_matching_movies(id_user, U, V)
 
-    # Moyenne des deux recommandations
-    results = recommendations * 0.4 + matching_movies * 0.6
-
-    # Tri des recommnandations par ordre décroissant de score
-    # La méthode argsort retourne la liste des indices triés sans les scores
-    results = (np.argsort(results)[::-1])[:n_reco]
-
-    # On remplace les indices des lignes par les ID MovieLens
-    for i in range(n_reco):
-        results[i] = movies_id_dict[results[i]]
-
-    return results
-
 # Création de la matrice de similarité
 sim_user = cosine_sim_user()
 
 U, V, rmse_list, mae_list = sgd_als(num_factors=10, learning_rate=0.01, regularization=0.01, iterations=10)
-
-if __name__ == "__main__":
-    test_user_id = 4
-    user_recommendations = launch_U(test_user_id)
-    print("Recommandations pour l'utilisateur:", user_recommendations)

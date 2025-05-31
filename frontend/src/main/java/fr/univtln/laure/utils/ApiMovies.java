@@ -2,9 +2,11 @@ package fr.univtln.laure.utils;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class ApiMovies {
         return genres;
     }
 
-        public static JSONArray get8movies(int x) throws Exception {
+    public static JSONArray get8movies(int x) throws Exception {
         String url = String.format("%s/movies/8movies/%d", BASE_URL, x);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -97,15 +99,17 @@ public class ApiMovies {
     }
 
     public static JSONArray getMoviebyTitle(String title) throws Exception {
-        String url = String.format("%s/movies/title/%s", BASE_URL, title);
+        String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8).replace("+", "%20");
+        String url = String.format("%s/movies/title/%s", BASE_URL, encodedTitle);
+        System.out.println("URL: " + url);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET() 
-                .build();
+            .uri(URI.create(url))
+            .GET() 
+            .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        
+
         if (response.statusCode() != 200) {
             throw new IOException("Request failed with status: " + response.statusCode());
         }
