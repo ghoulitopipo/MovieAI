@@ -3,13 +3,8 @@ Algorithmes de filtrage collaboratif.
 A son éxécution, le script crée la matrice de similarité sim_user,
 qui indique la similarité entre les utilisateurs (basée sur les notes seulement).
 """
-
-
 import numpy as np
-import ApiBackend
 import utils
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 def sgd_als(num_factors, learning_rate, regularization, iterations=10):
@@ -24,18 +19,18 @@ def sgd_als(num_factors, learning_rate, regularization, iterations=10):
     mae_list = []
     
     # Initialize user and item latent factor matrices with small random values
-    user_factors = np.random.normal(scale=1./num_factors, size=(users_count, num_factors))
-    item_factors = np.random.normal(scale=1./num_factors, size=(movies_count, num_factors))
+    user_factors = np.random.normal(scale=1./num_factors, size=(utils.users_count, num_factors))
+    item_factors = np.random.normal(scale=1./num_factors, size=(utils.movies_count, num_factors))
     
     for iteration in range(iterations):
         total_rmse_error = 0
         total_mae_error = 0
         count = 0
-        for u in range(users_count):
-            for i in range(users_count):
-                if R[u, i] > 0:
+        for u in range(utils.users_count):
+            for i in range(utils.users_count):
+                if utils.R[u, i] > 0:
                     # Calcul de l'erreur entre la note réelle et la prédiction
-                    error = R[u, i] - np.dot(user_factors[u, :], item_factors[i, :].T)
+                    error = utils.R[u, i] - np.dot(user_factors[u, :], item_factors[i, :].T)
                     total_rmse_error += error**2
                     total_mae_error += np.abs(error)
 
@@ -61,14 +56,15 @@ def get_matching_movies(user_id, U, V):
     """
     Retourne les films avec les features recherchées par l'utilisateur.
     """
+    user_id -= 1 
     # Pour chaque film, calculer le produit scalaire entre le vecteur utilisateur et le vecteur item du film
     similarities = np.zeros(V.shape[0])
     for i in range(V.shape[0]):
         similarities[i] = np.dot(U[user_id], V[i])
 
     # Pour chaque film, si le film a été noté par l'utilisateur, on le met à -1 pour ne pas le recommander
-    for i in range(R.shape[1]):
-        if R[user_id, i] > 0:
+    for i in range(utils.R.shape[1]):
+        if utils.R[user_id, i] > 0:
             similarities[i] = 0
 
     # Liste des indices des films triés par pertinence avec l'utilisateur
@@ -88,8 +84,8 @@ def cosine_sim_user():
     avec pour la case (i, j) la similarité entre l'utilisateur i et l'utilisateur j.
     """
     # Normalisation : note - moyenne de l'utilisateur
-    rating_means = np.nanmean(R, axis=1)
-    normalized_ratings = R - rating_means[:, np.newaxis]
+    rating_means = np.nanmean(utils.R, axis=1)
+    normalized_ratings = utils.R - rating_means[:, np.newaxis]
     
     # Calcul de la similarité utilisateur-utilisateur
     filled_normalized = np.nan_to_num(normalized_ratings)
@@ -105,6 +101,7 @@ def cosine_user_recommend(user_index, k=20):
     L'algorithme trouve les k utilisateurs les plus similaires de l'utilisateur choisi en fonction des notes,
     puis fais une prédiction des notes en fonction de ce groupe d'utilisateurs.
     """
+    user_index -= 1
     sim_scores = sim_user[user_index]
     
     # Trouve les k utilisateurs les plus similaires de l'utilisateur (lui-même exclu)
@@ -112,15 +109,15 @@ def cosine_user_recommend(user_index, k=20):
     similar_users = similar_users[similar_users != user_index][:k]
     
     # Prédictions des notes
-    user_ratings = R[user_index]
+    user_ratings = utils.R[user_index]
     unrated_indices = np.where(np.isnan(user_ratings))[0]
-    predicted_ratings = np.zeros(movies_count)
+    predicted_ratings = np.zeros(utils.movies_count)
 
     for id in unrated_indices:
         sim_sum = 0
         weighted_sum = 0
         for other_user in similar_users:
-            rating = R[other_user, id]
+            rating = utils.R[other_user, id]
             if not np.isnan(rating):
                 sim = sim_scores[other_user]
                 weighted_sum += sim * rating
@@ -132,11 +129,9 @@ def cosine_user_recommend(user_index, k=20):
     # recommended = sorted(predicted_ratings.items(), key=lambda x: x[1], reverse=True)[:n_reco]
 
     # Arrondie les notes et remplace les indices de ligne par les ID MovieLens des films
-    recommended = [(utils.movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
-
+    # recommended = [(movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
 
     return predicted_ratings
-
 
 def launch_U(id_user, n_reco=50):
     u_id = id_user if id_user >= 1 else 0
@@ -144,7 +139,31 @@ def launch_U(id_user, n_reco=50):
     recommendations = cosine_user_recommend(u_id)
     matching_movies = get_matching_movies(id_user, U, V)
 
+    # Moyenne des deux recommandations
+    results = recommendations * 0.4 + matching_movies * 0.6
+
+    # Tri des recommnandations par ordre décroissant de score
+    # La méthode argsort retourne la liste des indices triés sans les scores
+    results = (np.argsort(results)[::-1])[:n_reco]
+
+    # On remplace les indices des lignes par les ID MovieLens
+    for i in range(n_reco):
+        results[i] = utils.movies_id_dict[results[i]]
+    
+    output = [{"movie_id": int(movie_id)} for movie_id in results]
+
+    return output
+
 # Création de la matrice de similarité
 sim_user = cosine_sim_user()
 
 U, V, rmse_list, mae_list = sgd_als(num_factors=10, learning_rate=0.01, regularization=0.01, iterations=10)
+
+
+def refresh_all():
+    """
+    Recharge toutes les données et recalcule les structures dépendantes.
+    """
+    global sim_user, U, V, rmse_list, mae_list
+    sim_user = cosine_sim_user()
+    U, V, rmse_list, mae_list = sgd_als(num_factors=10, learning_rate=0.01, regularization=0.01, iterations=10)

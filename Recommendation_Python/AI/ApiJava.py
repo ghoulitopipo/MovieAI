@@ -19,6 +19,7 @@ import IA_for_other
 import IA_for_you
 import IA_for_no_data
 import IA_similar
+import utils
 
 app = Flask(__name__)
 
@@ -36,7 +37,7 @@ def getrecobymovie(id_movie):
 
 @app.route("/api/RecoNoData", methods=["GET"])
 def getnouser():
-    return jsonify(IA_for_no_data.launch_N()
+    return jsonify(IA_for_no_data.launch_N())
                    
      
 @app.route("/api/update_values", methods=["POST"])
@@ -46,6 +47,7 @@ def update_values():
     This is a placeholder for the actual implementation.
     """
     utils.refresh_all()
+    IA_for_other.refresh_all()
     return jsonify({"message": "Values updated successfully"}), 200
 
 if __name__ == "__main__":
