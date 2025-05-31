@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import fr.univtln.laure.utils.ApiMovies;
 import fr.univtln.laure.utils.ApiPython;
+import fr.univtln.laure.utils.ApiRatings;
 import fr.univtln.laure.utils.ImgLoader;
 import fr.univtln.laure.utils.MovieCache;
 import fr.univtln.laure.utils.SceneChanger;
@@ -78,22 +79,14 @@ public class Home {
     @FXML
     public void initialize() {
         try {
-            if (cachedMovieForYou == null) {
-                cachedMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
-                if (cachedMovieForYou != null && cachedMovieForYou.length() == 0) {
-                    cachedMovieForYou = ApiPython.RecommendationForNoData();
-                }
-                else {
-                    if (cachedMovieByOthers == null) {
-                        cachedMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
-                    }
-                }
+            if (ApiRatings.nbRatings(IdConnexion) == 0) {
+                listMovieForYou = ApiPython.RecommendationForNoData();
+                listMovieByOthers = ApiPython.RecommendationForNoData();
             }
-            listMovieForYou = cachedMovieForYou;
-            listMovieByOthers = cachedMovieByOthers;
-
-            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
-            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
+            else {
+                listMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
+                listMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -247,7 +240,6 @@ public class Home {
             MovieCache.setTitle(title);
             MovieCache.setPosterUrl(posterUrl);
             MovieCache.setGenres(genre);
-
             URL fxmlUrl = getClass().getResource("/views/moviePage.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load());

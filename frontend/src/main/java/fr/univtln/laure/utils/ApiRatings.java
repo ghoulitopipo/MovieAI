@@ -107,10 +107,24 @@ public class ApiRatings {
             if (response.statusCode() != 201 && response.statusCode() != 200) {
                 throw new IOException("Ajout échoué, code: " + response.statusCode());
             } else {
+                ApiPython.update_values();
             System.out.println("Note ajoutée : " + rating + " pour le film " + id_movie + " par l'utilisateur " + id_user);
         }
             } else {
                 throw new IOException("Code retour inattendu: " + status);
             }
+        }
+
+        public static int nbRatings(long id_user) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/ratings/nbRatings/" + id_user))
+                .GET() 
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new IOException("Request failed with status: " + response.statusCode());
+        }
+            return Integer.parseInt(response.body());
+            
         }
     }

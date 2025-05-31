@@ -63,3 +63,23 @@ movies_id_dict, movies_index_dict = get_movies_id_dict()
 
 # Création de la matrice utilisateur/film
 R = create_user_item_matrix(True)
+
+def reload_data():
+    """
+    Recharge les données depuis l'API backend pour garantir qu'elles sont à jour.
+    """
+    global users_count, movies_data, ratings_data, tags_data
+    users_count, movies_data, ratings_data, tags_data = get_all_data()
+    global movies_count, ratings_count, tags_count
+    movies_count = len(movies_data)
+    ratings_count = len(ratings_data)
+    tags_count = len(tags_data)
+
+def refresh_all():
+    """
+    Recharge toutes les données et recalcule les structures dépendantes.
+    """
+    reload_data()
+    global movies_id_dict, movies_index_dict, R
+    movies_id_dict, movies_index_dict = get_movies_id_dict()
+    R = create_user_item_matrix(True)

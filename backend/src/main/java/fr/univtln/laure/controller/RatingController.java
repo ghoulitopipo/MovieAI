@@ -70,4 +70,14 @@ public class RatingController {
         return Response.ok(rate).build();
     }
     
+    @GET
+    @Path("/nbRatings/{id_movie}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response nbRatings(@PathParam("id_movie") long id_movie) {
+        int nb = ratingService.nbRatings(id_movie);
+        if (nb == -1) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        return Response.ok(nb).build();
+    }
 }

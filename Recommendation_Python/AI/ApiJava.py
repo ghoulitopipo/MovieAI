@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 import IA_for_other
 import IA_for_you
 import IA_for_no_data
-
+import utils
 """
 ApiJava.py, this file is used to create a Flask API that will be used by the Java application.
 The API has three endpoints:
@@ -12,7 +12,7 @@ The API has three endpoints:
 
 2. /api/RecoByOther/<int:id_user>: this endpoint is used to get recommendations for a user based on other users.
 
-3. /api/RecoNoUser: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
+3. /api/RecoNoData: this endpoint is used to get recommendations for a user that doesn't have enough ratings.
 """
 
 app = Flask(__name__)
@@ -36,6 +36,15 @@ def getrecobymovie(id_movie):
 @app.route("/api/RecoNoData", methods=["GET"])
 def getnouser():
     return jsonify(IA_for_no_data.launch())
+
+@app.route("/api/update_values", methods=["POST"])
+def update_values():
+    """
+    Endpoint to update the values in the database.
+    This is a placeholder for the actual implementation.
+    """
+    utils.refresh_all()
+    return jsonify({"message": "Values updated successfully"}), 200
 
 if __name__ == "__main__":
     app.run(port=5000)

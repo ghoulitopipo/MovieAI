@@ -44,4 +44,8 @@ public class RatingService {
     public Rating modifyRating(long id_movie, long id_user, float rating) {
         return ratingRepository.modifyRating(id_movie, id_user, rating);
     }
+
+    public int nbRatings(long id_movie) {
+        return ratingRepository.nbRatings(id_movie);
+    }
 }

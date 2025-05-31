@@ -130,6 +130,15 @@ public class RatingRepository {
         }
     }
 
-    
-    
+    public int nbRatings(long id_user) {
+        // This method retrieves the number of ratings made by a specific user.
+        try {
+            Long count = em.createQuery("SELECT COUNT(r) FROM Rating r WHERE r.user.id = :id_user", Long.class)
+                    .setParameter("id_user", id_user)
+                    .getSingleResult();
+            return count.intValue();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
 }
