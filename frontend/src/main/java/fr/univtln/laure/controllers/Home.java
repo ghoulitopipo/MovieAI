@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import fr.univtln.laure.utils.ApiMovies;
 import fr.univtln.laure.utils.ApiPython;
+import fr.univtln.laure.utils.ApiRatings;
 import fr.univtln.laure.utils.ImgLoader;
 import fr.univtln.laure.utils.MovieCache;
 import fr.univtln.laure.utils.SceneChanger;
@@ -17,6 +18,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -41,6 +45,9 @@ public class Home {
 
     @FXML
     private TextField searchField;
+
+    @FXML
+    private ListView<String> searchSuggestions;
 
     private static long IdConnexion;
 
@@ -72,22 +79,14 @@ public class Home {
     @FXML
     public void initialize() {
         try {
-            if (cachedMovieForYou == null) {
-                cachedMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
-                if (cachedMovieForYou != null && cachedMovieForYou.length() == 0) {
-                    cachedMovieForYou = ApiPython.RecommendationForNoData();
-                }
-                else {
-                    if (cachedMovieByOthers == null) {
-                        cachedMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
-                    }
-                }
+            if (ApiRatings.nbRatings(IdConnexion) == 0) {
+                listMovieForYou = ApiPython.RecommendationForNoData();
+                listMovieByOthers = ApiPython.RecommendationForNoData();
             }
-            listMovieForYou = cachedMovieForYou;
-            listMovieByOthers = cachedMovieByOthers;
-
-            showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
-            showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
+            else {
+                listMovieForYou = ApiPython.RecommendationForYou(IdConnexion);
+                listMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,6 +105,38 @@ public class Home {
                 StackPane stack = (StackPane) likedContainer.getChildren().get(i);
                 stack.setOnMouseClicked(e -> openMovie(likedData, index));
             }
+        }
+
+        if (searchSuggestions != null) {
+            searchSuggestions.setVisible(false);
+            searchSuggestions.setOnMouseClicked(event -> {
+                String selected = searchSuggestions.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    searchField.setText(selected);
+                    searchSuggestions.setVisible(false);
+                    try {
+                        JSONArray arr = ApiMovies.getMoviebyTitle(selected);
+                        System.out.println("Selected movie: " + selected + " - JSONArray: " + arr);
+                        if (arr.length() > 0) {
+                            JSONObject obj = arr.getJSONObject(0);
+                            long movieId = obj.getLong("id");
+                            JSONArray movieArr = ApiMovies.getMoviebyID(movieId);
+                            if (movieArr.length() > 0) {
+                                JSONObject movieObj = movieArr.getJSONObject(0);
+                                MoviePageData tempData = new MoviePageData();
+                                tempData.ids.add(movieId);
+                                tempData.titles.add(movieObj.getString("title"));
+                                tempData.genres.add(movieObj.getString("genre"));
+                                tempData.tmdbIds.add(movieObj.getLong("tmdb"));
+                                tempData.urls.add(ImgLoader.getImg(movieObj.getLong("tmdb")));
+                                openMovie(tempData, 0);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -209,7 +240,6 @@ public class Home {
             MovieCache.setTitle(title);
             MovieCache.setPosterUrl(posterUrl);
             MovieCache.setGenres(genre);
-
             URL fxmlUrl = getClass().getResource("/views/moviePage.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load());
@@ -241,6 +271,7 @@ public class Home {
     }
 
     public static void clearCache() {
+        System.out.println("Clearing cache...");
         cachedMovieForYou = null;
         cachedMovieByOthers = null;
     }
@@ -249,14 +280,26 @@ public class Home {
     public void searchName() {
         searchField.setVisible(true);
 
-        searchField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                String searchText = searchField.getText();
-                try {
-                    JSONArray movieArr = ApiMovies.getMoviebyTitle(searchText);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        searchField.setOnKeyReleased(event -> {
+            String searchText = searchField.getText();
+            if (searchText.isEmpty()) {
+                if (searchSuggestions != null) searchSuggestions.setVisible(false);
+                return;
+            }
+            try {
+                JSONArray movieArr = ApiMovies.getMoviebyTitle(searchText);
+                ObservableList<String> suggestions = FXCollections.observableArrayList();
+                for (int i = 0; i < movieArr.length(); i++) {
+                    String title = movieArr.getJSONObject(i).getString("title");
+                    suggestions.add(title);
                 }
+                if (searchSuggestions != null) {
+                    searchSuggestions.setItems(suggestions);
+                    searchSuggestions.setVisible(!suggestions.isEmpty());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (searchSuggestions != null) searchSuggestions.setVisible(false);
             }
         });
     }

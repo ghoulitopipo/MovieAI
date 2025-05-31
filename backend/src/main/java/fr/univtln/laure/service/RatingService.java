@@ -18,7 +18,7 @@ public class RatingService {
     public List<Rating> getAllRatings() {
         List<Rating> ratings = ratingRepository.findAllRatings();
         for (Rating rating : ratings) {
-            rating.setRating((float) DPUtils.privatizeRating(rating.getRating(), 5.0));
+            rating.setRating((float) DPUtils.privatizeRating(rating.getRating(), 7.0));
         }
         return ratings;
     }
@@ -30,7 +30,7 @@ public class RatingService {
     public Rating getRating(long id_movie, long id_user) {
         Rating rating = ratingRepository.getRating(id_movie, id_user);
         if (rating != null) {
-            rating.setRating((float) DPUtils.privatizeRating(rating.getRating(), 5.0));
+            rating.setRating((float) DPUtils.privatizeRating(rating.getRating(), 7.0));
         }
         return rating; 
     }
@@ -43,5 +43,9 @@ public class RatingService {
     @Transactional
     public Rating modifyRating(long id_movie, long id_user, float rating) {
         return ratingRepository.modifyRating(id_movie, id_user, rating);
+    }
+
+    public int nbRatings(long id_movie) {
+        return ratingRepository.nbRatings(id_movie);
     }
 }

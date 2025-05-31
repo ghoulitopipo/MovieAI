@@ -88,4 +88,18 @@ public class ApiPython {
         
         return new JSONArray(response.body());
     }
+
+    public static void update_values() throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(BASE_URL + "/api/update_values"))
+            .POST(HttpRequest.BodyPublishers.noBody())
+            .build();
+    System.out.println("requete faite");
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    if (response.statusCode() != 200) {
+        throw new IOException("Request failed with status: " + response.statusCode());
+    }
+}
+    
 }
