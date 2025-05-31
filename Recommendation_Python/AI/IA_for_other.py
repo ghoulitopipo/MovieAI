@@ -2,8 +2,9 @@
 Algorithmes de recommandation CF et CB basés sur le calcul de la similarité cosinus.
 """
 
+import numpy as np
 import ApiBackend
-from utils import *
+import utils
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -17,10 +18,7 @@ def cosine_user_recommend(user_index, ratings, k=20, n_recommendations=50):
     L'algorithme trouve les k utilisateurs les plus similaires de l'utilisateur choisi en fonction des notes,
     puis fais une prédiction des notes en fonction de ce groupe d'utilisateurs.
     """
-    # Si l'utilisateur a noté tous les films, on ne peut pas faire de recommandation
-    if np.all(~np.isnan(ratings[user_index])):
-        print("L'utilisateur a noté tous les films.")
-        return []
+    user_index -= 1
 
     # Normalisation : note - moyenne de l'utilisateur
     rating_means = np.nanmean(ratings, axis=1)
@@ -57,7 +55,7 @@ def cosine_user_recommend(user_index, ratings, k=20, n_recommendations=50):
     recommended = sorted(predicted_ratings.items(), key=lambda x: x[1], reverse=True)[:n_recommendations]
 
     # Arrondie les notes et remplace les indices de ligne par les ID MovieLens des films
-    recommended = [(movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
+    recommended = [(utils.movies_id_dict[idx], round(rating, 2)) for idx, rating in recommended]
 
     return recommended
 
@@ -68,7 +66,7 @@ def cosine_sim_genre():
     Retourne une matrice carrée de taille movies_count
     avec pour la case (i, j) la similarité entre le film i et le film j.
     """
-    genres_raw = movies_data[:, 2]
+    genres_raw = utils.movies_data[:, 2]
     genre_lists = [g.split('|') if g else [] for g in genres_raw]
 
     mlb = MultiLabelBinarizer()
@@ -87,14 +85,14 @@ def cosine_sim_tag():
     # Construire une liste de tags combinés pour chaque film dans l'ordre de movies_data
     tag_dict = {}
 
-    for row in tags_data:
+    for row in utils.tags_data:
         movie_id = int(row[1])
         tag_text = str(row[2])
         if movie_id not in tag_dict:
             tag_dict[movie_id] = []
         tag_dict[movie_id].append(tag_text)
 
-    movie_ids = movies_data[:, 0].astype(int)
+    movie_ids = utils.movies_data[:, 0].astype(int)
     tag_strings = []
 
     for mid in movie_ids:
@@ -135,11 +133,11 @@ def cosine_content_recommend_similar(movie_id, sim_matrix, n_reco=30, min_rating
     Algorithme CB basé uniquement sur les genres des films.
     Retourne les n films les plus similaires au film choisi.
     """
-    if movie_id not in movies_index_dict:
+    if movie_id not in utils.movies_index_dict:
         print(f"Film {movie_id} introuvable.")
         return []
 
-    idx = movies_index_dict[movie_id]
+    idx = utils.movies_index_dict[movie_id]
     similarities = sim_matrix[idx]
     
     # Exclure le film lui-même
@@ -150,7 +148,7 @@ def cosine_content_recommend_similar(movie_id, sim_matrix, n_reco=30, min_rating
 
 
     for i in top_indices:
-        mid = int(movies_data[i,0])
+        mid = int(utils.movies_data[i,0])
         score = similarities[i]
         recommendations.append((mid, score))
 
@@ -162,7 +160,7 @@ def cosine_content_recommend_user(user_id, sim_matrix, n_reco=30, min_rating=4.0
     de l'algorithme cosine similarity.
     """
     # Récupère les films notés par l'utilisateur
-    user_ratings = ratings_data[ratings_data[:, 0] == (user_id + 1)]
+    user_ratings = utils.ratings_data[utils.ratings_data[:, 0] == (user_id + 1)]
     liked_movies = user_ratings[user_ratings[:, 2] >= min_rating]
 
     if liked_movies.shape[0] == 0:
@@ -174,13 +172,13 @@ def cosine_content_recommend_user(user_id, sim_matrix, n_reco=30, min_rating=4.0
     for row in liked_movies:
         movie_id = int(row[1])
         rating = float(row[2])
-        if movie_id in movies_index_dict:
-            idx = movies_index_dict[movie_id]
+        if movie_id in utils.movies_index_dict:
+            idx = utils.movies_index_dict[movie_id]
             scores += sim_matrix[idx] * rating
 
     # Éviter les films déjà vus par l'utilisateur
     seen_movie_ids = user_ratings[:, 1].astype(int)
-    seen_indices = [movies_index_dict[mid] for mid in seen_movie_ids if mid in movies_index_dict]
+    seen_indices = [utils.movies_index_dict[mid] for mid in seen_movie_ids if mid in utils.movies_index_dict]
     scores[seen_indices] = -1  # on les exclut des recommandations
 
     # Recommander les n premiers films
@@ -189,7 +187,7 @@ def cosine_content_recommend_user(user_id, sim_matrix, n_reco=30, min_rating=4.0
     # Convertit les indices en movieIds et titres
     recommendations = []
     for idx in top_indices:
-        movie_id = int(movies_data[idx, 0])
+        movie_id = int(utils.movies_data[idx, 0])
         score = round(scores[idx], 2)
         recommendations.append((movie_id, score))
 
@@ -202,7 +200,8 @@ def launch_U(id_user):
     else:
         u = 0
     
-    recommendations = cosine_user_recommend(u, R)
+    print(len(utils.R), len(utils.R[0]))
+    recommendations = cosine_user_recommend(u, utils.R)
 
     output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
 

@@ -149,7 +149,6 @@ public class MoviePage {
     @FXML
     public void handleHome(){
         try {
-
             URL fxmlUrl = getClass().getResource("/views/home.fxml");
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Scene scene = new Scene(loader.load());

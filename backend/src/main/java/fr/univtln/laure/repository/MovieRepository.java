@@ -1,9 +1,5 @@
 package fr.univtln.laure.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.EntityManager;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -14,6 +10,9 @@ import java.util.TreeSet;
 
 import fr.univtln.laure.model.Movie;
 import fr.univtln.laure.service.DPUtils;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @ApplicationScoped
 public class MovieRepository{
@@ -126,7 +125,7 @@ public class MovieRepository{
 
             List<Object> group = grouped.get(key);
             float originalRating = (float) group.get(1);
-            float privatizedRating = (float) DPUtils.privatizeRating(originalRating, 5.0);
+            float privatizedRating = (float) DPUtils.privatizeRating(originalRating, 7.0);
             group.set(1, privatizedRating);
 
             ((List<String>) grouped.get(key).get(2)).add(tag);
