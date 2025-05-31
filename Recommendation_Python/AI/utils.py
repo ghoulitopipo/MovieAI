@@ -1,3 +1,5 @@
+
+
 """
 Module qui contient des parties du code réutilisables par les différents algorithmes Python.
 """
@@ -81,4 +83,3 @@ def refresh_all():
     global movies_id_dict, movies_index_dict, R
     movies_id_dict, movies_index_dict = get_movies_id_dict()
     R = create_user_item_matrix(True)
-    

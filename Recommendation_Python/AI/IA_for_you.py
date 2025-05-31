@@ -2,7 +2,7 @@ import ApiBackend
 
 def Notratedonegenre(genre, u=0):
     """
-        Retrieves and sorts movies of a given genre not yet rated by the user, in descending order of average rating.
+    Retrieves and sorts movies of a given genre not yet rated by the user, in descending order of average rating.
     """
     MM = ApiBackend.get_not_rated(u, genre)
     for movie in MM:
@@ -54,7 +54,7 @@ def Matrixgenrerating(LG, u=0):
 
 def Allgenre():
     """
-        Returns a list of all available genres formatted with zero placeholders
+    Returns a list of all available genres formatted with zero placeholders
     """
     LG = ApiBackend.get_genres()
     G = []
@@ -64,8 +64,8 @@ def Allgenre():
 
 def LikedgenresTag(u=0):
     """
-        Calculates Bayesian-weighted preference scores for genres and tags based on user's rating history.
-        The genres more important than  the tags
+    Calculates Bayesian-weighted preference scores for genres and tags based on user's rating history.
+    The genres more important than  the tags
     """
     M,MT = Matrixgenrerating(Allgenre(), u)
 
@@ -75,7 +75,7 @@ def LikedgenresTag(u=0):
         total_notes += note_moy * nb_films
         total_films += nb_films
     if total_films != 0 :
-        C = total_notes / total_films
+        C = total_notes / total_films 
     else:
         C = 0
 
@@ -87,7 +87,7 @@ def LikedgenresTag(u=0):
     for tag in MT:
         T[tag[0]] = 0
 
-    s = 0
+    s = 0 
     i = 0
     j = 0
     while i < len(M) and j < len(G):
@@ -114,7 +114,7 @@ def LikedgenresTag(u=0):
 
 def generate_recommendations(u=0):
     """
-        Generates personalized movie recommendations based on genre and tag preferences using weighted Bayesian scores.
+    Generates personalized movie recommendations based on genre and tag preferences using weighted Bayesian scores.
     """
     G,Tnonfil = LikedgenresTag(u)
     T = {t: w for t, w in Tnonfil.items() if w > 3.0}
@@ -142,9 +142,9 @@ def generate_recommendations(u=0):
     return LM
 
 
-def launch(id_user):
+def launch_Y(id_user):
     """
-        Launches the recommendation engine for a given user and returns the list of recommended movies with scores.
+    Launches the recommendation engine for a given user and returns the list of recommended movies with scores.
     """
     if id_user >= 1:
         u = id_user
@@ -154,5 +154,4 @@ def launch(id_user):
     recommendations = generate_recommendations(u)
 
     output = [{"movie_id": movie_id, "score": score} for movie_id, score in recommendations]
-
     return output
