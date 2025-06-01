@@ -101,7 +101,6 @@ public class ApiMovies {
     public static JSONArray getMoviebyTitle(String title) throws Exception {
         String encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8).replace("+", "%20");
         String url = String.format("%s/movies/title/%s", BASE_URL, encodedTitle);
-        System.out.println("URL: " + url);
 
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create(url))

@@ -62,8 +62,8 @@ public class Home {
     private int scrollPaneElement = 0;
     private int otherPaneElement = 0;
 
-    private JSONArray listMovieForYou;
-    private JSONArray listMovieByOthers;
+    private static JSONArray listMovieForYou;
+    private static JSONArray listMovieByOthers;
     @FXML
     private VBox likedSection;
 
@@ -75,28 +75,28 @@ public class Home {
         List<String> urls = new ArrayList<>();
     }
 
+    public static boolean needRefresh = true;
+
     private final MoviePageData recommendedData = new MoviePageData();
     private final MoviePageData likedData = new MoviePageData();
 
 
-@   FXML
+    @FXML
     public void initialize() {
         try {
-            ApiPython.update_values();
-            if (ApiRatings.nbRatings(IdConnexion) == 0) {
-                listMovieForYou = ApiPython.RecommendationForNoData();
-                likedSection.setVisible(false);
-                listMovieByOthers = listMovieForYou;
-            }
-            else {
-                likedSection.setVisible(true);
-                JSONArray temp = ApiPython.RecommendationForYou(IdConnexion);
-                if (temp.length() > 0) {
-                    listMovieForYou = temp;
-                } else {
+            if (needRefresh || listMovieForYou == null || listMovieByOthers == null) {
+                ApiPython.update_values();
+                if (ApiRatings.nbRatings(IdConnexion) == 0) {
                     listMovieForYou = ApiPython.RecommendationForNoData();
+                    likedSection.setVisible(false);
+                    listMovieByOthers = listMovieForYou;
+                } else {
+                    likedSection.setVisible(true);
+                    JSONArray temp = ApiPython.RecommendationForYou(IdConnexion);
+                    listMovieForYou = (temp.length() > 0) ? temp : ApiPython.RecommendationForNoData();
+                    listMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
                 }
-                listMovieByOthers = ApiPython.RecommendationForOther(IdConnexion);
+                needRefresh = false;
             }
             showMovies(listMovieForYou, recommendedContainer, scrollPaneElement, recommendedData);
             showMovies(listMovieByOthers, likedContainer, otherPaneElement, likedData);
@@ -104,52 +104,20 @@ public class Home {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < recommendedContainer.getChildren().size(); i++) {
-            int index = i;
-            if (recommendedContainer.getChildren().get(i) instanceof StackPane) {
-                StackPane stack = (StackPane) recommendedContainer.getChildren().get(i);
-                stack.setOnMouseClicked(e -> openMovie(recommendedData, index));
+        try {
+            if (ApiRatings.nbRatings(IdConnexion) == 0) {
+                likedSection.setVisible(false);
+            } else {
+                likedSection.setVisible(true);
             }
-        }
-
-        for (int i = 0; i < likedContainer.getChildren().size(); i++) {
-            int index = i;
-            if (likedContainer.getChildren().get(i) instanceof StackPane) {
-                StackPane stack = (StackPane) likedContainer.getChildren().get(i);
-                stack.setOnMouseClicked(e -> openMovie(likedData, index));
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            likedSection.setVisible(false);
         }
 
         if (searchSuggestions != null) {
             searchSuggestions.setVisible(false);
-            searchSuggestions.setOnMouseClicked(event -> {
-                String selected = searchSuggestions.getSelectionModel().getSelectedItem();
-                if (selected != null) {
-                    searchField.setText(selected);
-                    searchSuggestions.setVisible(false);
-                    try {
-                        JSONArray arr = ApiMovies.getMoviebyTitle(selected);
-                        System.out.println("Selected movie: " + selected + " - JSONArray: " + arr);
-                        if (arr.length() > 0) {
-                            JSONObject obj = arr.getJSONObject(0);
-                            long movieId = obj.getLong("id");
-                            JSONArray movieArr = ApiMovies.getMoviebyID(movieId);
-                            if (movieArr.length() > 0) {
-                                JSONObject movieObj = movieArr.getJSONObject(0);
-                                MoviePageData tempData = new MoviePageData();
-                                tempData.ids.add(movieId);
-                                tempData.titles.add(movieObj.getString("title"));
-                                tempData.genres.add(movieObj.getString("genre"));
-                                tempData.tmdbIds.add(movieObj.getLong("tmdb"));
-                                tempData.urls.add(ImgLoader.getImg(movieObj.getLong("tmdb")));
-                                openMovie(tempData, 0);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            searchSuggestions.setOnMouseClicked(event -> handleSearchSuggestionClick());
         }
     }
     
@@ -162,9 +130,10 @@ public class Home {
 
         int end = Math.min(startIndex + 8, movieArray.length());
 
-        for (int i = 0; i < container.getChildren().size(); i++) {
-            if (container.getChildren().get(i) instanceof StackPane) {
-                ((StackPane) container.getChildren().get(i)).getChildren().clear();
+        for (var node : container.getChildren()) {
+            if (node instanceof StackPane) {
+                StackPane stack = (StackPane) node;
+                stack.getChildren().clear();
             }
         }
 
@@ -172,9 +141,8 @@ public class Home {
             try {
                 JSONObject obj = movieArray.getJSONObject(i);
                 long movieId = obj.getLong("movie_id");
-                JSONArray movieArr = ApiMovies.getMoviebyID(movieId);
-                if (movieArr.length() == 0) continue;
-                JSONObject movieObj = movieArr.getJSONObject(0);
+                JSONObject movieObj = obj.has("title") ? obj : ApiMovies.getMoviebyID(movieId).optJSONObject(0);
+                if (movieObj == null) continue;
 
                 String title = movieObj.getString("title");
                 String genre = movieObj.getString("genre");
@@ -206,7 +174,46 @@ public class Home {
                 ex.printStackTrace();
             }
         }
+        addStackPaneListeners(container, data);
     }
+
+    private void addStackPaneListeners(HBox container, MoviePageData data) {
+        for (int i = 0; i < container.getChildren().size(); i++) {
+            int index = i;
+            if (container.getChildren().get(i) instanceof StackPane) {
+                StackPane stack = (StackPane) container.getChildren().get(i);
+                stack.setOnMouseClicked(e -> openMovie(data, index));
+            }
+        }
+    }
+
+    private void handleSearchSuggestionClick() {
+        String selected = searchSuggestions.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            searchField.setText(selected);
+            searchSuggestions.setVisible(false);
+            try {
+                JSONArray arr = ApiMovies.getMoviebyTitle(selected);
+                if (arr.length() > 0) {
+                    JSONObject obj = arr.getJSONObject(0);
+                    long movieId = obj.getLong("id");
+                    JSONObject movieObj = ApiMovies.getMoviebyID(movieId).optJSONObject(0);
+                    if (movieObj != null) {
+                        MoviePageData tempData = new MoviePageData();
+                        tempData.ids.add(movieId);
+                        tempData.titles.add(movieObj.getString("title"));
+                        tempData.genres.add(movieObj.getString("genre"));
+                        tempData.tmdbIds.add(movieObj.getLong("tmdb"));
+                        tempData.urls.add(ImgLoader.getImg(movieObj.getLong("tmdb")));
+                        openMovie(tempData, 0);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     @FXML
     private void updateMoviesN() {
@@ -287,6 +294,8 @@ public class Home {
         System.out.println("Clearing cache...");
         cachedMovieForYou = null;
         cachedMovieByOthers = null;
+        listMovieForYou = null;
+        listMovieByOthers = null;
     }
 
     @FXML

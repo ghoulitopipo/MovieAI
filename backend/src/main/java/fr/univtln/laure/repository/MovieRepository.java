@@ -147,10 +147,6 @@ public class MovieRepository{
             uniqueGenres.addAll(Arrays.asList(splitGenres));
         }
 
-        for (String genre : uniqueGenres) {
-            System.out.println(genre);
-        }
-
         return new ArrayList<>(uniqueGenres);
     }
 

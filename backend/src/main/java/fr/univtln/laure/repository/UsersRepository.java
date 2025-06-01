@@ -71,7 +71,6 @@ public class UsersRepository {
             user.setPassword(createStoredPassword(password));
                 
             em.persist(user);
-            System.out.println(createStoredPassword("motdepasse"));
             return user;
         }
         

@@ -63,6 +63,7 @@ public class MoviePage {
                 ApiRatings apiRatings = new ApiRatings();
                 apiRatings.addRating(idMovie, userId, (float) rounded);
                 ratingLabel.setText("Votre note : " + rounded + " / 5");
+                Home.needRefresh = true;
             } catch (Exception e) {
                 e.printStackTrace();
                 rating.setRating(0);
@@ -129,7 +130,6 @@ public class MoviePage {
     private void loadtags(long idMovie) {
         ObservableList<String> tags = FXCollections.observableArrayList();
         try {
-            System.out.println("ID Movie: " + idMovie);
             JSONArray result = ApiTags.getAll(idMovie);
             if (result.length() > 0) {
                 for (int i = 0; i < result.length(); i++) {
@@ -138,7 +138,6 @@ public class MoviePage {
                     tags.add(tagName);
                 }
             }
-            System.out.println(tags);
             updateTagsBar(tags);
         } catch (Exception e) {
             e.printStackTrace();

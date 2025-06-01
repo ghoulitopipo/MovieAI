@@ -147,8 +147,3 @@ def launch_M(id_movie):
 
 # Création de la matrice de similarité
 sim_genre_tag = similarite_genre_tag()
-
-if __name__ == "__main__":
-    test_movie_id = 1
-    movie_recommendations = launch_M(test_movie_id)
-    print("Recommandations pour le film:", movie_recommendations)
